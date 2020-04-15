@@ -1,0 +1,8 @@
+*.elf
+*.nro
+*.pfs0
+*.nacp
+*.nso
+build/*
+.DS_Store
+*node_modules
