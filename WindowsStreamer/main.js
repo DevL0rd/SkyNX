@@ -277,9 +277,7 @@ hidStreamClient.on('end', function () {
 
 connect();
 
-module.exports.log = function (msg) {
-  console.log(msg);
-};
+module.exports.init = connect
 
 
 
