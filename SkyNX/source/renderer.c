@@ -106,9 +106,21 @@ void SDL_DrawText(RenderContext *context, int x, int y, SDL_Color colour, const 
 {
     FC_DrawColor(context->font, context->renderer, x, y, colour, text);
 }
-
+void draw_rect(RenderContext *context, int x, int y, int w, int h, SDL_Color colour)
+{
+    SDL_SetRenderDrawColor(context->renderer, colour.r, colour.g, colour.b, colour.a);
+    SDL_Rect r = {x, y, w, h};
+    SDL_RenderFillRect(context->renderer, &r);
+}
 void drawSplash(RenderContext *context)
 {
+    SDL_Color bg = {30, 30, 30, 255};
+    SDL_ClearScreen(context, bg);
+    SDL_Color menuBar = {60, 60, 60, 255};
+    draw_rect(context, 0, 0, 1280, 60, menuBar);
+
+
+
     u32 ip = gethostid();
     char str_buf[300];
     snprintf(str_buf, 300, "Your Switch is now ready for a PC to connect!\nIt has the IP-Address %u.%u.%u.%u\n"
@@ -119,12 +131,11 @@ void drawSplash(RenderContext *context)
              ip & 0xFF, (ip >> 8) & 0xFF, (ip >> 16) & 0xFF, (ip >> 24) & 0xFF,
              clock_strings[context->overclock_status]);
 
-    SDL_Color black = {0, 0, 0, 255};
+    
     SDL_Color white = {230, 230, 230, 255};
-    SDL_ClearScreen(context, white);
+    SDL_DrawText(context, 20, 65, white, str_buf);
 
-    SDL_DrawText(context, 170, 150, black, str_buf);
-
+    
     SDL_RenderPresent(context->renderer);
 
     hidScanInput();
