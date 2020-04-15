@@ -1,12 +1,10 @@
 #include "renderer.h"
 
 #include <stdbool.h>
-#include <switch.h>
 #include <libavutil/imgutils.h>
 #include <libswscale/swscale.h>
 #include <unistd.h>
 #include "video.h"
-
 
 static char *clock_strings[] = {
     "333 MHz (underclocked, very slow)", "710 MHz (underclocked, slow)", "1020 MHz (standard, not overclocked)", "1224 MHz (slightly overclocked)", "1581 MHz (overclocked)", "1785 MHz (strong overclock)"};
@@ -23,7 +21,8 @@ RenderContext *createRenderer()
     {
         SDL_Log("SDL_CreateWindow: %s\n", SDL_GetError());
         SDL_Quit();
-        while (1);
+        while (1)
+            ;
     }
 
     context->renderer = SDL_CreateRenderer(context->window, 0, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
@@ -31,7 +30,8 @@ RenderContext *createRenderer()
     {
         SDL_Log("SDL_CreateRenderer: %s\n", SDL_GetError());
         SDL_Quit();
-        while (1);
+        while (1)
+            ;
     }
 
     context->yuv_text = SDL_CreateTexture(context->renderer, SDL_PIXELFORMAT_IYUV, SDL_TEXTUREACCESS_STREAMING, RESX, RESY);
@@ -119,8 +119,6 @@ void drawSplash(RenderContext *context)
     SDL_Color menuBar = {60, 60, 60, 255};
     draw_rect(context, 0, 0, 1280, 60, menuBar);
 
-
-
     u32 ip = gethostid();
     char str_buf[300];
     snprintf(str_buf, 300, "Your Switch is now ready for a PC to connect!\nIt has the IP-Address %u.%u.%u.%u\n"
@@ -131,11 +129,9 @@ void drawSplash(RenderContext *context)
              ip & 0xFF, (ip >> 8) & 0xFF, (ip >> 16) & 0xFF, (ip >> 24) & 0xFF,
              clock_strings[context->overclock_status]);
 
-    
     SDL_Color white = {230, 230, 230, 255};
     SDL_DrawText(context, 20, 65, white, str_buf);
 
-    
     SDL_RenderPresent(context->renderer);
 
     hidScanInput();
