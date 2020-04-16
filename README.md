@@ -5,9 +5,6 @@ The desktop streaming client is completely rewritten from before. Currently the 
 
 The Switch app however, is a modified version of the [In-Home-Switching](https://github.com/jakibaki/In-Home-Switching/blob/master/README.md) app. The modifications at the moment are a new icon for the app, along with touch input.
 
-I will eventually be rewritting the Switch app to give it a new UI and to add more functionality.
-
-[In-Home-Switching](https://github.com/jakibaki/In-Home-Switching/blob/master/README.md).
 ## SkyNX Streamer
 ![SkyNX Streamer](Screenshots/Streamer.png "SkyNX Streaner")
 
@@ -20,21 +17,17 @@ I will eventually be rewritting the Switch app to give it a new UI and to add mo
 5. Select a streaming quality.
 6. Click start streamer.
 
-
-
 ## Notes:
 When the streamer conencts it will try to connect the switch as a virtual xBox controller. If the driver is not installed, It will install it automatically at this point.
 
 If for some reason it keeps prompting to install, or the controllers don't work. Try the following steps.
 
 1. Restart windows, and launch it again.
-1. If it still is not working. And you have previously used In-Home-Switching, Try removing the ScpDriverInterface that In-Home-Switching installs. You can use the installer that came with it to uninstall it, or get it [Here](https://github.com/mogzol/ScpDriverInterface/releases/download/1.1/ScpDriverInterface_v1.1.zip).
+2. If it still is not working. And you have previously used In-Home-Switching, Try removing the ScpDriverInterface that In-Home-Switching installs. You can use the installer that came with it to uninstall it, or get it [Here](https://github.com/mogzol/ScpDriverInterface/releases/download/1.1/ScpDriverInterface_v1.1.zip).
 
 ## Todo:
 Finish rewrite of App UI.
-Fix audio bugs.
-Fix sleep bug.
 
 ## Issues:
 Buggy audio.
-Incomplete app UI rewrite. Still basically using In-Home-Switching.
+Audio is choppy.
