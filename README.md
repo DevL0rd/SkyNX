@@ -31,3 +31,11 @@ Finish rewrite of App UI.
 ## Issues:
 Buggy audio.
 Audio is choppy.
+
+## Credits to
+* [DuchessOfDark88](https://twitter.com/DuchessOfDark88) App icon and graphics.
+* [jakibaki](https://github.com/jakibaki) For the original [In-Home-Switching](https://github.com/jakibaki/In-Home-Switching/blob/master/README.md) Switch app I am using as a base.
+* [ffmpeg](https://www.ffmpeg.org/) for being such a powerful media tool that we use on PC and Switch.
+* [SwitchBrew](https://switchbrew.org/) for libNX and its ffmpeg inclusion
+* [Atmosphère](https://github.com/Atmosphere-NX/Atmosphere) for being such a great Switch CFW
+* [Screen Capture Recorder](https://github.com/rdp/screen-capture-recorder-to-video-windows-free) for helping us grab audio.
