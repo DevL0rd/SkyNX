@@ -27,8 +27,8 @@
     <div id="navBar" class="customScroll rainbowScrollColor">
       <button id="main-btn" class="navBar-btns" data-toggle="tooltip" data-placement="right" data-html="true"
         title="Plugins"><i class="fas fa-desktop"></i></button>
-      <!-- <button id="settings-btn" class="navBar-btns" data-toggle="tooltip" data-placement="right" data-html="true"
-        title="Settings"><i class="fas fa-cogs"></i></button> -->
+      <button id="settings-btn" class="navBar-btns" data-toggle="tooltip" data-placement="right" data-html="true"
+        title="Settings"><i class="fas fa-cogs"></i></button>
     </div>
     <div id="main" class="contentArea">
       <div class="form-group">
@@ -44,51 +44,27 @@
         <button id="startBtn" type="button" class="btn btn-dark btn-lg btn-block">Start Streamer</button>
       </form>
     </div>
-    <!-- <div id="settings" class="contentArea" style="display: none;">
-      <input id="settingsSearch" type="text" placeholder="Search settings">
-      <h2>Settings</h2>
-      <div class="row">
-        <div class="col-md-4 settingCol">
-          <div class="input-group centerHorz flex-nowrap">
-            <div class="input-group-prepend">
-              <span class="input-group-text">Debug</span>
-            </div>
-            <span class="input-group-append input-group-text">
-              <label class="switch">
-                <input id="debugEnabled" type="checkbox">
-                <span class="slider round"></span>
-              </label>
-            </span>
-          </div>
-        </div>
-        <div class="col-md-4 settingCol">
-          <div class="input-group centerHorz flex-nowrap">
-            <div class="input-group-prepend">
-              <span class="input-group-text">Dev Tools On Start</span>
-            </div>
-            <span class="input-group-append input-group-text">
-              <label class="switch">
-                <input id="devToolsOnStartup" type="checkbox">
-                <span class="slider round"></span>
-              </label>
-            </span>
-          </div>
-        </div>
-        <div class="col-md-4 settingCol">
-          <div class="input-group centerHorz flex-nowrap">
-            <div class="input-group-prepend">
-              <span class="input-group-text dark-group-text">Rainbow Accents</span>
-            </div>
-            <span class="input-group-append input-group-text dark-group-text">
-              <label class="switch">
-                <input id="rainbowEnabled" type="checkbox">
-                <span class="slider round"></span>
-              </label>
-            </span>
-          </div>
-        </div>
-      </div>
-    </div> -->
+    <div id="settings" class="contentArea" style="display: none;">
+      <form class="form-group">
+        <button id="installScpVBusBtn" type="button" class="btn btn-dark btn-block">Install Xbox
+          Controller</button>
+      </form>
+      <form class="form-group">
+        <button id="unInstallScpVBusBtn" type="button" class="btn btn-dark btn-block">Un-Install Xbox
+          Controller</button>
+      </form>
+      <form class="form-group">
+        <button id="installAudioDriverBtn" type="button" class="btn btn-dark btn-block">Install Audio Driver</button>
+      </form>
+      <form class="form-group">
+        <button id="unInstallAudioDriverBtn" type="button" class="btn btn-dark btn-block">Un-Install Audio
+          Driver</button>
+      </form>
+      <label class="switch">
+        <input id="rainbowEnabled" type="checkbox">
+        <span class="slider round"></span>
+      </label>
+    </div>
   </div>
   <div id="statusbar" class="rainbowBackgroundColor2">
     <span id="statusbartext">Ready!</span>

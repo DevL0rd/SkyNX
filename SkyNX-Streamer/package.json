@@ -11,12 +11,13 @@
   "author": "Dustin Harris",
   "license": "",
   "dependencies": {
+    "bootstrap": "latest",
     "electron": "latest",
     "electron-window-state": "latest",
     "formidable": "latest",
-    "readdirp": "latest",
-    "bootstrap": "latest",
     "jquery": "latest",
-    "popper.js": "latest"
+    "popper.js": "latest",
+    "readdirp": "latest",
+    "windows-elevate": "^1.0.1"
   }
 }

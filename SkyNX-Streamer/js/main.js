@@ -1,4 +1,4 @@
-var ipcRenderer = require('electron').ipcRenderer;
+
 ipcRenderer.on('close', function (event, data) {
     $("#startBtn").addClass('btn-dark').removeClass('btn-danger');
     $("#startBtn").html("Start Streamer");
@@ -41,3 +41,4 @@ $(document).on('input', '#ipInput', function () {
     clientSettings.ip = $(this).val();
     saveClientSettings();
 });
+

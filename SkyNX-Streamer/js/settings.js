@@ -64,13 +64,26 @@ $("#rainbowEnabled").on('change', function () {
     saveClientSettings();
     applyClientSettings();
 });
-$("#debugEnabled").on('change', function () {
-    clientSettings.debug = $("#debugEnabled").prop("checked");
-    saveClientSettings();
-    applyClientSettings();
+// $("#debugEnabled").on('change', function () {
+//     clientSettings.debug = $("#debugEnabled").prop("checked");
+//     saveClientSettings();
+//     applyClientSettings();
+// });
+// $("#devToolsOnStartup").on('change', function () {
+//     clientSettings.devToolsOnStartup = $("#devToolsOnStartup").prop("checked");
+//     saveClientSettings();
+//     applyClientSettings();
+// });
+
+$('#installScpVBusBtn').click(function () {
+    ipcRenderer.send('installScpVBus');
 });
-$("#devToolsOnStartup").on('change', function () {
-    clientSettings.devToolsOnStartup = $("#devToolsOnStartup").prop("checked");
-    saveClientSettings();
-    applyClientSettings();
+$('#unInstallScpVBusBtn').click(function () {
+    ipcRenderer.send('unInstallScpVBus');
+});
+$('#installAudioDriverBtn').click(function () {
+    ipcRenderer.send('installAudioDriver');
+});
+$('#unInstallAudioDriverBtn').click(function () {
+    ipcRenderer.send('unInstallAudioDriver');
 });

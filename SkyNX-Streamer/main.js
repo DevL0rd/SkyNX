@@ -1,5 +1,6 @@
 
 const { spawn } = require("child_process");
+const elevate = require("windows-elevate");
 const windowStateKeeper = require('electron-window-state');
 const fs = require('fs');
 const DB = require('./Devlord_modules/DB.js');
@@ -103,4 +104,56 @@ ipcMain.on('restart', (event, arg) => {
 });
 ipcMain.on('kill', (event, arg) => {
   streamerProcess.kill();
+});
+ipcMain.on('installScpVBus', (event, arg) => {
+  console.log("Installing ScpVBus driver..")
+  var df = __dirname + "\\NxStreamingService\\lib\\"
+  elevate.exec(df + "devcon.exe", ["install", df + "ScpVBus.inf", "Root\\ScpVBus"],
+    function (error, stdout, stderr) {
+      console.log(`${stdout}`);
+      console.log(`${stderr}`);
+      if (error) {
+        console.log("driver install error: " + error);
+      } else {
+        console.log("Driver install success!");
+      }
+    });
+});
+ipcMain.on('unInstallScpVBus', (event, arg) => {
+  console.log("Un-Installing ScpVBus driver..")
+  var df = __dirname + "\\NxStreamingService\\lib\\"
+  elevate.exec(df + "devcon.exe", ["remove", "Root\\ScpVBus"],
+    function (error, stdout, stderr) {
+      if (error !== null) {
+        console.log('driver uninstall error: ' + error);
+      } else {
+        console.log("Driver un-installed!");
+      }
+    });
+
+});
+
+ipcMain.on('installAudioDriver', (event, arg) => {
+  console.log("Installing audio driver..")
+  var df = __dirname + "\\NxStreamingService\\lib\\"
+  elevate.exec("regsvr32", [df + "audio_sniffer.dll"],
+    function (error, stdout, stderr) {
+      if (error !== null) {
+        console.log('driver install error: ' + error);
+      } else {
+        console.log("Driver installed!");
+      }
+    });
+});
+ipcMain.on('unInstallAudioDriver', (event, arg) => {
+  console.log("Un-Installing audio driver..")
+  var df = __dirname + "\\NxStreamingService\\lib\\"
+  elevate.exec("regsvr32", ["/u", df + "audio_sniffer.dll"],
+    function (error, stdout, stderr) {
+      if (error !== null) {
+        console.log('driver uninstall error: ' + error);
+      } else {
+        console.log("Driver un-installed!");
+      }
+    });
 });

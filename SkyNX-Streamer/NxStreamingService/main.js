@@ -35,55 +35,54 @@ hidStreamClient.on('error', function (ex) {
 function plugControllerIn() {
   console.log("Plugging in virtual controller...");
   try {
-    // Try plugging in first controller
     controllerId = vgen.pluginNext();
+    console.log("Plugging in as controller " + controllerId + ".");
   }
   catch (e) {
-    // Exception most probably due to drivers not installed
-    vgen.installDriver(() => {
-      console.log("Plug in failed, installing driver... If this keeps happening try restarting your computer after the driver installs.")
-      setTimeout(plugControllerIn, 3000);
-    });
+    console.log("Could not plug in virtual controller. Make sure the driver is installed.");
+    setTimeout(plugControllerIn, 3000);
   }
 }
-hidStreamClient.on('connect', function () {
-  console.log('Connected to Switch!');
 
-
-  plugControllerIn();
-
-
-  ffmpegProcess = spawn(
-    "./lib/ffmpeg.exe",
-    ["-probesize", "10M", "-f", "gdigrab", "-framerate", "60", "-video_size", swidth + "x" + sheight, "-offset_x", "0", "-offset_y", "0", "-i", "desktop", "-f", "h264", "-vf", "scale=1280x720", "-preset", "ultrafast", "-tune", "zerolatency", "-pix_fmt", "yuv420p", "-profile:v", "baseline", "-x264-params", "\"nal-hrd=cbr\"", "-b:v", quality + "M", "-minrate", quality + "M", "-maxrate", quality + "M", "-bufsize", "2M", "tcp://" + ip + ":2222"],
-    { stdio: "pipe" }
-  );
-  ffmpegProcess.stdout.on("data", chunk => {
-
-  });
-  ffmpegProcess.stderr.on('data', (data) => {
-    //console.error(`stderr: ${data}`);
-  });
-  ffmpegProcess.on('close', (code) => {
-    console.log(`ffmpegProcess process exited with code ${code}`);
-  });
-
-
-
+function startAudioProcess() {
   ffmpegAudioProcess = spawn(
     "./lib/ffmpeg.exe",
     ["-y", "-f", "dshow", "-i", "audio=virtual-audio-capturer", "-f", "s16le", "-ar", "16000", "-ac", "2", "-c:a", "pcm_s16le", "udp://" + ip + ":2224?pkt_size=640"],
-    { stdio: "pipe" }
+    { detached: false }
   );
-  ffmpegAudioProcess.stdout.on("data", chunk => {
-    //videoStreamClient.write(chunk);
+  ffmpegAudioProcess.stdout.on("data", data => {
+    //console.log(`${data}`);
   });
   ffmpegAudioProcess.stderr.on('data', (data) => {
-    //console.error(`stderr: ${data}`);
+    //console.error(`ffmpegAudioProcessErr: ${data}`);
   });
   ffmpegAudioProcess.on('close', (code) => {
     console.log(`ffmpegAudioProcess process exited with code ${code}`);
   });
+}
+function startVideoProcess() {
+  ffmpegProcess = spawn(
+    "./lib/ffmpeg.exe",
+    ["-probesize", "10M", "-f", "gdigrab", "-framerate", "60", "-video_size", swidth + "x" + sheight, "-offset_x", "0", "-offset_y", "0", "-i", "desktop", "-f", "h264", "-vf", "scale=1280x720", "-preset", "ultrafast", "-tune", "zerolatency", "-pix_fmt", "yuv420p", "-profile:v", "baseline", "-x264-params", "\"nal-hrd=cbr\"", "-b:v", quality + "M", "-minrate", quality + "M", "-maxrate", quality + "M", "-bufsize", "2M", "tcp://" + ip + ":2222"],
+    {
+      detached: false
+    }
+  );
+  ffmpegProcess.stdout.on("data", data => {
+    // console.log(`${data}`);
+  });
+  ffmpegProcess.stderr.on('data', (data) => {
+    // console.error(`ffmpegProcessErr: ${data}`);
+  });
+  ffmpegProcess.on('close', (code) => {
+    console.log(`ffmpegProcess process exited with code ${code}`);
+  });
+}
+hidStreamClient.on('connect', function () {
+  console.log('Connected to Switch!');
+  plugControllerIn();
+  startVideoProcess();
+  startAudioProcess();
 });
 var switchHidBuffer = new Buffer.alloc(0);
 function parseInputStruct(buff) {
@@ -266,6 +265,7 @@ hidStreamClient.on('data', function (data) {
     touchXold = touchX;
     touchYold = touchY;
   }
+
 });
 hidStreamClient.on('end', function () {
   console.log('hidStreamClient Disconnected.');
@@ -276,7 +276,7 @@ hidStreamClient.on('end', function () {
   }
   ffmpegProcess.kill();
   ffmpegAudioProcess.kill();
-  connect();
+  setTimeout(connect, 1000);
 });
 
 
@@ -298,8 +298,3 @@ if (args.length > 1) {
 } else {
   console.log('Error: Usage NXStreamer.exe ip 0.0.0.0 q 5');
 }
-
-
-
-
-

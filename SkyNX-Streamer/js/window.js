@@ -1,6 +1,7 @@
 //Authour: Dustin Harris
 //GitHub: https://github.com/DevL0rd
 const remote = require('electron').remote;
+const ipcRenderer = require('electron').ipcRenderer;
 const dialog = remote.dialog;
 const fs = require('fs')
 var DB = require('./Devlord_modules/DB.js');

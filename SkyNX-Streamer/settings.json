@@ -1,5 +1,5 @@
 {
-	"debug": false,
+	"debug": true,
 	"accentColor": {
 		"r": 50,
 		"g": 50,
@@ -9,5 +9,5 @@
 	"rainbowEnabled": true,
 	"devToolsOnStartup": false,
 	"ip": "172.16.0.10",
-	"quality": "15"
+	"quality": "14"
 }
