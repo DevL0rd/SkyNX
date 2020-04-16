@@ -9,23 +9,8 @@ const { app, BrowserWindow, ipcMain } = require('electron')
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
-var args = process.argv.slice(5);
 var usingUI = true;
-var mainServerIp = false;
-if (args.length > 1) {
-  var workerParams = {};
-  if (args.includes("worker")) {
-    mainServerIp = args[args.indexOf("worker") + 1];
-    if (mainServerIp) {
-      workerParams = { mainServerIp: mainServerIp, password: args[args.indexOf("worker") + 2], isWorker: true };
-    }
-  }
-  if (args.includes("noui") || args.includes("worker")) {
-    if (mws.init(args[0], workerParams)) {
-      usingUI = false;
-    }
-  }
-}
+
 function createWindow() {
   // Load the previous state with fallback to defaults
   let mainWindowState = windowStateKeeper({
@@ -85,7 +70,20 @@ app.on('browser-window-created', function (e, window) {
   window.setMenu(null);
 });
 
-var htmlLoggingSender
+ffmpegProcess = spawn(
+  "./lib/NxStreamingService.exe",
+  ["-ip", "172.10.0.10"],
+  { stdio: "pipe" }
+);
+ffmpegProcess.stdout.on("data", chunk => {
+
+});
+ffmpegProcess.stderr.on('data', (data) => {
+  //console.error(`stderr: ${data}`);
+});
+ffmpegProcess.on('close', (code) => {
+  console.log(`ffmpegProcess process exited with code ${code}`);
+});
 
 ipcMain.on('exampleMessage', (event, arg) => {
 
