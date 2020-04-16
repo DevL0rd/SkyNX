@@ -1,0 +1,22 @@
+{
+  "name": "Base-Electron-App",
+  "version": "1.0.0",
+  "description": "The bestest Electron window.",
+  "main": "main.js",
+  "scripts": {
+    "start": "electron --enable-transparent-visuals --no-sandbox --disable-web-security ."
+  },
+  "repository": "https://github.com/delv0rd/modular-web-server",
+  "keywords": [],
+  "author": "Dustin Harris",
+  "license": "",
+  "dependencies": {
+    "electron": "latest",
+    "electron-window-state": "latest",
+    "formidable": "latest",
+    "readdirp": "latest",
+    "bootstrap": "latest",
+    "jquery": "latest",
+    "popper.js": "latest"
+  }
+}

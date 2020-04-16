@@ -1,0 +1,227 @@
+/* Authour: Dustin Harris */
+/* GitHub: https://github.com/DevL0rd */
+.is-hidden {
+  visibility: hidden;
+}
+@-webkit-keyframes bounceLeft {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateX(-100px);
+            transform: translateX(-100px);
+  }
+  60% {
+    opacity: 1;
+    -webkit-transform: translateX(20px);
+            transform: translateX(20px);
+  }
+  100% {
+    -webkit-transform: translateX(0);
+            transform: translateX(0);
+  }
+}
+
+@keyframes bounceLeft {
+  0% {
+    opacity: 0;
+    -webkit-transform: translateX(-100px);
+            transform: translateX(-100px);
+  }
+  60% {
+    opacity: 1;
+    -webkit-transform: translateX(20px);
+            transform: translateX(20px);
+  }
+  100% {
+    -webkit-transform: translateX(0);
+            transform: translateX(0);
+  }
+}
+
+@keyframes growInFromCenter {
+  0% {
+      opacity: 0;
+  -ms-transform: scale(0.95, 0.95); /* IE 9 */
+  -webkit-transform: scale(0.95, 0.95); /* Safari */
+  transform: scale(0.95, 0.95);
+    }
+    60% {
+      opacity: 1;
+      -ms-transform: scale(1.01, 1.01);
+      -webkit-transform: scale(1.01, 1.01);
+      transform: scale(1.01, 1.01);
+    }
+    100% {
+      -ms-transform: scale(1, 1);
+      -webkit-transform: scale(1, 1);
+      transform: scale(1, 1);
+    }
+}
+
+@keyframes fadeIn {
+  0% {
+      opacity: 0;
+    }
+    100% {
+      opacity: 1;
+    }
+}
+@keyframes slideOutRight {
+  0% {
+    -webkit-transform: translateX(0px);
+            transform: translateX(0px);
+  }
+  100% {
+    opacity: 0;
+    -webkit-transform: translateX(100px);
+            transform: translateX(100px);
+  }
+}
+
+.slideOutRight {
+  -webkit-transform: translateZ(0);
+  -moz-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  -o-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation: slideOutRight 0.6s; /* Safari, Chrome and Opera > 12.1 */
+  -moz-animation: slideOutRight 0.6s; /* Firefox < 16 */
+  -ms-animation: slideOutRight 0.6s; /* Internet Explorer */
+  -o-animation: slideOutRight 0.6s; /* Opera < 12.1 */
+  animation: slideOutRight 0.6s;
+}
+
+.fadeIn {
+  -webkit-transform: translateZ(0);
+  -moz-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  -o-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation: fadeIn 1s; /* Safari, Chrome and Opera > 12.1 */
+  -moz-animation: fadeIn 1s; /* Firefox < 16 */
+  -ms-animation: fadeIn 1s; /* Internet Explorer */
+  -o-animation: fadeIn 1s; /* Opera < 12.1 */
+  animation: fadeIn 1s;
+}
+
+.growInFromCenter {
+  -webkit-transform: translateZ(0);
+  -moz-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  -o-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation: growInFromCenter 0.7s; /* Safari, Chrome and Opera > 12.1 */
+  -moz-animation: growInFromCenter 0.7s; /* Firefox < 16 */
+  -ms-animation: growInFromCenter 0.7s; /* Internet Explorer */
+  -o-animation: growInFromCenter 0.7s; /* Opera < 12.1 */
+  animation: growInFromCenter 0.7s;
+}
+
+.growInFromCenterOnShow_anim {
+  -webkit-transform: translateZ(0);
+  -moz-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  -o-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation: growInFromCenter 0.7s; /* Safari, Chrome and Opera > 12.1 */
+  -moz-animation: growInFromCenter 0.7s; /* Firefox < 16 */
+  -ms-animation: growInFromCenter 0.7s; /* Internet Explorer */
+  -o-animation: growInFromCenter 0.7s; /* Opera < 12.1 */
+  animation: growInFromCenter 0.7s;
+}
+
+.fadeInOnShow_anim {
+  -webkit-transform: translateZ(0);
+  -moz-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  -o-transform: translateZ(0);
+  transform: translateZ(0);
+  -webkit-animation: fadeIn 1s; /* Safari, Chrome and Opera > 12.1 */
+  -moz-animation: fadeIn 1s; /* Firefox < 16 */
+  -ms-animation: fadeIn 1s; /* Internet Explorer */
+  -o-animation: fadeIn 1s; /* Opera < 12.1 */
+  animation: fadeIn 1s;
+}
+
+.bounceLeft_anim {
+  -webkit-transform: translateZ(0);
+  -moz-transform: translateZ(0);
+  -ms-transform: translateZ(0);
+  -o-transform: translateZ(0);
+  transform: translateZ(0);
+  visibility: visible;
+  -webkit-animation: bounceLeft 0.6s;
+          animation: bounceLeft 0.6s;
+}
+
+.rainbowFontColor {
+  color : red;
+}
+
+.rainbowBackgroundColor {
+  background : linear-gradient(to right, rgba(255,00,00,0.7) 0%,rgba(255,00,00,0.7) 100%);
+}
+
+.rainbowBackgroundColor2 {
+  background : linear-gradient(to right, rgba(255,00,00,0.7) 0%,rgba(255,00,00,0.7) 100%);
+}
+
+/* The switch - the box around the slider */
+.switch {
+  position: relative;
+  display: inline-block;
+  width: 35px;
+  height: 24px;
+  margin-top: 7px;
+}
+
+/* Hide default HTML checkbox */
+.switch input {
+  opacity: 0;
+  width: 0;
+  height: 0;
+}
+
+/* The slider */
+.slider {
+  position: absolute;
+  cursor: pointer;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+.slider:before {
+  position: absolute;
+  content: "";
+  height: 14px;
+  width: 14px;
+  left: 5px;
+  bottom: 5px;
+  background-color: #ccc;
+  -webkit-transition: .4s;
+  transition: .4s;
+}
+
+input:checked + .slider {
+  background-color:  linear-gradient(to right, rgba(255,00,00,0.7) 0%,rgba(255,00,00,0.7) 100%);
+
+}
+
+input:checked + .slider:before {
+  -webkit-transform: translateX(12px);
+  -ms-transform: translateX(12px);
+  transform: translateX(12px);
+}
+
+/* Rounded sliders */
+.slider.round {
+  border-radius: 34px;
+}
+
+.slider.round:before {
+  border-radius: 50%;
+}

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8">
+  <title>DevL0rd's Base Electron App</title>
+  <link rel="stylesheet" href="css/bootstrap.min.css">
+  <link rel="stylesheet" href="css/animations.css">
+  <link rel="stylesheet" href="css/fa-svg-with-js.css">
+  <link rel="stylesheet" href="css/windowStyle.css">
+</head>
+
+<body>
+  <nav id="title-bar" class="rainbowBackgroundColor">
+    <div id="title">DevL0rd's Base Electron App</div>
+    <div id="title-bar-btns">
+      <button id="rld-btn" class="title-bar-tools" style="display: none;"><i class="fas fa-sync-alt"></i></button>
+      <button id="dev-btn" class="title-bar-tools" style="display: none;"><i class="fab fa-dev"></i></button>
+      <button id="min-btn" class="title-bar-btns"><i class="fas fa-window-minimize"></i></button>
+      <button id="max-btn" class="title-bar-btns"><i class="fas fa-window-maximize"></i></button>
+      <button id="close-btn" class="title-bar-btns"><i class="fas fa-window-close"></i></button>
+    </div>
+  </nav>
+  <div id="content" class="customScroll rainbowScrollColor">
+    <div id="navBar" class="customScroll rainbowScrollColor">
+      <button id="main-btn" class="navBar-btns" data-toggle="tooltip" data-placement="right" data-html="true"
+        title="Plugins"><i class="fas fa-desktop"></i></button>
+      <button id="settings-btn" class="navBar-btns" data-toggle="tooltip" data-placement="right" data-html="true"
+        title="Settings"><i class="fas fa-cogs"></i></button>
+    </div>
+    <div id="main" class="contentArea">
+
+    </div>
+    <div id="settings" class="contentArea" style="display: none;">
+      <input id="settingsSearch" type="text" placeholder="Search settings">
+      <h2>Settings</h2>
+      <div class="row">
+        <div class="col-md-4 settingCol">
+          <div class="input-group centerHorz flex-nowrap">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Debug</span>
+            </div>
+            <span class="input-group-append input-group-text">
+              <label class="switch">
+                <input id="debugEnabled" type="checkbox">
+                <span class="slider round"></span>
+              </label>
+            </span>
+          </div>
+        </div>
+        <div class="col-md-4 settingCol">
+          <div class="input-group centerHorz flex-nowrap">
+            <div class="input-group-prepend">
+              <span class="input-group-text">Dev Tools On Start</span>
+            </div>
+            <span class="input-group-append input-group-text">
+              <label class="switch">
+                <input id="devToolsOnStartup" type="checkbox">
+                <span class="slider round"></span>
+              </label>
+            </span>
+          </div>
+        </div>
+        <div class="col-md-4 settingCol">
+          <div class="input-group centerHorz flex-nowrap">
+            <div class="input-group-prepend">
+              <span class="input-group-text dark-group-text">Rainbow Accents</span>
+            </div>
+            <span class="input-group-append input-group-text dark-group-text">
+              <label class="switch">
+                <input id="rainbowEnabled" type="checkbox">
+                <span class="slider round"></span>
+              </label>
+            </span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div id="statusbar" class="rainbowBackgroundColor2">
+    <span id="statusbartext">Ready!</span>
+  </div>
+  <div id="loadingCover">
+    <div class="centerVert">
+      <img src="img/loading.gif" class="loadingGif">
+      <h1 style="color:rgb(206, 206, 206); font-size: 16px;">
+        Application loading...
+      </h1>
+    </div>
+  </div>
+  <script src="js/fontawesome-all.min.js"></script>
+  <script>
+    let $ = require('jquery');
+    require('popper.js');
+    require('bootstrap');
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip({ boundary: 'window' })
+    })
+  </script>
+  <script src="./js/animations.js"></script>
+  <script src="./js/window.js"></script>
+  <script src="./js/main.js"></script>
+  <script src="./js/settings.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,244 @@
+/* Authour: Dustin Harris */
+/* GitHub: https://github.com/DevL0rd */
+html {
+    background: transparent;
+    height: 100%;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    overflow: hidden;
+}
+
+body {
+    background: transparent;
+    height: 100%;
+    padding: 0px;
+    margin: 0px;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    border-bottom-left-radius: 8px;
+    border-bottom-right-radius: 8px;
+    overflow: hidden;
+}
+
+textarea:focus, input:focus{
+    outline: none;
+}
+#content {
+    background: linear-gradient(to bottom, rgba(30,30,30,0.9) 0%,rgba(51,51,51,0.8) 67%,rgba(51,51,51,0.8) 100%);
+    height: calc(100% - 57px);
+    overflow: auto;
+    width: 100%;
+    
+}
+
+#title-bar {
+    -webkit-app-region: drag;
+    height: 32px; 
+    background-color: rgba(255, 0, 0, 0.8);
+    padding: 0px;
+    margin: 0px; 
+    box-shadow: 0px 4px 14px 0px rgba(0,0,0,0.9);
+}
+
+#title {
+    position: fixed;
+    top: 7px;
+    left: 6px;
+    color: white;
+    font-size: 12px;
+    font-weight:bold;
+}
+   
+#title-bar-btns {
+    -webkit-app-region: no-drag;
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    height: 32px;
+}
+.title-bar-btns:focus {
+    outline: none;
+}
+.title-bar-btns:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transition: 0.3s;
+}
+#close-btn:hover{
+    background-color: rgba(221, 34, 50, 0.9);
+    transition: 0.3s;
+}
+
+.title-bar-btns{
+    background: transparent;
+    font-size: 12px;
+    font-weight:bold;
+    width: 46px;
+    height: 32px;
+    border: none;
+    margin: 0px; 
+    color: white;
+}
+.title-bar-tools:focus {
+    outline: none;
+}
+.title-bar-tools:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transition: 0.3s;
+}
+.title-bar-tools{
+    background: transparent;
+    font-size: 12px;
+    font-weight:bold;
+    width: 26px;
+    height: 32px;
+    border: none;
+    margin: 0px; 
+    color: white;
+}
+#statusbar {
+    height: 25px;
+    background: rgba(26, 26, 26, 0.8)
+}
+#statusbartext{
+    position: absolute;
+    left: 6px;
+    bottom: 5px;
+    font-size: 10px;
+    color: white;
+    font-weight:bold;
+    margin: 0px; 
+}
+.collapsed {
+    display: none;
+}
+
+#loadingCover {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    background: rgb(25, 25, 25);
+    background: -moz-linear-gradient(top, rgba(25, 25, 25, 1) 1%, rgba(35, 35, 35, 1) 31%, rgba(35, 35, 35, 1) 70%, rgba(25, 25, 25, 1) 100%);
+    background: -webkit-linear-gradient(top, rgba(25, 25, 25, 1) 1%, rgba(35, 35, 35, 1) 31%, rgba(35, 35, 35, 1) 70%, rgba(25, 25, 25, 1) 100%);
+    background: linear-gradient(to bottom, rgba(25, 25, 25, 1) 1%, rgba(35, 35, 35, 1) 31%, rgba(35, 35, 35, 1) 70%, rgba(25, 25, 25, 1) 100%);
+    filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#191919', endColorstr='#191919', GradientType=0);
+    display: flex;
+    justify-content: center;
+}
+
+.centerHorz {
+    display: flex;
+    justify-content: center;
+}
+
+.centerVert {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.loadingGif {
+    margin: 0 auto;
+    width: 200px;
+    height: 150px;
+}
+
+/* scroll */
+.customScroll::-webkit-scrollbar {
+    width: 12px;
+    background-color: rgba(0, 0, 0, 0.8);
+}
+
+.customScroll::-webkit-scrollbar-thumb {
+    width: 8px;
+    background-color: rgb(58, 58, 58);
+    border-radius: 50px;
+}
+
+/* bootstrap fix */
+.row {
+    margin-right: 0px;
+    margin-left: 0px;
+}
+
+.dropdown {
+    -webkit-app-region: no-drag;
+}
+
+.dropdown-toggle {
+    font-size: 10px;
+}
+
+#navBar{
+    position: absolute;
+    top: 32px;
+    left: 0px;
+    height: calc(100% - 57px);
+    width: 50px;
+    background: rgba(39, 39, 39, 0.8);
+    overflow-y:auto;
+    font-size: 10px;
+    box-shadow: 4px 0px 14px 0px rgba(0,0,0,0.7);
+}
+.navBar-btns{
+    background: transparent;
+    font-size: 25px;
+    font-weight:bold;
+    height: 50px;
+    width: 100%;
+    border: none;
+    margin: 0px; 
+    color: white;
+}
+.navBar-btns:focus {
+    outline: none;
+}
+.navBar-btns:hover {
+    background-color: rgba(255, 255, 255, 0.1);
+    transition: 0.3s;
+}
+
+.contentArea{
+    position: absolute;
+    top: 32px;
+    left: 50px;
+    height: calc(100% - 57px);
+    width: calc(100% - 50px);
+    background: rgba(0,0,0,0.5);
+    overflow: none;
+}
+
+#settingsSearch {
+    background: black;
+    border: none;
+    border-radius: 25px;
+    color: white;
+    padding-left: 8px;
+    height: 40px;
+    width: calc(100% - 20px);
+    margin-top: 10px;
+    margin-left: 10px;
+    margin-bottom: 10px;
+};
+
+.dark-group-text {
+background-color: rgba(40,40,0.75);
+color: white;
+}
+
+.validInput {
+    border: 3px solid green;
+}
+
+.invalidInput {
+    border: 3px solid tomato;
+}
+
+
+.selected{
+    background: rgba(255, 255, 255, 0.1);
+}
