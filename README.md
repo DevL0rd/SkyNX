@@ -35,7 +35,7 @@ If for some reason it keeps prompting to install, or the controllers don't work.
   * Audio is choppy.
 
 ## Credits to
-* [DuchessOfDark88](https://twitter.com/DuchessOfDark88) App icon and graphics.
+* [DuchessOfDark88](https://twitter.com/DuchessOfDark88) App icon and graphics. (Some content at this link may be NSFW)
 * [jakibaki](https://github.com/jakibaki) For the original [In-Home-Switching](https://github.com/jakibaki/In-Home-Switching/blob/master/README.md) Switch app I am using as a base.
 * [ffmpeg](https://www.ffmpeg.org/) for being such a powerful media tool that we use on PC and Switch.
 * [SwitchBrew](https://switchbrew.org/) for libNX and its ffmpeg inclusion
