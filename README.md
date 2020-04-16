@@ -26,11 +26,13 @@ If for some reason it keeps prompting to install, or the controllers don't work.
 2. If it still is not working. And you have previously used In-Home-Switching, Try removing the ScpDriverInterface that In-Home-Switching installs. You can use the installer that came with it to uninstall it, or get it [Here](https://github.com/mogzol/ScpDriverInterface/releases/download/1.1/ScpDriverInterface_v1.1.zip).
 
 ## Todo:
-Finish rewrite of App UI.
+  * Finish rewrite of App UI.
 
-## Issues:
-Buggy audio.
-Audio is choppy.
+## Known issues
+  * So far Switch crashes when put to sleep with app running (please close app beforehand, we have not fixed this issue yet)
+  * App breaks when Switch changes from docked to handheld mode or vice-versa. Please quit the app before doing so.
+  * Buggy audio.
+  * Audio is choppy.
 
 ## Credits to
 * [DuchessOfDark88](https://twitter.com/DuchessOfDark88) App icon and graphics.
