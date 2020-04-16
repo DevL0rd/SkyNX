@@ -1,24 +1,40 @@
 # SkyNX
 A repalcement for the abandoned In-Home-Switching.
 
-I will rewrite this messy readme when I make my first release. Coming VERY soon.
-
-
 The desktop streaming client is completely rewritten from before. Currently the the audio is a little buggy but it runs well!
-The Switch app however, is a modified version of the [In-Home-Switching](https://github.com/jakibaki/In-Home-Switching/blob/master/README.md) app. The modifications at the moment are a fixed icon for the app, along with touch input.
+
+The Switch app however, is a modified version of the [In-Home-Switching](https://github.com/jakibaki/In-Home-Switching/blob/master/README.md) app. The modifications at the moment are a new icon for the app, along with touch input.
 
 I will eventually be rewritting the Switch app to give it a new UI and to add more functionality.
 
-For audio, [Screen Capture Recorder](https://github.com/rdp/screen-capture-recorder-to-video-windows-free/releases) still needs to be installed. Kind of like the original [In-Home-Switching](https://github.com/jakibaki/In-Home-Switching/blob/master/README.md).
+[In-Home-Switching](https://github.com/jakibaki/In-Home-Switching/blob/master/README.md).
+## SkyNX Streamer
+![SkyNX Streamer](Screenshots/Streamer.png "SkyNX Streaner")
 
-Other than that there are no other requirements. 
+## Instructions:
+(Optional) Install [Screen Capture Recorder](https://github.com/rdp/screen-capture-recorder-to-video-windows-free/releases) to have audio.
+1. Set desktop and game resolution to 1280 X 720.
+2. Open SkyNXStreamer-win32-x64/SkyNXStreamer.exe
+3. Launch SkyNX on switch.
+4. Put the IP showed on the app into the streamer.
+5. Select a streaming quality.
+6. Click start streamer.
 
-The virtual xBox controller driver will install automatically on first connection.
-If you are having issues with the virtual xbox driver not working, and you have used in-home-switching, you will need to remove SCP drivers. just use the ScpDriverInstaller that came with in-home-switching and use the uninstall option.
 
-TODO:
-Now that the streaming app is working, I will be writting a BEAUTIFUL UI for it.
-After that is done I will be overhauling the Switch Apps UI.
 
-CREDITS:
+## Notes:
+When the streamer conencts it will try to connect the switch as a virtual xBox controller. If the driver is not installed, It will install it automatically at this point.
 
+If for some reason it keeps prompting to install, or the controllers don't work. Try the following steps.
+
+1. Restart windows, and launch it again.
+1. If it still is not working. And you have previously used In-Home-Switching, Try removing the ScpDriverInterface that In-Home-Switching installs. You can use the installer that came with it to uninstall it, or get it [Here](https://github.com/mogzol/ScpDriverInterface/releases/download/1.1/ScpDriverInterface_v1.1.zip).
+
+## Todo:
+Finish rewrite of App UI.
+Fix audio bugs.
+Fix sleep bug.
+
+## Issues:
+Buggy audio.
+Incomplete app UI rewrite. Still basically using In-Home-Switching.
