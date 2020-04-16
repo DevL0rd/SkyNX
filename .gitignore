@@ -6,4 +6,4 @@
 build/*
 .DS_Store
 *node_modules
-NxStreamingService/NxStreamingService.exe
+SkyNX-Streamer/NxStreamingService/NxStreamingService.exe
