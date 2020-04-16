@@ -44,15 +44,10 @@ window.addEventListener('load', function () {
 
 //PROJECT CODE STARTS HERE
 
-var ipcRenderer = require('electron').ipcRenderer;
-ipcRenderer.on('exampleMessage', function (event, data) {
-
-});
-
 
 $("#main-btn").click(function () {
     $(".contentArea").hide();
-    $("#plugins").fadeIn(400);
+    $("#main").fadeIn(400);
     $('#main-btn').tooltip('hide');
 });
 $("#settings-btn").click(function () {

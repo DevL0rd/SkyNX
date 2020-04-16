@@ -1,9 +1,8 @@
 
-
-const DB = require('./Devlord_modules/DB.js');
+const { spawn } = require("child_process");
 const windowStateKeeper = require('electron-window-state');
 const fs = require('fs');
-
+const DB = require('./Devlord_modules/DB.js');
 // Modules to control application life and create native browser window
 const { app, BrowserWindow, ipcMain } = require('electron')
 // Keep a global reference of the window object, if you don't, the window will
@@ -14,22 +13,24 @@ var usingUI = true;
 function createWindow() {
   // Load the previous state with fallback to defaults
   let mainWindowState = windowStateKeeper({
-    defaultWidth: 720,
-    defaultHeight: 500
+    defaultWidth: 350,
+    defaultHeight: 250
   });
   // Create the browser window.
   mainWindow = new BrowserWindow({
     x: mainWindowState.x,
     y: mainWindowState.y,
-    width: mainWindowState.width,
-    height: mainWindowState.height,
-    minWidth: 720,
-    minHeight: 500,
+    // width: mainWindowState.width,
+    // height: mainWindowState.height,
+    width: 350,
+    height: 280,
+    // minWidth: 350,
+    // minHeight: 300,
     webPreferences: {
       nodeIntegration: true
     },
     transparent: true,
-    resizable: true,
+    resizable: false,
     frame: false
   })
   mainWindowState.manage(mainWindow);
@@ -45,6 +46,7 @@ function createWindow() {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     mainWindow = null
+    streamerProcess.kill();
   });
 }
 
@@ -58,6 +60,7 @@ app.on('window-all-closed', function () {
   // On macOS it is common for applications and their menu bar
   // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== 'darwin') app.quit()
+  streamerProcess.kill();
 })
 
 app.on('activate', function () {
@@ -69,22 +72,35 @@ app.on('activate', function () {
 app.on('browser-window-created', function (e, window) {
   window.setMenu(null);
 });
-
-ffmpegProcess = spawn(
-  "./lib/NxStreamingService.exe",
-  ["-ip", "172.10.0.10"],
-  { stdio: "pipe" }
-);
-ffmpegProcess.stdout.on("data", chunk => {
-
-});
-ffmpegProcess.stderr.on('data', (data) => {
-  //console.error(`stderr: ${data}`);
-});
-ffmpegProcess.on('close', (code) => {
-  console.log(`ffmpegProcess process exited with code ${code}`);
-});
-
-ipcMain.on('exampleMessage', (event, arg) => {
-
+var streamerProcess;
+var clientSender;
+function startStreamer(arg) {
+  streamerProcess = spawn(
+    "./NxStreamingService.exe",
+    ["/ip", arg.ip, "/q", arg.q],
+    { cwd: './NxStreamingService/', stdio: "pipe" }
+  );
+  streamerProcess.stdout.on("data", data => {
+    console.log(`${data}`);
+  });
+  streamerProcess.stderr.on('data', (data) => {
+    console.error(`streamerProcess Error: ${data}`);
+  });
+  streamerProcess.on('close', (code) => {
+    clientSender.send("close");
+    console.log(`streamerProcess process exited with code ${code}`);
+  });
+  clientSender.send("started");
+}
+ipcMain.on('connect', (event, arg) => {
+  clientSender = event.sender;
+  startStreamer(arg);
 })
+
+ipcMain.on('restart', (event, arg) => {
+  streamerProcess.kill();
+  startStreamer(arg);
+});
+ipcMain.on('kill', (event, arg) => {
+  streamerProcess.kill();
+});

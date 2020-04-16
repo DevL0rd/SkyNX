@@ -1,15 +1,17 @@
 
 var debug = true;
 var clientSettings = {
-    "debug": true,
+    "debug": false,
     "accentColor": {
         "r": 50,
         "g": 50,
         "b": 50,
         "a": 0.9
     },
-    "rainbowEnabled": false,
-    "devToolsOnStartup": false
+    "rainbowEnabled": true,
+    "devToolsOnStartup": false,
+    "ip": "172.16.0.10",
+    "quality": 5
 };
 var clientSettingsPath = "./settings.json";
 if (fs.existsSync(clientSettingsPath)) {
@@ -34,6 +36,9 @@ function loadClientSettings() {
     $("#debugEnabled").prop("checked", clientSettings.debug);
     $("#rainbowEnabled").prop("checked", clientSettings.rainbowEnabled);
     $("#devToolsOnStartup").prop("checked", clientSettings.devToolsOnStartup);
+    $("#qualitySlider").val(clientSettings.quality);
+    $('#qualityLabel').html("Quality: " + clientSettings.quality + "M");
+    $("#ipInput").val(clientSettings.ip);
     applyClientSettings();
     if (clientSettings.devToolsOnStartup) {
         openDevTools();

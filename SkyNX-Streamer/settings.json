@@ -1,11 +1,13 @@
 {
-	"debug": true,
+	"debug": false,
 	"accentColor": {
 		"r": 50,
 		"g": 50,
 		"b": 50,
 		"a": 0.9
 	},
-	"rainbowEnabled": false,
-	"devToolsOnStartup": false
+	"rainbowEnabled": true,
+	"devToolsOnStartup": false,
+	"ip": "172.16.0.10",
+	"quality": "15"
 }

@@ -3,16 +3,18 @@
 
 <head>
   <meta charset="UTF-8">
-  <title>DevL0rd's Base Electron App</title>
+  <title>SkyNX Streamer</title>
   <link rel="stylesheet" href="css/bootstrap.min.css">
   <link rel="stylesheet" href="css/animations.css">
   <link rel="stylesheet" href="css/fa-svg-with-js.css">
   <link rel="stylesheet" href="css/windowStyle.css">
+  <link rel="stylesheet" href="css/styles.css">
 </head>
 
 <body>
   <nav id="title-bar" class="rainbowBackgroundColor">
-    <div id="title">DevL0rd's Base Electron App</div>
+    <img id="titleIcon" src="./img/iconTransparent.png">
+    <div id="title">SkyNX Streamer</div>
     <div id="title-bar-btns">
       <button id="rld-btn" class="title-bar-tools" style="display: none;"><i class="fas fa-sync-alt"></i></button>
       <button id="dev-btn" class="title-bar-tools" style="display: none;"><i class="fab fa-dev"></i></button>
@@ -25,13 +27,24 @@
     <div id="navBar" class="customScroll rainbowScrollColor">
       <button id="main-btn" class="navBar-btns" data-toggle="tooltip" data-placement="right" data-html="true"
         title="Plugins"><i class="fas fa-desktop"></i></button>
-      <button id="settings-btn" class="navBar-btns" data-toggle="tooltip" data-placement="right" data-html="true"
-        title="Settings"><i class="fas fa-cogs"></i></button>
+      <!-- <button id="settings-btn" class="navBar-btns" data-toggle="tooltip" data-placement="right" data-html="true"
+        title="Settings"><i class="fas fa-cogs"></i></button> -->
     </div>
     <div id="main" class="contentArea">
+      <div class="form-group">
+        <label for="ipInput">Switch IP Address</label>
+        <input id="ipInput" type="text" class="form-control" placeholder="Switch IP">
+      </div>
+      <form class="form-group">
+        <label id="qualityLabel" for="qualitySlider">Quality: 5M</label>
+        <input id="qualitySlider" type="range" class="custom-range" min="1" max="80" value="5" />
+      </form>
 
+      <form class="form-group">
+        <button id="startBtn" type="button" class="btn btn-dark btn-lg btn-block">Start Streamer</button>
+      </form>
     </div>
-    <div id="settings" class="contentArea" style="display: none;">
+    <!-- <div id="settings" class="contentArea" style="display: none;">
       <input id="settingsSearch" type="text" placeholder="Search settings">
       <h2>Settings</h2>
       <div class="row">
@@ -75,7 +88,7 @@
           </div>
         </div>
       </div>
-    </div>
+    </div> -->
   </div>
   <div id="statusbar" class="rainbowBackgroundColor2">
     <span id="statusbartext">Ready!</span>
