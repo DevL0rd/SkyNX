@@ -5,7 +5,8 @@
             "includePath": [
                 "${workspaceFolder}/**",
                 "C:\\devkitPro/**",
-                "C:/devkitPro/libnx/include"
+                "C:/devkitPro/libnx/include",
+                "C:/devkitPro/libnx/include/switch/services"
             ],
             "defines": [
                 "_DEBUG",

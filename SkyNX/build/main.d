@@ -1,4 +1,4 @@
-main.o: C:/Github/SkyNX/SkyNX/source/main.c \
+main.o: C:/GitHub/SkyNX/SkyNX/source/main.c \
  C:/devkitPro/portlibs/switch/include/libavutil/samplefmt.h \
  C:/devkitPro/portlibs/switch/include/libavutil/avutil.h \
  C:/devkitPro/portlibs/switch/include/libavutil/common.h \
@@ -57,7 +57,7 @@ main.o: C:/Github/SkyNX/SkyNX/source/main.c \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_system.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_timer.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_version.h \
- C:/Github/SkyNX/SkyNX/source/context.h \
+ C:/GitHub/SkyNX/SkyNX/source/context.h \
  C:/devkitPro/portlibs/switch/include/libavformat/avformat.h \
  C:/devkitPro/portlibs/switch/include/libavcodec/avcodec.h \
  C:/devkitPro/portlibs/switch/include/libavutil/attributes.h \
@@ -82,15 +82,15 @@ main.o: C:/Github/SkyNX/SkyNX/source/main.c \
  C:/devkitPro/portlibs/switch/include/libavformat/version.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_image.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL.h \
- C:/Github/SkyNX/SkyNX/source/SDL_FontCache.h \
+ C:/GitHub/SkyNX/SkyNX/source/SDL_FontCache.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_ttf.h \
- C:/Github/SkyNX/SkyNX/source/input.h \
- C:/Github/SkyNX/SkyNX/source/video.h \
- C:/Github/SkyNX/SkyNX/source/network.h \
- C:/Github/SkyNX/SkyNX/source/renderer.h \
+ C:/GitHub/SkyNX/SkyNX/source/input.h \
+ C:/GitHub/SkyNX/SkyNX/source/video.h \
+ C:/GitHub/SkyNX/SkyNX/source/network.h \
+ C:/GitHub/SkyNX/SkyNX/source/renderer.h \
  C:/devkitPro/portlibs/switch/include/libswscale/swscale.h \
  C:/devkitPro/portlibs/switch/include/libswscale/version.h \
- C:/Github/SkyNX/SkyNX/source/audio.h
+ C:/GitHub/SkyNX/SkyNX/source/audio.h
 
 C:/devkitPro/portlibs/switch/include/libavutil/samplefmt.h:
 
@@ -208,7 +208,7 @@ C:/devkitPro/portlibs/switch/include/SDL2/SDL_timer.h:
 
 C:/devkitPro/portlibs/switch/include/SDL2/SDL_version.h:
 
-C:/Github/SkyNX/SkyNX/source/context.h:
+C:/GitHub/SkyNX/SkyNX/source/context.h:
 
 C:/devkitPro/portlibs/switch/include/libavformat/avformat.h:
 
@@ -258,20 +258,20 @@ C:/devkitPro/portlibs/switch/include/SDL2/SDL_image.h:
 
 C:/devkitPro/portlibs/switch/include/SDL2/SDL.h:
 
-C:/Github/SkyNX/SkyNX/source/SDL_FontCache.h:
+C:/GitHub/SkyNX/SkyNX/source/SDL_FontCache.h:
 
 C:/devkitPro/portlibs/switch/include/SDL2/SDL_ttf.h:
 
-C:/Github/SkyNX/SkyNX/source/input.h:
+C:/GitHub/SkyNX/SkyNX/source/input.h:
 
-C:/Github/SkyNX/SkyNX/source/video.h:
+C:/GitHub/SkyNX/SkyNX/source/video.h:
 
-C:/Github/SkyNX/SkyNX/source/network.h:
+C:/GitHub/SkyNX/SkyNX/source/network.h:
 
-C:/Github/SkyNX/SkyNX/source/renderer.h:
+C:/GitHub/SkyNX/SkyNX/source/renderer.h:
 
 C:/devkitPro/portlibs/switch/include/libswscale/swscale.h:
 
 C:/devkitPro/portlibs/switch/include/libswscale/version.h:
 
-C:/Github/SkyNX/SkyNX/source/audio.h:
+C:/GitHub/SkyNX/SkyNX/source/audio.h:

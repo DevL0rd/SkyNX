@@ -43,7 +43,6 @@
 #include "network.h"
 #include "renderer.h"
 #include "audio.h"
-
 static const SocketInitConfig socketInitConf = {
     .bsdsockets_version = 1,
 
@@ -101,38 +100,42 @@ void startRender(VideoContext *videoContext)
     threadStart(&renderThread);
 }
 
-int main(int argc, char **argv)
+RenderContext *renderContext = NULL;
+VideoContext *videoContext = NULL;
+void init()
 {
-    RenderContext *renderContext = NULL;
-    VideoContext *videoContext = NULL;
-
     /* Init all switch required systems */
     switchInit();
     renderContext = createRenderer();
     videoContext = createVideoContext();
     videoContext->renderContext = renderContext;
-
     /* Run audio handling in background */
     startAudio();
-
-    startRender(videoContext);
-
     /* Run input handling in background */
     startInput();
-
-
-    while (appletMainLoop())
+    /* Run input handling in background */
+    startRender(videoContext);
+}
+void unInit()
+{
+    freeRenderer(renderContext);
+    freeVideoContext(videoContext);
+}
+int main(int argc, char **argv)
+{
+    init();
+    bool running = true;
+    while (appletMainLoop() && running == true)
     {
         if (isVideoActive(renderContext))
         {
             displayFrame(renderContext);
-        } else {
+        }
+        else
+        {
             drawSplash(renderContext);
         }
     }
-
     /* Deinitialize all used systems */
-    freeRenderer(renderContext);
-    freeVideoContext(videoContext);
-    switchDestroy();
+    unInit();
 }

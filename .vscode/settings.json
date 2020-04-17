@@ -1,0 +1,9 @@
+{
+    "files.associations": {
+        "xiosbase": "c",
+        "random": "c",
+        "functional": "c",
+        "iosfwd": "c",
+        "queue": "c"
+    }
+}

@@ -1,5 +1,5 @@
-SDL_FontCache.o: C:/Github/SkyNX/SkyNX/source/SDL_FontCache.c \
- C:/Github/SkyNX/SkyNX/source/SDL_FontCache.h \
+SDL_FontCache.o: C:/GitHub/SkyNX/SkyNX/source/SDL_FontCache.c \
+ C:/GitHub/SkyNX/SkyNX/source/SDL_FontCache.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_main.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_stdinc.h \
@@ -47,7 +47,7 @@ SDL_FontCache.o: C:/Github/SkyNX/SkyNX/source/SDL_FontCache.c \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_ttf.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL.h
 
-C:/Github/SkyNX/SkyNX/source/SDL_FontCache.h:
+C:/GitHub/SkyNX/SkyNX/source/SDL_FontCache.h:
 
 C:/devkitPro/portlibs/switch/include/SDL2/SDL.h:
 

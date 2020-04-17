@@ -5,6 +5,7 @@
 #include <libswscale/swscale.h>
 #include <unistd.h>
 #include "video.h"
+#include <time.h>
 
 static char *clock_strings[] = {
     "333 MHz (underclocked, very slow)", "710 MHz (underclocked, slow)", "1020 MHz (standard, not overclocked)", "1224 MHz (slightly overclocked)", "1581 MHz (overclocked)", "1785 MHz (strong overclock)"};
@@ -33,7 +34,8 @@ RenderContext *createRenderer()
         while (1)
             ;
     }
-
+    SDL_SetRenderDrawBlendMode(context->renderer, SDL_BLENDMODE_BLEND); //enable transparency
+    //Create font cache
     context->yuv_text = SDL_CreateTexture(context->renderer, SDL_PIXELFORMAT_IYUV, SDL_TEXTUREACCESS_STREAMING, RESX, RESY);
 
     context->rect.x = 0;
@@ -57,7 +59,6 @@ RenderContext *createRenderer()
 
     return context;
 }
-
 void applyOC(RenderContext *context)
 {
     pcvSetClockRate(PcvModule_CpuBus, clock_rates[context->overclock_status]);
@@ -112,47 +113,201 @@ void draw_rect(RenderContext *context, int x, int y, int w, int h, SDL_Color col
     SDL_Rect r = {x, y, w, h};
     SDL_RenderFillRect(context->renderer, &r);
 }
+void strokeCircle(RenderContext *context, int32_t centreX, int32_t centreY, int32_t radius, SDL_Color colour)
+{
+    const int32_t diameter = (radius * 2);
+    int32_t x = (radius - 1);
+    int32_t y = 0;
+    int32_t tx = 1;
+    int32_t ty = 1;
+    int32_t error = (tx - diameter);
+    SDL_SetRenderDrawColor(context->renderer, colour.r, colour.g, colour.b, colour.a);
+    while (x >= y)
+    {
+        //  Each of the following renders an octant of the circle
+        SDL_RenderDrawPoint(context->renderer, centreX + x, centreY - y);
+        SDL_RenderDrawPoint(context->renderer, centreX + x, centreY + y);
+        SDL_RenderDrawPoint(context->renderer, centreX - x, centreY - y);
+        SDL_RenderDrawPoint(context->renderer, centreX - x, centreY + y);
+        SDL_RenderDrawPoint(context->renderer, centreX + y, centreY - x);
+        SDL_RenderDrawPoint(context->renderer, centreX + y, centreY + x);
+        SDL_RenderDrawPoint(context->renderer, centreX - y, centreY - x);
+        SDL_RenderDrawPoint(context->renderer, centreX - y, centreY + x);
+
+        if (error <= 0)
+        {
+            ++y;
+            error += ty;
+            ty += 2;
+        }
+
+        if (error > 0)
+        {
+            --x;
+            tx += 2;
+            error += (tx - diameter);
+        }
+    }
+}
+void drawCircle(RenderContext *context, int32_t centreX, int32_t centreY, int32_t radius, int lineThicknes, SDL_Color colour)
+{
+    for (int i = 0; i < lineThicknes; i++)
+    {
+        strokeCircle(context, centreX, centreY, radius - i, colour);
+    }
+}
+void drawGradient(RenderContext *context, int x, int y, int w, int h, SDL_Color colourStart, SDL_Color colourEnd, int direction)
+{
+    int drawLines = 1;
+    switch (direction)
+    {
+    case 1: //Top to bottom gradient
+        drawLines = h;
+        break;
+    case 2: //Bottom to top gradient
+        drawLines = h;
+        break;
+    case 3: //Left to right gradient
+        drawLines = w;
+        break;
+    case 4: //Right to left gradient
+        drawLines = w;
+        break;
+    }
+    for (int i = 0; i < drawLines; i++)
+    { //Top to bottom gradient
+        float t = ((float)(i)) / ((float)(drawLines));
+        int r = ((float)colourStart.r) * (1.0f - t) + ((float)colourEnd.r) * t;
+        int g = ((float)colourStart.g) * (1.0f - t) + ((float)colourEnd.g) * t;
+        int b = ((float)colourStart.b) * (1.0f - t) + ((float)colourEnd.b) * t;
+        int a = ((float)colourStart.a) * (1.0f - t) + ((float)colourEnd.a) * t;
+        SDL_Color glc = {r, g, b, a};
+        switch (direction)
+        {
+        case 1:
+            draw_rect(context, x, y + i, w, 1, glc);
+            break;
+        case 2:
+            draw_rect(context, x, (y + h) - i, w, 1, glc);
+            break;
+        case 3:
+            draw_rect(context, x + 1, y, 0, h, glc);
+            break;
+        case 4:
+            draw_rect(context, (x + w) - i, y, 0, h, glc);
+            break;
+        }
+    }
+}
+int getRandomInt(int minimum_number, int max_number)
+{
+    return rand() % (max_number + 1 - minimum_number) + minimum_number;
+}
+time_t deltaThen = 0;
+time_t deltaNow = 1;
+u32 delta = 1;
+
+void loopStart()
+{
+    deltaNow = time(NULL);
+    // printf("%d ", deltaNow);
+    delta = (deltaNow - deltaThen) / 1000;
+}
+
+void loopEnd()
+{
+    deltaThen = deltaNow;
+}
+typedef struct
+{
+    int x;
+    int y;
+    int r;
+    int vx;
+    int vy;
+    SDL_Color color;
+} bubble;
+int bubblesLength = 0;
+bubble bubbles[20];
+bubble getNewBubble()
+{
+    SDL_Color bubbleColor = {getRandomInt(0, 255), getRandomInt(0, 255), getRandomInt(0, 255), 255};
+    int randXv = 0;
+    if (getRandomInt(0, 1) == 0)
+    {
+        randXv = getRandomInt(0, 2);
+    }
+    else
+    {
+        randXv = getRandomInt(0, 2) * -1;
+    }
+    bubble newBubble = {getRandomInt(0, 1280), 750, getRandomInt(5, 25), randXv, getRandomInt(1, 3) * -1, bubbleColor};
+    return newBubble;
+}
+void doBubbles(RenderContext *context)
+{
+    if (bubblesLength < 20)
+    {
+        bubblesLength++;
+        bubbles[bubblesLength] = getNewBubble();
+    }
+
+    for (int i = 0; i < bubblesLength; i++)
+    {
+        bubbles[i].x += (unsigned int)bubbles[i].vx;
+        bubbles[i].y += (unsigned int)bubbles[i].vy;
+        //Use when delta is working and i figure out time
+        // bubbles[i].x += (unsigned int)bubbles[i].vx * delta;
+        // bubbles[i].y += (unsigned int)bubbles[i].vy * delta;
+        int negRadius = (unsigned int)bubbles[i].r * -1;
+        if (bubbles[i].y < negRadius)
+        {
+            bubbles[i] = getNewBubble();
+        }
+        drawCircle(context, bubbles[i].x, bubbles[i].y, bubbles[i].r, 1, bubbles[i].color);
+    }
+}
 void drawSplash(RenderContext *context)
 {
-    SDL_Color bg = {30, 30, 30, 255};
+    loopStart();
+    SDL_Color bg = {50, 50, 50, 255};
     SDL_ClearScreen(context, bg);
-    SDL_Color menuBar = {60, 60, 60, 255};
-    draw_rect(context, 0, 0, 1280, 60, menuBar);
-
-    u32 ip = gethostid();
-    char str_buf[300];
-    snprintf(str_buf, 300, "Your Switch is now ready for a PC to connect!\nIt has the IP-Address %u.%u.%u.%u\n"
-                           "\nInstructions can be found here:"
-                           "\nhttps://github.com/jakibaki/In-Home-Switching/blob/master/README.md"
-                           "\n\nOverclock status:\n%s"
-                           "\nPress X to increase, Y to decrease clockrate",
-             ip & 0xFF, (ip >> 8) & 0xFF, (ip >> 16) & 0xFF, (ip >> 24) & 0xFF,
-             clock_strings[context->overclock_status]);
+    SDL_Color gf = {0, 0, 0, 255};
+    SDL_Color gt = {0, 0, 0, 0};
+    doBubbles(context);
+    drawGradient(context, 0, 0, 1280, 100, gf, gt, 1);
+    drawGradient(context, 0, 720 - 100, 1280, 100, gf, gt, 2);
 
     SDL_Color white = {230, 230, 230, 255};
-    SDL_DrawText(context, 20, 65, white, str_buf);
+    u32 ip = gethostid();
+    char str_buf[300];
+    snprintf(str_buf, 300, "IP-Address: %u.%u.%u.%u\n",
+             ip & 0xFF, (ip >> 8) & 0xFF, (ip >> 16) & 0xFF, (ip >> 24) & 0xFF);
+
+    SDL_DrawText(context, 400, 630, white, str_buf);
 
     SDL_RenderPresent(context->renderer);
 
-    hidScanInput();
-    u32 keys = hidKeysDown(CONTROLLER_P1_AUTO);
-    if (keys & KEY_X)
-    {
-        if (context->overclock_status < sizeof(clock_rates) / sizeof(int) - 1)
-        {
-            context->overclock_status++;
-            applyOC(context);
-        }
-    }
+    // hidScanInput();
+    // u32 keys = hidKeysDown(CONTROLLER_P1_AUTO);
+    // if (keys & KEY_X)
+    // {
+    //     if (context->overclock_status < sizeof(clock_rates) / sizeof(int) - 1)
+    //     {
+    //         context->overclock_status++;
+    //         applyOC(context);
+    //     }
+    // }
 
-    if (keys & KEY_Y)
-    {
-        if (context->overclock_status > 0)
-        {
-            context->overclock_status--;
-            applyOC(context);
-        }
-    }
+    // if (keys & KEY_Y)
+    // {
+    //     if (context->overclock_status > 0)
+    //     {
+    //         context->overclock_status--;
+    //         applyOC(context);
+    //     }
+    // }
+    loopEnd();
 }
 
 u64 old_time = 0, new_time = 0;

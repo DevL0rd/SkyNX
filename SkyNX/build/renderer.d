@@ -1,5 +1,5 @@
-renderer.o: C:/Github/SkyNX/SkyNX/source/renderer.c \
- C:/Github/SkyNX/SkyNX/source/renderer.h \
+renderer.o: C:/GitHub/SkyNX/SkyNX/source/renderer.c \
+ C:/GitHub/SkyNX/SkyNX/source/renderer.h \
  C:/devkitPro/portlibs/switch/include/libavformat/avformat.h \
  C:/devkitPro/portlibs/switch/include/libavcodec/avcodec.h \
  C:/devkitPro/portlibs/switch/include/libavutil/samplefmt.h \
@@ -38,7 +38,7 @@ renderer.o: C:/Github/SkyNX/SkyNX/source/renderer.c \
  C:/devkitPro/portlibs/switch/include/libavformat/version.h \
  C:/devkitPro/portlibs/switch/include/libswscale/swscale.h \
  C:/devkitPro/portlibs/switch/include/libswscale/version.h \
- C:/Github/SkyNX/SkyNX/source/context.h \
+ C:/GitHub/SkyNX/SkyNX/source/context.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_main.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_stdinc.h \
@@ -85,13 +85,13 @@ renderer.o: C:/Github/SkyNX/SkyNX/source/renderer.c \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_version.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_image.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL.h \
- C:/Github/SkyNX/SkyNX/source/SDL_FontCache.h \
+ C:/GitHub/SkyNX/SkyNX/source/SDL_FontCache.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_ttf.h \
  C:/devkitPro/portlibs/switch/include/libavutil/imgutils.h \
  C:/devkitPro/portlibs/switch/include/libavutil/pixdesc.h \
- C:/Github/SkyNX/SkyNX/source/video.h
+ C:/GitHub/SkyNX/SkyNX/source/video.h
 
-C:/Github/SkyNX/SkyNX/source/renderer.h:
+C:/GitHub/SkyNX/SkyNX/source/renderer.h:
 
 C:/devkitPro/portlibs/switch/include/libavformat/avformat.h:
 
@@ -169,7 +169,7 @@ C:/devkitPro/portlibs/switch/include/libswscale/swscale.h:
 
 C:/devkitPro/portlibs/switch/include/libswscale/version.h:
 
-C:/Github/SkyNX/SkyNX/source/context.h:
+C:/GitHub/SkyNX/SkyNX/source/context.h:
 
 C:/devkitPro/portlibs/switch/include/SDL2/SDL.h:
 
@@ -263,7 +263,7 @@ C:/devkitPro/portlibs/switch/include/SDL2/SDL_image.h:
 
 C:/devkitPro/portlibs/switch/include/SDL2/SDL.h:
 
-C:/Github/SkyNX/SkyNX/source/SDL_FontCache.h:
+C:/GitHub/SkyNX/SkyNX/source/SDL_FontCache.h:
 
 C:/devkitPro/portlibs/switch/include/SDL2/SDL_ttf.h:
 
@@ -271,4 +271,4 @@ C:/devkitPro/portlibs/switch/include/libavutil/imgutils.h:
 
 C:/devkitPro/portlibs/switch/include/libavutil/pixdesc.h:
 
-C:/Github/SkyNX/SkyNX/source/video.h:
+C:/GitHub/SkyNX/SkyNX/source/video.h:
