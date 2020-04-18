@@ -5,8 +5,11 @@ The desktop streaming client is completely rewritten from before. Currently the 
 
 The Switch app however, is a modified version of the [In-Home-Switching](https://github.com/jakibaki/In-Home-Switching/blob/master/README.md) app. The modifications at the moment are a new icon for the app, along with touch input.
 
+## SkyNX App
+![SkyNX App](Screenshots/App.jpg "SkyNX App")
+
 ## SkyNX Streamer
-![SkyNX Streamer](Screenshots/Streamer.png "SkyNX Streaner")
+![SkyNX Streamer](Screenshots/Streamer.png "SkyNX Streamer")
 
 ## Instructions:
 (Optional) Install [Screen Capture Recorder](https://github.com/rdp/screen-capture-recorder-to-video-windows-free/releases) to have audio.
