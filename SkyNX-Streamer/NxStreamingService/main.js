@@ -47,7 +47,7 @@ function plugControllerIn() {
 function startAudioProcess() {
   ffmpegAudioProcess = spawn(
     "./lib/ffmpeg.exe",
-    ["-y", "-f", "dshow", "-i", "audio=virtual-audio-capturer", "-f", "s16le", "-ar", "160000", "-ac", "2", "-c:a", "pcm_s16le", "udp://" + ip + ":2224?pkt_size=640"],
+    ["-y", "-f", "dshow", "-i", "audio=virtual-audio-capturer", "-f", "s16le", "-ar", "16000", "-ac", "2", "-c:a", "pcm_s16le", "udp://" + ip + ":2224?pkt_size=640"],
     { detached: false }
   );
   ffmpegAudioProcess.stdout.on("data", data => {

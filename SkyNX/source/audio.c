@@ -113,7 +113,7 @@ void audioHandlerLoop()
     int sock = setup_socket();
     printf("%d\n", sock);
     int played = 0;
-    while (1)
+    while (appletMainLoop())
     {
         struct sockaddr si_other;
         socklen_t slen = sizeof(si_other);

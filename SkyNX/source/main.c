@@ -106,6 +106,8 @@ void init()
 {
     /* Init all switch required systems */
     switchInit();
+    pcvSetClockRate(PcvModule_CpuBus, 1785000000); //Overclock CPU
+
     renderContext = createRenderer();
     videoContext = createVideoContext();
     videoContext->renderContext = renderContext;
@@ -120,12 +122,13 @@ void unInit()
 {
     freeRenderer(renderContext);
     freeVideoContext(videoContext);
+    pcvSetClockRate(PcvModule_CpuBus, 1020000000); //Reset CPU clock to default
 }
 int main(int argc, char **argv)
 {
     init();
-    bool running = true;
-    while (appletMainLoop() && running == true)
+
+    while (appletMainLoop())
     {
         if (isVideoActive(renderContext))
         {

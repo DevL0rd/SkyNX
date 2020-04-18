@@ -1,6 +1,6 @@
-network.o: C:/GitHub/SkyNX/SkyNX/source/network.c \
- C:/GitHub/SkyNX/SkyNX/source/network.h \
- C:/GitHub/SkyNX/SkyNX/source/context.h \
+network.o: C:/Github/SkyNX/SkyNX/source/network.c \
+ C:/Github/SkyNX/SkyNX/source/network.h \
+ C:/Github/SkyNX/SkyNX/source/context.h \
  C:/devkitPro/portlibs/switch/include/libavformat/avformat.h \
  C:/devkitPro/portlibs/switch/include/libavcodec/avcodec.h \
  C:/devkitPro/portlibs/switch/include/libavutil/samplefmt.h \
@@ -83,13 +83,13 @@ network.o: C:/GitHub/SkyNX/SkyNX/source/network.c \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_version.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_image.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL.h \
- C:/GitHub/SkyNX/SkyNX/source/SDL_FontCache.h \
+ C:/Github/SkyNX/SkyNX/source/SDL_FontCache.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_ttf.h \
  C:/devkitPro/portlibs/switch/include/libavutil/timestamp.h
 
-C:/GitHub/SkyNX/SkyNX/source/network.h:
+C:/Github/SkyNX/SkyNX/source/network.h:
 
-C:/GitHub/SkyNX/SkyNX/source/context.h:
+C:/Github/SkyNX/SkyNX/source/context.h:
 
 C:/devkitPro/portlibs/switch/include/libavformat/avformat.h:
 
@@ -255,7 +255,7 @@ C:/devkitPro/portlibs/switch/include/SDL2/SDL_image.h:
 
 C:/devkitPro/portlibs/switch/include/SDL2/SDL.h:
 
-C:/GitHub/SkyNX/SkyNX/source/SDL_FontCache.h:
+C:/Github/SkyNX/SkyNX/source/SDL_FontCache.h:
 
 C:/devkitPro/portlibs/switch/include/SDL2/SDL_ttf.h:
 

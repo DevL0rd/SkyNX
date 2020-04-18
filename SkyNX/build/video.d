@@ -1,4 +1,4 @@
-video.o: C:/GitHub/SkyNX/SkyNX/source/video.c \
+video.o: C:/Github/SkyNX/SkyNX/source/video.c \
  C:/devkitPro/portlibs/switch/include/libavutil/imgutils.h \
  C:/devkitPro/portlibs/switch/include/libavutil/avutil.h \
  C:/devkitPro/portlibs/switch/include/libavutil/common.h \
@@ -16,8 +16,8 @@ video.o: C:/GitHub/SkyNX/SkyNX/source/video.c \
  C:/devkitPro/portlibs/switch/include/libavutil/pixdesc.h \
  C:/devkitPro/portlibs/switch/include/libavutil/samplefmt.h \
  C:/devkitPro/portlibs/switch/include/libavutil/timestamp.h \
- C:/GitHub/SkyNX/SkyNX/source/video.h \
- C:/GitHub/SkyNX/SkyNX/source/context.h \
+ C:/Github/SkyNX/SkyNX/source/video.h \
+ C:/Github/SkyNX/SkyNX/source/context.h \
  C:/devkitPro/portlibs/switch/include/libavformat/avformat.h \
  C:/devkitPro/portlibs/switch/include/libavcodec/avcodec.h \
  C:/devkitPro/portlibs/switch/include/libavutil/attributes.h \
@@ -86,10 +86,10 @@ video.o: C:/GitHub/SkyNX/SkyNX/source/video.c \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_version.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_image.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL.h \
- C:/GitHub/SkyNX/SkyNX/source/SDL_FontCache.h \
+ C:/Github/SkyNX/SkyNX/source/SDL_FontCache.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_ttf.h \
- C:/GitHub/SkyNX/SkyNX/source/network.h \
- C:/GitHub/SkyNX/SkyNX/source/renderer.h \
+ C:/Github/SkyNX/SkyNX/source/network.h \
+ C:/Github/SkyNX/SkyNX/source/renderer.h \
  C:/devkitPro/portlibs/switch/include/libswscale/swscale.h \
  C:/devkitPro/portlibs/switch/include/libswscale/version.h
 
@@ -127,9 +127,9 @@ C:/devkitPro/portlibs/switch/include/libavutil/samplefmt.h:
 
 C:/devkitPro/portlibs/switch/include/libavutil/timestamp.h:
 
-C:/GitHub/SkyNX/SkyNX/source/video.h:
+C:/Github/SkyNX/SkyNX/source/video.h:
 
-C:/GitHub/SkyNX/SkyNX/source/context.h:
+C:/Github/SkyNX/SkyNX/source/context.h:
 
 C:/devkitPro/portlibs/switch/include/libavformat/avformat.h:
 
@@ -267,13 +267,13 @@ C:/devkitPro/portlibs/switch/include/SDL2/SDL_image.h:
 
 C:/devkitPro/portlibs/switch/include/SDL2/SDL.h:
 
-C:/GitHub/SkyNX/SkyNX/source/SDL_FontCache.h:
+C:/Github/SkyNX/SkyNX/source/SDL_FontCache.h:
 
 C:/devkitPro/portlibs/switch/include/SDL2/SDL_ttf.h:
 
-C:/GitHub/SkyNX/SkyNX/source/network.h:
+C:/Github/SkyNX/SkyNX/source/network.h:
 
-C:/GitHub/SkyNX/SkyNX/source/renderer.h:
+C:/Github/SkyNX/SkyNX/source/renderer.h:
 
 C:/devkitPro/portlibs/switch/include/libswscale/swscale.h:
 

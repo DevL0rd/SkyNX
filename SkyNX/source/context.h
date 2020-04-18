@@ -10,30 +10,27 @@
 #define RESX 1280
 #define RESY 720
 
-
 typedef struct
 {
     SDL_Window *window;
     SDL_Renderer *renderer;
     SDL_Texture *yuv_text;
 
-
     SDL_Rect rect;
+    SDL_Texture *logoTexture;
 
     Mutex texture_mut;
 
-    u8 YPlane[RESX*RESY];
-    u8 UPlane[RESX*RESY/4];
-    u8 VPlane[RESX*RESY/4];
+    u8 YPlane[RESX * RESY];
+    u8 UPlane[RESX * RESY / 4];
+    u8 VPlane[RESX * RESY / 4];
 
     bool frame_avail;
     Mutex frame_avail_mut;
-    FC_Font* font;
+    FC_Font *font;
 
     bool video_active;
     Mutex video_active_mut;
-
-    int overclock_status;
 
 } RenderContext;
 

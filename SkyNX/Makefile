@@ -55,7 +55,7 @@ CXXFLAGS	:= $(CFLAGS) -fno-rtti -fno-exceptions
 ASFLAGS	:=	-g $(ARCH)
 LDFLAGS	=	-specs=$(DEVKITPRO)/libnx/switch.specs -g $(ARCH) -Wl,-Map,$(notdir $*.map)
 
-LIBS    := -lSDL2_ttf -lSDL2_image -lSDL2_mixer -lSDL2 -lSDL2_gfx \
+LIBS    := -lSDL2_ttf -lSDL2_image -lwebp -lSDL2_mixer -lSDL2 -lSDL2_gfx \
 			-ljpeg \
 			-lglad -lEGL -lglapi -ldrm_nouveau \
 			-lvorbisidec -logg -lmpg123 -lmodplug -lstdc++ \

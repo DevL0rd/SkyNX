@@ -6,13 +6,191 @@
 #include <unistd.h>
 #include "video.h"
 #include <time.h>
+float timeThen = 0;
+float timeNow = 1;
+float delta = 1;
+void initDelta()
+{
+    timeThen = svcGetSystemTick();
+    timeNow = svcGetSystemTick();
+    delta = (timeNow - timeThen) / 1000000;
+}
+void loopStart()
+{
+    timeNow = svcGetSystemTick();
+    delta = (timeNow - timeThen) / 1000000;
+}
 
-static char *clock_strings[] = {
-    "333 MHz (underclocked, very slow)", "710 MHz (underclocked, slow)", "1020 MHz (standard, not overclocked)", "1224 MHz (slightly overclocked)", "1581 MHz (overclocked)", "1785 MHz (strong overclock)"};
+void loopEnd()
+{
+    timeThen = timeNow;
+}
 
-static int clock_rates[] = {
-    333000000, 710000000, 1020000000, 1224000000, 1581000000, 1785000000};
+int getRandomInt(int minimum_number, int max_number)
+{
+    return rand() % (max_number + 1 - minimum_number) + minimum_number;
+}
+typedef struct
+{
+    float x;
+    float y;
+    float r;
+    float vx;
+    float vy;
+    SDL_Color color;
+} bubble;
+typedef struct
+{
+    bubble a;
+    bubble aIndex;
+    bubble b;
+    bubble bIndex;
+} bubblePair;
+typedef struct
+{
+    float vx;
+    float vy;
+} vector;
+vector globalForce = {0, -0.5};
 
+int bubblesLength = 0;
+int maxBubbles = 20;
+bubble bubbles[20];
+long getDistance(long ax, long ay, long bx, long by)
+{
+    long a = ax - bx;
+    long b = ay - by;
+    return sqrt(a * a + b * b);
+}
+bubble resolveBubble(bubble b1, bubble b2)
+{ //Fix colliding circles
+    long distance_x = b1.x - b2.x;
+    long distance_y = b1.y - b2.y;
+    long radii_sum = b1.r + b2.r;
+    long distance = getDistance(b1.x, b1.y, b2.x, b2.y);
+    long unit_x = distance_x / distance;
+    long unit_y = distance_y / distance;
+
+    b1.x = b2.x + (radii_sum)*unit_x; //Uncollide
+    b1.y = b2.y + (radii_sum)*unit_y; //Uncollide
+    //Conservation of momentum
+    long newVelX1 = (b1.vx * (b1.r - b2.r) + (2 * b2.r * b2.vx)) / radii_sum;
+    long newVelY1 = (b1.vy * (b1.r - b2.r) + (2 * b2.r * b2.vy)) / radii_sum;
+    // long newVelX2 = (b2.vx * (b2.r - b1.r) + (2 * b1.r * b1.vx)) / radii_sum;
+    // long newVelY2 = (b2.vy * (b2.r - b1.r) + (2 * b1.r * b1.vy)) / radii_sum;
+    b1.vx = newVelX1;
+    b1.vy = newVelY1;
+    // b2.vx = newVelX2;
+    // b2.vy = newVelY2;
+    bubble newBubble = b1;
+    return newBubble;
+}
+bool detectCircleToCircleCollision(bubble b1, bubble b2)
+{ //check for collision between circles
+    long radii_sum = b1.r + b2.r;
+    long distance = getDistance(b1.x, b1.y, b2.x, b2.y); //If distance is less than radius added together a collision is occuring
+    if (distance < radii_sum)
+    {
+        return true;
+    }
+    return false;
+}
+bool testForCollision(bubble b, int bI)
+{
+    for (int i = 0; i < bubblesLength; i++)
+    {
+        if (i != bI)
+        {
+            if (detectCircleToCircleCollision(b, bubbles[i]))
+            {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+void resolveCollisions()
+{
+    bubble newBubbles[20];
+    bool aCollided = false;
+    for (int a = 0; a < bubblesLength; a++)
+    {
+        for (int b = a + 1; b < bubblesLength; b++)
+        {
+
+            if (detectCircleToCircleCollision(bubbles[a], bubbles[b]))
+            {
+                aCollided = true;
+                newBubbles[a] = resolveBubble(bubbles[a], bubbles[b]);
+            }
+        }
+        if (!aCollided)
+        { //If nothing collided keep the same data
+            newBubbles[a] = bubbles[a];
+        }
+        aCollided = false;
+    }
+    for (int i = 0; i < bubblesLength; i++)
+    {
+        bubbles[i] = newBubbles[i];
+    }
+}
+void initBubbles()
+{
+    while (bubblesLength < maxBubbles)
+    {
+        SDL_Color bubbleColor = {126, 242, 213, 255};
+        float randR = 15;
+        if (bubblesLength < 5)
+        {
+            SDL_Color nbc = {145, 255, 249, 120};
+            randR = getRandomInt(5, 20);
+            bubbleColor = nbc;
+        }
+        else if (bubblesLength < 10)
+        {
+            SDL_Color nbc = {75, 219, 211, 180};
+            randR = getRandomInt(25, 40);
+            bubbleColor = nbc;
+        }
+        else if (bubblesLength < 15)
+        {
+            SDL_Color nbc = {24, 161, 153, 200};
+            randR = getRandomInt(45, 60);
+            bubbleColor = nbc;
+        }
+        else if (bubblesLength < 20)
+        {
+            SDL_Color nbc = {0, 102, 96, 230};
+            randR = getRandomInt(65, 80);
+            bubbleColor = nbc;
+        }
+        float randXv = 0;
+        if (getRandomInt(0, 1) == 0)
+        {
+            randXv = getRandomInt(0, 3);
+        }
+        else
+        {
+            randXv = getRandomInt(0, 3) * -1;
+        }
+        float randYv = getRandomInt(3, 8) * -1;
+        bool collides = true;
+        while (collides)
+        {
+            int randX = getRandomInt(0, 1280);
+            int randY = getRandomInt(0, 720);
+            bubble nb = {randX, randY, randR, randXv, randYv, bubbleColor};
+            if (!testForCollision(nb, -1)) //-1 is because bubble has not yet spawned
+            {
+                bubblesLength++;
+                bubbles[bubblesLength] = nb;
+                collides = false;
+            }
+        };
+    }
+}
+SDL_Texture *logoTexture = NULL;
 RenderContext *createRenderer()
 {
     RenderContext *context = malloc(sizeof(RenderContext));
@@ -35,6 +213,9 @@ RenderContext *createRenderer()
             ;
     }
     SDL_SetRenderDrawBlendMode(context->renderer, SDL_BLENDMODE_BLEND); //enable transparency
+
+    logoTexture = IMG_LoadTexture(context->renderer, "iconTransparent.png");
+
     //Create font cache
     context->yuv_text = SDL_CreateTexture(context->renderer, SDL_PIXELFORMAT_IYUV, SDL_TEXTUREACCESS_STREAMING, RESX, RESY);
 
@@ -54,14 +235,10 @@ RenderContext *createRenderer()
     plGetSharedFontByType(&fontExtData, PlSharedFontType_NintendoExt);
     context->font = FC_CreateFont();
     FC_LoadFont_RW(context->font, context->renderer, SDL_RWFromMem((void *)fontData.address, fontData.size), SDL_RWFromMem((void *)fontExtData.address, fontExtData.size), 1, 40, FC_MakeColor(0, 0, 0, 255), TTF_STYLE_NORMAL);
-
-    context->overclock_status = 2;
+    initDelta();
+    initBubbles();
 
     return context;
-}
-void applyOC(RenderContext *context)
-{
-    pcvSetClockRate(PcvModule_CpuBus, clock_rates[context->overclock_status]);
 }
 
 void setFrameAvail(RenderContext *context)
@@ -113,14 +290,14 @@ void draw_rect(RenderContext *context, int x, int y, int w, int h, SDL_Color col
     SDL_Rect r = {x, y, w, h};
     SDL_RenderFillRect(context->renderer, &r);
 }
-void strokeCircle(RenderContext *context, int32_t centreX, int32_t centreY, int32_t radius, SDL_Color colour)
+void strokeCircle(RenderContext *context, float centreX, float centreY, float radius, SDL_Color colour)
 {
-    const int32_t diameter = (radius * 2);
-    int32_t x = (radius - 1);
-    int32_t y = 0;
-    int32_t tx = 1;
-    int32_t ty = 1;
-    int32_t error = (tx - diameter);
+    int diameter = (radius * 2);
+    int x = (radius - 1);
+    int y = 0;
+    int tx = 1;
+    int ty = 1;
+    int error = (tx - diameter);
     SDL_SetRenderDrawColor(context->renderer, colour.r, colour.g, colour.b, colour.a);
     while (x >= y)
     {
@@ -149,11 +326,21 @@ void strokeCircle(RenderContext *context, int32_t centreX, int32_t centreY, int3
         }
     }
 }
-void drawCircle(RenderContext *context, int32_t centreX, int32_t centreY, int32_t radius, int lineThicknes, SDL_Color colour)
+void drawCircle(RenderContext *context, float centreX, float centreY, float radius, int lineThicknes, SDL_Color colour)
 {
     for (int i = 0; i < lineThicknes; i++)
     {
         strokeCircle(context, centreX, centreY, radius - i, colour);
+    }
+}
+void fillCircle(RenderContext *context, float centreX, float centreY, float radius, SDL_Color colour)
+{
+    for (double dy = 1; dy <= radius; dy += 1.0)
+    {
+        double dx = floor(sqrt((2.0 * radius * dy) - (dy * dy)));
+        SDL_SetRenderDrawColor(context->renderer, colour.r, colour.g, colour.b, colour.a);
+        SDL_RenderDrawLine(context->renderer, centreX - dx, centreY + dy - radius, centreX + dx, centreY + dy - radius);
+        SDL_RenderDrawLine(context->renderer, centreX - dx, (centreY + 1) - dy + radius, centreX + dx, (centreY + 1) - dy + radius);
     }
 }
 void drawGradient(RenderContext *context, int x, int y, int w, int h, SDL_Color colourStart, SDL_Color colourEnd, int direction)
@@ -199,72 +386,44 @@ void drawGradient(RenderContext *context, int x, int y, int w, int h, SDL_Color 
         }
     }
 }
-int getRandomInt(int minimum_number, int max_number)
-{
-    return rand() % (max_number + 1 - minimum_number) + minimum_number;
-}
-time_t deltaThen = 0;
-time_t deltaNow = 1;
-u32 delta = 1;
 
-void loopStart()
+void renderBubbles(RenderContext *context)
 {
-    deltaNow = time(NULL);
-    // printf("%d ", deltaNow);
-    delta = (deltaNow - deltaThen) / 1000;
-}
-
-void loopEnd()
-{
-    deltaThen = deltaNow;
-}
-typedef struct
-{
-    int x;
-    int y;
-    int r;
-    int vx;
-    int vy;
-    SDL_Color color;
-} bubble;
-int bubblesLength = 0;
-bubble bubbles[20];
-bubble getNewBubble()
-{
-    SDL_Color bubbleColor = {getRandomInt(0, 255), getRandomInt(0, 255), getRandomInt(0, 255), 255};
-    int randXv = 0;
-    if (getRandomInt(0, 1) == 0)
-    {
-        randXv = getRandomInt(0, 2);
-    }
-    else
-    {
-        randXv = getRandomInt(0, 2) * -1;
-    }
-    bubble newBubble = {getRandomInt(0, 1280), 750, getRandomInt(5, 25), randXv, getRandomInt(1, 3) * -1, bubbleColor};
-    return newBubble;
-}
-void doBubbles(RenderContext *context)
-{
-    if (bubblesLength < 20)
-    {
-        bubblesLength++;
-        bubbles[bubblesLength] = getNewBubble();
-    }
-
+    //Buggy right now. I need to understand C a bit better first.
+    //resolveCollisions();
     for (int i = 0; i < bubblesLength; i++)
     {
-        bubbles[i].x += (unsigned int)bubbles[i].vx;
-        bubbles[i].y += (unsigned int)bubbles[i].vy;
-        //Use when delta is working and i figure out time
-        // bubbles[i].x += (unsigned int)bubbles[i].vx * delta;
-        // bubbles[i].y += (unsigned int)bubbles[i].vy * delta;
-        int negRadius = (unsigned int)bubbles[i].r * -1;
+        bubbles[i].vx += globalForce.vx * delta;
+        bubbles[i].vy += globalForce.vy * delta;
+        bubbles[i].x += bubbles[i].vx * delta;
+        bubbles[i].y += bubbles[i].vy * delta;
+        float negRadius = bubbles[i].r * -1;
         if (bubbles[i].y < negRadius)
         {
-            bubbles[i] = getNewBubble();
+            bubbles[i].vy = getRandomInt(0, 3) * -1;
+            bubbles[i].y = 720 + bubbles[i].r;
+            bool isColliding = true;
+            while (isColliding)
+            {
+                bubbles[i].x = getRandomInt(0, 1280);
+                if (!testForCollision(bubbles[i], i))
+                {
+                    isColliding = false;
+                }
+            }
+
+            float randXv = 0;
+            if (getRandomInt(0, 1) == 0)
+            {
+                randXv = getRandomInt(0, 3);
+            }
+            else
+            {
+                randXv = getRandomInt(0, 3) * -1;
+            }
+            bubbles[i].vx = randXv;
         }
-        drawCircle(context, bubbles[i].x, bubbles[i].y, bubbles[i].r, 1, bubbles[i].color);
+        fillCircle(context, bubbles[i].x, bubbles[i].y, bubbles[i].r, bubbles[i].color);
     }
 }
 void drawSplash(RenderContext *context)
@@ -274,10 +433,18 @@ void drawSplash(RenderContext *context)
     SDL_ClearScreen(context, bg);
     SDL_Color gf = {0, 0, 0, 255};
     SDL_Color gt = {0, 0, 0, 0};
-    doBubbles(context);
+    renderBubbles(context);
     drawGradient(context, 0, 0, 1280, 100, gf, gt, 1);
     drawGradient(context, 0, 720 - 100, 1280, 100, gf, gt, 2);
-
+    int w = 0;
+    int h = 0;
+    SDL_QueryTexture(logoTexture, NULL, NULL, &w, &h);
+    SDL_Rect destination;
+    destination.x = (1280 / 2) - (w / 2);
+    destination.y = (720 / 2) - (h / 2);
+    destination.w = 256;
+    destination.h = 256;
+    SDL_RenderCopy(context->renderer, logoTexture, NULL, &destination);
     SDL_Color white = {230, 230, 230, 255};
     u32 ip = gethostid();
     char str_buf[300];
@@ -287,26 +454,6 @@ void drawSplash(RenderContext *context)
     SDL_DrawText(context, 400, 630, white, str_buf);
 
     SDL_RenderPresent(context->renderer);
-
-    // hidScanInput();
-    // u32 keys = hidKeysDown(CONTROLLER_P1_AUTO);
-    // if (keys & KEY_X)
-    // {
-    //     if (context->overclock_status < sizeof(clock_rates) / sizeof(int) - 1)
-    //     {
-    //         context->overclock_status++;
-    //         applyOC(context);
-    //     }
-    // }
-
-    // if (keys & KEY_Y)
-    // {
-    //     if (context->overclock_status > 0)
-    //     {
-    //         context->overclock_status--;
-    //         applyOC(context);
-    //     }
-    // }
     loopEnd();
 }
 
