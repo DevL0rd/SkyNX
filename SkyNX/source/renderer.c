@@ -403,13 +403,15 @@ void renderBubbles(RenderContext *context)
             bubbles[i].vy = getRandomInt(0, 3) * -1;
             bubbles[i].y = 720 + bubbles[i].r;
             bool isColliding = true;
-            while (isColliding)
+            int attempts = 3;
+            while (isColliding && attempts > 3)
             {
                 bubbles[i].x = getRandomInt(0, 1280);
                 if (!testForCollision(bubbles[i], i))
                 {
                     isColliding = false;
                 }
+                attempts--;
             }
 
             float randXv = 0;
@@ -431,27 +433,35 @@ void drawSplash(RenderContext *context)
     loopStart();
     SDL_Color bg = {50, 50, 50, 255};
     SDL_ClearScreen(context, bg);
-    SDL_Color gf = {0, 0, 0, 255};
-    SDL_Color gt = {0, 0, 0, 0};
+
+    SDL_Color bgf = {0, 181, 178, 255};
+    SDL_Color bgt = {0, 41, 40, 255};
+    drawGradient(context, 0, 0, 1280, 720, bgf, bgt, 1);
+
     renderBubbles(context);
-    drawGradient(context, 0, 0, 1280, 100, gf, gt, 1);
-    drawGradient(context, 0, 720 - 100, 1280, 100, gf, gt, 2);
-    int w = 0;
-    int h = 0;
-    SDL_QueryTexture(logoTexture, NULL, NULL, &w, &h);
-    SDL_Rect destination;
-    destination.x = (1280 / 2) - (w / 2);
-    destination.y = (720 / 2) - (h / 2);
-    destination.w = 256;
-    destination.h = 256;
-    SDL_RenderCopy(context->renderer, logoTexture, NULL, &destination);
+
+    SDL_Color gf = {0, 0, 0, 250};
+    SDL_Color gt = {0, 0, 0, 0};
+    drawGradient(context, 0, 0, 1280, 180, gf, gt, 1);
+    drawGradient(context, 0, 720 - 100, 1280, 180, gf, gt, 2);
+
+    int imgW = 0;
+    int imgH = 0;
+    SDL_QueryTexture(logoTexture, NULL, NULL, &imgW, &imgH);
+    SDL_Rect imgDest;
+    imgDest.x = (1280 / 2) - (imgW / 2);
+    imgDest.y = (720 / 2) - (imgH / 2);
+    imgDest.w = imgW;
+    imgDest.h = imgH;
+    SDL_RenderCopy(context->renderer, logoTexture, NULL, &imgDest);
+
     SDL_Color white = {230, 230, 230, 255};
     u32 ip = gethostid();
     char str_buf[300];
     snprintf(str_buf, 300, "IP-Address: %u.%u.%u.%u\n",
              ip & 0xFF, (ip >> 8) & 0xFF, (ip >> 16) & 0xFF, (ip >> 24) & 0xFF);
 
-    SDL_DrawText(context, 400, 630, white, str_buf);
+    SDL_DrawText(context, 400, imgDest.y + imgH + 8, white, str_buf);
 
     SDL_RenderPresent(context->renderer);
     loopEnd();

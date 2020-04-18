@@ -1,1 +1,1 @@
-audio.o: C:/Github/SkyNX/SkyNX/source/audio.c
+audio.o: C:/GitHub/SkyNX/SkyNX/source/audio.c
