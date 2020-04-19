@@ -1,9 +1,9 @@
 # SkyNX
 A replacement for the abandoned [In-Home-Switching](https://github.com/jakibaki/In-Home-Switching/blob/master/README.md).
 
-The desktop streaming client is completely rewritten from before. Currently the the audio is a little buggy but it runs well!
+The desktop streaming client is completely new. Currently the the audio is a little buggy but it runs well!
 
-The Switch app however, is a modified version of the [In-Home-Switching](https://github.com/jakibaki/In-Home-Switching/blob/master/README.md) app. The modifications at the moment are a new icon for the app, along with touch input.
+The Switch app however has it's roots in the original [In-Home-Switching](https://github.com/jakibaki/In-Home-Switching/blob/master/README.md) app.
 
 ## SkyNX App
 ![SkyNX App](Screenshots/App.jpg "SkyNX App")
