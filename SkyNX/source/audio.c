@@ -75,25 +75,27 @@ void play_buf(int buffer_size, int data_size)
 }
 
 // out_buf has to be in_buf_size*fact*2 big
-void resample(unsigned short *in_buf, int in_buf_size, unsigned short *out_buf, int fact)
+short lastAbove0Value = 0;
+void resample(unsigned short *in_buf, int in_buf_size, unsigned short *out_buf, short fact)
 {
     int channels = 2;
-
-    for (int i = 0; i < in_buf_size / sizeof(unsigned short); i += channels)
+    //channels are right next to each other
+    int dataLength = in_buf_size / sizeof(unsigned short);
+    for (int i = 0; i < dataLength; i += channels) //skip through audio data based on channel count
     {
-        int out_base = i * fact;
+        int out_base = i * fact; //get next starting point in upsampled audio buffer
 
-        for (int j = 0; j < fact; j++)
+        for (int j = 0; j < fact; j++) //do this thing 3 times to fill missing audio
         {
-            for (int c = 0; c < channels; c++)
+            for (int chan = 0; chan < channels; chan++) //For both channels
             {
-                out_buf[out_base++] = in_buf[i + c];
+                out_buf[out_base++] = in_buf[i + chan]; //Smoothing here?? maybe..
             }
         }
     }
 }
 
-#define DATA_SIZE 1920  //(SAMPLECOUNT * CHANNELCOUNT * BYTESPERSAMPLE);
+#define DATA_SIZE 1920
 #define IN_RATE 160000  // Bitrate.
 #define OUT_RATE 480000 // Bitrate.
 #define FACT (OUT_RATE / IN_RATE)

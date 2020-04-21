@@ -13,12 +13,17 @@ void initDelta()
 {
     timeThen = svcGetSystemTick();
     timeNow = svcGetSystemTick();
-    delta = (timeNow - timeThen) / 1000000;
+    delta = (timeNow - timeThen) / 10000000;
 }
 void loopStart()
 {
     timeNow = svcGetSystemTick();
-    delta = (timeNow - timeThen) / 1000000;
+    delta = (timeNow - timeThen) / 10000000;
+    if (delta > 1)
+    {
+        //to much lag. set to 1
+        delta = 1.0f;
+    }
 }
 
 void loopEnd()
@@ -51,7 +56,7 @@ typedef struct
     float vx;
     float vy;
 } vector;
-vector globalForce = {0, -0.5};
+vector globalForce = {0, -30};
 
 int bubblesLength = 0;
 int maxBubbles = 20;
@@ -141,19 +146,19 @@ void initBubbles()
     {
         SDL_Color bubbleColor = {126, 242, 213, 255};
         float randR = 15;
-        if (bubblesLength < 5)
+        if (bubblesLength < 8)
         {
             SDL_Color nbc = {145, 255, 249, 120};
             randR = getRandomInt(5, 20);
             bubbleColor = nbc;
         }
-        else if (bubblesLength < 10)
+        else if (bubblesLength < 13)
         {
             SDL_Color nbc = {75, 219, 211, 180};
             randR = getRandomInt(25, 40);
             bubbleColor = nbc;
         }
-        else if (bubblesLength < 15)
+        else if (bubblesLength < 17)
         {
             SDL_Color nbc = {24, 161, 153, 200};
             randR = getRandomInt(45, 60);
@@ -168,13 +173,13 @@ void initBubbles()
         float randXv = 0;
         if (getRandomInt(0, 1) == 0)
         {
-            randXv = getRandomInt(0, 3);
+            randXv = getRandomInt(10, 25);
         }
         else
         {
-            randXv = getRandomInt(0, 3) * -1;
+            randXv = getRandomInt(10, 25) * -1;
         }
-        float randYv = getRandomInt(3, 8) * -1;
+        float randYv = getRandomInt(20, 50) * -1;
         bool collides = true;
         while (collides)
         {
@@ -398,9 +403,11 @@ void renderBubbles(RenderContext *context)
         bubbles[i].x += bubbles[i].vx * delta;
         bubbles[i].y += bubbles[i].vy * delta;
         float negRadius = bubbles[i].r * -1;
-        if (bubbles[i].y < negRadius)
+        if (bubbles[i].y < negRadius || bubbles[i].y > 720 + bubbles[i].r + 1) //bubble off top or overflowed to bottom because large delta
         {
-            bubbles[i].vy = getRandomInt(0, 3) * -1;
+
+            float randYv = getRandomInt(20, 50) * -1;
+            bubbles[i].vy = randYv;
             bubbles[i].y = 720 + bubbles[i].r;
             bool isColliding = true;
             int attempts = 3;
@@ -417,11 +424,11 @@ void renderBubbles(RenderContext *context)
             float randXv = 0;
             if (getRandomInt(0, 1) == 0)
             {
-                randXv = getRandomInt(0, 3);
+                randXv = getRandomInt(10, 25);
             }
             else
             {
-                randXv = getRandomInt(0, 3) * -1;
+                randXv = getRandomInt(10, 25) * -1;
             }
             bubbles[i].vx = randXv;
         }

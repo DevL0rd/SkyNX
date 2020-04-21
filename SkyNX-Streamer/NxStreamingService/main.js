@@ -47,14 +47,14 @@ function plugControllerIn() {
 function startAudioProcess() {
   ffmpegAudioProcess = spawn(
     "./lib/ffmpeg.exe",
-    ["-y", "-f", "dshow", "-i", "audio=virtual-audio-capturer", "-f", "s16le", "-ar", "16000", "-ac", "2", "-c:a", "pcm_s16le", "udp://" + ip + ":2224?pkt_size=640"],
+    ["-y", "-f", "avfoundation", "-i", "audio=virtual-audio-capturer", "-af", "equalizer=f=100:t=h:width=200:g=-64", "-f", "s16le", "-ar", "16000", "-ac", "2", "-c:a", "pcm_s16le", "udp://" + ip + ":2224?pkt_size=640"],
     { detached: false }
   );
   ffmpegAudioProcess.stdout.on("data", data => {
     //console.log(`${data}`);
   });
   ffmpegAudioProcess.stderr.on('data', (data) => {
-    //console.error(`ffmpegAudioProcessErr: ${data}`);
+    console.error(`ffmpegAudioProcessErr: ${data}`);
   });
   ffmpegAudioProcess.on('close', (code) => {
     console.log(`ffmpegAudioProcess process exited with code ${code}`);
