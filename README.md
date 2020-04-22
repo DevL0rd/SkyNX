@@ -1,5 +1,6 @@
 # SkyNX
 A replacement for the abandoned [In-Home-Switching](https://github.com/jakibaki/In-Home-Switching/blob/master/README.md).
+[Downloads are here](https://github.com/DevL0rd/SkyNX/releases)
 
 The desktop streaming client is completely new. Currently the the audio is a little buggy but it runs well!
 
