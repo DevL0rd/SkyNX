@@ -215,7 +215,7 @@ textarea:focus, input:focus{
     left: 50px;
     height: calc(100% - 57px);
     width: calc(100% - 50px);
-    background: rgba(0,0,0,0.5);
+    background: rgba(50,50,50,0.5);
     overflow: hidden;
 }
 .contentAreaScrollable{
@@ -223,19 +223,9 @@ textarea:focus, input:focus{
     overflow-y: auto;
     overflow-x: hidden;
 }
-#settingsSearch {
-    background: black;
-    border: none;
-    border-radius: 25px;
-    color: white;
-    padding-left: 8px;
-    height: 40px;
-    width: calc(100% - 20px);
-    margin-top: 10px;
-    margin-left: 10px;
-    margin-bottom: 10px;
-};
-
+.sidePanel {
+    background: rgba(30,30,30,0.5);
+}
 .dark-group-text {
 background-color: rgba(40,40,0.75);
 color: white;
@@ -248,7 +238,6 @@ color: white;
 .invalidInput {
     border: 3px solid tomato;
 }
-
 
 .selected{
     background: rgba(255, 255, 255, 0.1);

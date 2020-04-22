@@ -23,7 +23,7 @@ function createWindow() {
     y: mainWindowState.y,
     // width: mainWindowState.width,
     // height: mainWindowState.height,
-    width: 350,
+    width: 400,
     height: 280,
     // minWidth: 350,
     // minHeight: 300,
@@ -47,7 +47,11 @@ function createWindow() {
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
     mainWindow = null
-    streamerProcess.kill();
+    try {
+      streamerProcess.kill();
+    } catch (error) {
+
+    }
   });
 }
 

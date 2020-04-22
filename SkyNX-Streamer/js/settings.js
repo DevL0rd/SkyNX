@@ -80,8 +80,8 @@ function applyClientSettings() {
         ipcRenderer.send('installScpVBus');
         ipcRenderer.send('installAudioDriver');
         clientSettings.firstInstall = true;
-        saveClientSettings();
     }
+    saveClientSettings();
 }
 $("#rainbowEnabled").on('change', function () {
     clientSettings.rainbowEnabled = $("#rainbowEnabled").prop("checked");

@@ -31,34 +31,53 @@
         title="Settings"><i class="fas fa-cogs"></i></button>
     </div>
     <div id="main" class="contentArea">
-      <div class="form-group">
-        <label for="ipInput">Switch IP Address</label>
-        <input id="ipInput" type="text" class="form-control" placeholder="Switch IP">
-      </div>
-      <form class="form-group">
-        <label id="qualityLabel" for="qualitySlider">Quality: 5Mbps</label>
-        <input id="qualitySlider" type="range" class="custom-range" min="1" max="80" value="5" />
-      </form>
+      <div class="row">
+        <div class="col-8">
+          <div class="form-group">
+            <label for="ipInput">Switch IP Address</label>
+            <input id="ipInput" type="text" class="form-control" placeholder="Switch IP">
+          </div>
+          <form class="form-group">
+            <label id="qualityLabel" for="qualitySlider">Quality: 5Mbps</label>
+            <input id="qualitySlider" type="range" class="custom-range" min="1" max="80" value="5" />
+          </form>
 
-      <form class="form-group">
-        <button id="startBtn" type="button" class="btn btn-dark btn-lg btn-block">Start Streamer</button>
-      </form>
+          <form class="form-group">
+            <button id="startBtn" type="button" class="btn btn-dark btn-lg btn-block">Start Streamer</button>
+          </form>
+        </div>
+        <div class="col-4 sidePanel">
+          <label>More Settings coming soon..</label>
+        </div>
+      </div>
+
     </div>
     <div id="settings" class="contentArea contentAreaScrollable customScroll" style="display: none;">
+
       <form class="form-group">
-        <button id="installScpVBusBtn" type="button" class="btn btn-dark btn-block">Install Xbox
-          Controller</button>
+
+
+        <div class="row">
+          <div class="col">
+            <button id="installScpVBusBtn" type="button" class="btn btn-dark btn-block">Install Controller</button>
+          </div>
+          <div class="col">
+            <button id="unInstallScpVBusBtn" type="button" class="btn btn-danger btn-block">Un-Install
+              Controller</button>
+          </div>
+        </div>
       </form>
       <form class="form-group">
-        <button id="unInstallScpVBusBtn" type="button" class="btn btn-dark btn-block">Un-Install Xbox
-          Controller</button>
-      </form>
-      <form class="form-group">
-        <button id="installAudioDriverBtn" type="button" class="btn btn-dark btn-block">Install Audio Driver</button>
-      </form>
-      <form class="form-group">
-        <button id="unInstallAudioDriverBtn" type="button" class="btn btn-dark btn-block">Un-Install Audio
-          Driver</button>
+        <div class="row">
+          <div class="col">
+            <button id="installAudioDriverBtn" type="button" class="btn btn-dark btn-block">Install Audio
+              Driver</button>
+          </div>
+          <div class="col">
+            <button id="unInstallAudioDriverBtn" type="button" class="btn btn-danger btn-block">Un-Install Audio
+              Driver</button>
+          </div>
+        </div>
       </form>
       <div class="form-group">
         <label class="switch">
