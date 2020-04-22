@@ -115,7 +115,7 @@ ipcMain.on('installScpVBus', (event, arg) => {
       if (error) {
         console.log("driver install error: " + error);
       } else {
-        console.log("Driver install success!");
+        console.log("Driver installed!");
       }
     });
 });

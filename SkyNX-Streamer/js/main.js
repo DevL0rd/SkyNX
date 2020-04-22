@@ -28,7 +28,7 @@ $('#startBtn').click(function () {
 });
 var qualityChangeTimeout;
 $(document).on('input', '#qualitySlider', function () {
-    $('#qualityLabel').html("Quality: " + $(this).val() + "M");
+    $('#qualityLabel').html("Quality: " + $(this).val() + "Mbps");
     clientSettings.quality = $(this).val();
     saveClientSettings();
     if (running) {
