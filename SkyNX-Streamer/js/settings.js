@@ -58,6 +58,7 @@ function applyClientSettings() {
     $("#debugEnabled").prop("checked", clientSettings.debug);
     $("#rainbowEnabled").prop("checked", clientSettings.rainbowEnabled);
     $("#devToolsOnStartup").prop("checked", clientSettings.devToolsOnStartup);
+    $("#autoStart").prop("checked", clientSettings.autoStartStreamer);
     $("#qualitySlider").val(clientSettings.quality);
     $('#qualityLabel').html("Quality: " + clientSettings.quality + "M");
     $("#ipInput").val(clientSettings.ip);
