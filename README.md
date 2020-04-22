@@ -1,10 +1,10 @@
 # SkyNX
 A replacement for the abandoned [In-Home-Switching](https://github.com/jakibaki/In-Home-Switching/blob/master/README.md).
-If you are not sure what that is, well, it is an app that allows you to stream your PC games to your Nintendo Switch! Kind of like moonlight. It is not at all entirely ready, and if there were a way to do hardware decoding on switch it would be alot better. But for now It is definitely, definitely playable.
+If you are not sure what that is, well, it is an app that allows you to stream your PC games to your Nintendo Switch! Kind of like moonlight. It is not at all entirely ready, and if there were a way to do hardware decoding on switch it would be a lot better. But for now It is definitely, definitely playable.
 
 [Downloads are here](https://github.com/DevL0rd/SkyNX/releases)
 
-The desktop streaming client is completely new. Currently the the audio is a little buggy but it runs well!
+The desktop streaming client is completely new. Currently the audio is a little buggy but it runs well!
 
 The Switch app however has it's roots in the original [In-Home-Switching](https://github.com/jakibaki/In-Home-Switching/blob/master/README.md) app.
 
@@ -24,7 +24,7 @@ The Switch app however has it's roots in the original [In-Home-Switching](https:
 6. Click start streamer.
 
 ## Notes:
-When the streamer conencts it will try to connect the switch as a virtual xBox controller. If the driver is not installed, It will install it automatically at this point.
+When the streamer connects it will try to connect the switch as a virtual xBox controller. If the driver is not installed, It will install it automatically at this point.
 
 If for some reason it keeps prompting to install, or the controllers don't work. Try the following steps.
 
