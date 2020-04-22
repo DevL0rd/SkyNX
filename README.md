@@ -16,6 +16,7 @@ The Switch app however has it's roots in the original [In-Home-Switching](https:
 
 ## Instructions:
 (Optional) Install [Screen Capture Recorder](https://github.com/rdp/screen-capture-recorder-to-video-windows-free/releases) to have audio.
+1. Go to settings and install the xBox controller driver and the audio driver. (If there are any issues with audio or your joycon input, check the Notes section below
 1. Set desktop and game resolution to 1280 X 720.
 2. Open SkyNXStreamer-win32-x64/SkyNXStreamer.exe
 3. Launch SkyNX on switch.
@@ -24,21 +25,14 @@ The Switch app however has it's roots in the original [In-Home-Switching](https:
 6. Click start streamer.
 
 ## Notes:
-When the streamer connects it will try to connect the switch as a virtual xBox controller. If the driver is not installed, It will install it automatically at this point.
-
-If for some reason it keeps prompting to install, or the controllers don't work. Try the following steps.
+When the streamer connects it will try to connect the switch as a virtual xBox controller, if for some reason the controllers don't work. Try the following steps.
 
 1. Restart windows, and launch it again.
 2. If it still is not working. And you have previously used In-Home-Switching, Try removing the ScpDriverInterface that In-Home-Switching installs. You can use the installer that came with it to uninstall it, or get it [Here](https://github.com/mogzol/ScpDriverInterface/releases/download/1.1/ScpDriverInterface_v1.1.zip).
 
-## Todo:
-  * Finish rewrite of App UI.
-
 ## Known issues
-  * So far Switch crashes when put to sleep with app running (please close app beforehand, we have not fixed this issue yet)
+  * So far Switch crashes when put to sleep with app running, please close app beforehand. It will be fixed after optimizations.
   * App breaks when Switch changes from docked to handheld mode or vice-versa. Please quit the app before doing so.
-  * Buggy audio.
-  * Audio is choppy.
 
 ## Credits to
 * [DuchessOfDark88](https://twitter.com/DuchessOfDark88) App icon and graphics. (Some content at this link may be NSFW)
