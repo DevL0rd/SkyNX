@@ -216,9 +216,13 @@ textarea:focus, input:focus{
     height: calc(100% - 57px);
     width: calc(100% - 50px);
     background: rgba(0,0,0,0.5);
-    overflow: none;
+    overflow: hidden;
 }
-
+.contentAreaScrollable{
+    overflow: hidden;
+    overflow-y: auto;
+    overflow-x: hidden;
+}
 #settingsSearch {
     background: black;
     border: none;
