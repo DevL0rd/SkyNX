@@ -4,6 +4,7 @@
         "random": "c",
         "functional": "c",
         "iosfwd": "c",
-        "queue": "c"
+        "queue": "c",
+        "sdl.h": "c"
     }
 }

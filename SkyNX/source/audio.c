@@ -52,14 +52,14 @@ int curBuf = 0;
 
 AudioOutBuffer *audout_released_buf;
 int audout_filled = 0;
-u64 U64_MAX = 10;
 void play_buf(int buffer_size, int data_size)
 {
 
     if (audout_filled >= BUF_COUNT)
     {
         u32 released_count;
-        audoutWaitPlayFinish(&audout_released_buf, &released_count, U64_MAX);
+        //audoutPlayBuffer(&audout_released_buf, &released_count);
+        audoutWaitPlayFinish(&audout_released_buf, &released_count, UINT64_MAX);
     }
 
     audiobuf[curBuf].next = 0;
@@ -115,12 +115,11 @@ void audioHandlerLoop()
     int sock = setup_socket();
     printf("%d\n", sock);
     int played = 0;
+    struct sockaddr si_other;
+    socklen_t slen = sizeof(si_other);
     while (appletMainLoop())
     {
-        struct sockaddr si_other;
-        socklen_t slen = sizeof(si_other);
         int ret = recvfrom(sock, in_buf, sizeof(in_buf), 0, &si_other, &slen);
-
         if (ret < 0)
         {
             perror("recv failed:");
@@ -132,10 +131,10 @@ void audioHandlerLoop()
 
             continue;
         }
-
         resample((unsigned short *)in_buf, sizeof(in_buf), (unsigned short *)buf_data[curBuf], FACT);
         play_buf(buffer_size, DATA_SIZE);
         played++;
+        // svcSleepThread(16666665); //Nano sleep to keep at 60fps
     }
 
     for (int curBuf = 0; curBuf < BUF_COUNT; curBuf++)

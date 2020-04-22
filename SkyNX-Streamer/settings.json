@@ -8,6 +8,6 @@
 	},
 	"rainbowEnabled": true,
 	"devToolsOnStartup": false,
-	"ip": "172.16.0.10",
+	"ip": "172.16.0.12",
 	"quality": "10"
 }

@@ -496,20 +496,22 @@ void handleFrame(RenderContext *renderContext, VideoContext *videoContext)
 
 void displayFrame(RenderContext *renderContext)
 {
-    while (!checkFrameAvail(renderContext))
+    // while (!checkFrameAvail(renderContext))
+    // {
+    // }
+    if (checkFrameAvail(renderContext))
     {
+        SDL_RenderClear(renderContext->renderer);
+
+        mutexLock(&renderContext->texture_mut);
+        SDL_UpdateYUVTexture(renderContext->yuv_text, &renderContext->rect, renderContext->YPlane, RESX,
+                             renderContext->UPlane, RESX / 2,
+                             renderContext->VPlane, RESX / 2);
+        mutexUnlock(&renderContext->texture_mut);
+
+        SDL_RenderCopy(renderContext->renderer, renderContext->yuv_text, NULL, NULL);
+        SDL_RenderPresent(renderContext->renderer);
     }
-
-    SDL_RenderClear(renderContext->renderer);
-
-    mutexLock(&renderContext->texture_mut);
-    SDL_UpdateYUVTexture(renderContext->yuv_text, &renderContext->rect, renderContext->YPlane, RESX,
-                         renderContext->UPlane, RESX / 2,
-                         renderContext->VPlane, RESX / 2);
-    mutexUnlock(&renderContext->texture_mut);
-
-    SDL_RenderCopy(renderContext->renderer, renderContext->yuv_text, NULL, NULL);
-    SDL_RenderPresent(renderContext->renderer);
 }
 
 void freeRenderer(RenderContext *context)

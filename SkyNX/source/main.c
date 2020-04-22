@@ -138,6 +138,7 @@ int main(int argc, char **argv)
         {
             drawSplash(renderContext);
         }
+        svcSleepThread(16666665); //Nano sleep to keep at 60fps
     }
     /* Deinitialize all used systems */
     unInit();
