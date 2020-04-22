@@ -15,7 +15,6 @@ The Switch app however has it's roots in the original [In-Home-Switching](https:
 ![SkyNX Streamer](Screenshots/Streamer.png "SkyNX Streamer")
 
 ## Instructions:
-1. Go to settings and install the xBox controller driver and the audio driver. (If there are any issues with audio or your joycon input, check the Notes section below
 1. Set desktop and game resolution to 1280 X 720.
 2. Open SkyNXStreamer-win32-x64/SkyNXStreamer.exe
 3. Launch SkyNX on switch.
@@ -31,9 +30,11 @@ If for some reason the controllers don't work. Try the following steps.
 If the streamer just starts and stops immediately, try the following steps.
 1. Reinstall the xBox controller driver from the settings tab.
 2. Try running it again, if it still fails, restart the system and try once more.
-3.  If all else fails, join us in [this thread](https://github.com/DevL0rd/SkyNX/issues/4) to pinpoint this issue.
+3. If all else fails, join us in [this thread](https://github.com/DevL0rd/SkyNX/issues/4) to pinpoint this issue.
 
-If there is no audio playing, and you have installed the audio driver. Then for now just install [Screen Capture Recorder](https://github.com/rdp/screen-capture-recorder-to-video-windows-free/releases) to have audio. It is a sad workaround I know but I will get the bugs worked out soon.
+If there is no audio playing, and you have installed the audio driver.
+1. Restart windows and launch it again.
+2. Remove the audio driver in settings, and reinstall it.
 
 If your stream has high latency or is lagging. Try the following fixes and leave a issue here letting me know what fixed it.
 1. Stop and start the streamer.
