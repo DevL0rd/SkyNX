@@ -31,7 +31,7 @@ When the streamer connects it will try to connect the switch as a virtual xBox c
 If the streamer just starts and stops immediately, try the following steps.
 1. Reinstall the xBox controller driver from the settings tab.
 2. Try running it again, if it still fails, restart the system and try once more.
-3.  If all else fails, join us in [this thread](https://github.com/DevL0rd/SkyNX/issues/4) where we are pinpointing this issue.
+3.  If all else fails, join us in [this thread](https://github.com/DevL0rd/SkyNX/issues/4) to pinpoint this issue.
 
 If there is no audio playing, and you have installed the audio driver. Then for now just install [Screen Capture Recorder](https://github.com/rdp/screen-capture-recorder-to-video-windows-free/releases) to have audio. It is a sad workaround I know but I will get the bugs worked out soon.
 
