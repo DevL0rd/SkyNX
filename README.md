@@ -24,11 +24,15 @@ The Switch app however has it's roots in the original [In-Home-Switching](https:
 5. Select a streaming quality.
 6. Click start streamer.
 
-## Notes:
+## Troubleshooting:
 When the streamer connects it will try to connect the switch as a virtual xBox controller, if for some reason the controllers don't work. Try the following steps.
-
 1. Restart windows, and launch it again.
 2. If it still is not working. And you have previously used In-Home-Switching, Try removing the ScpDriverInterface that In-Home-Switching installs. You can use the installer that came with it to uninstall it, or get it [Here](https://github.com/mogzol/ScpDriverInterface/releases/download/1.1/ScpDriverInterface_v1.1.zip).
+
+If the streamer just starts and stops immediately, try the following steps.
+1. Reinstall the xBox controller driver from the settings tab.
+2. Try running it again, if it still fails, restart the system and try once more.
+3.  If all else fails, join us in [this thread](https://github.com/DevL0rd/SkyNX/issues/4) where we are pinpointing this issue.
 
 ## Known issues
   * So far Switch crashes when put to sleep with app running, please close app beforehand. It will be fixed after optimizations.
