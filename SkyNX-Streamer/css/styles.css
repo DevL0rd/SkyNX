@@ -7,3 +7,27 @@
 label {
     color: white;
 }
+#consoleContainer {
+    height: calc(100% - 25px);
+    width: 100%;
+    background: rgba(0,0,0,0.1);
+    overflow-y:auto;
+    font-size: 10px;
+    padding-left: 6px;
+    color: white;
+}
+#consoleInput:focus {
+    outline: none;
+}
+#consoleInput{
+    height: 25px;
+    width: 100%;
+    background: rgba(0, 0, 0, 0.6);
+    font-size: 10px;
+    padding-left: 6px;
+    border: none;
+    color: rgb(185, 185, 185);
+}
+#consoleInput:focus {
+    outline: none;
+}

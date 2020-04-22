@@ -29,6 +29,8 @@
         title="Plugins"><i class="fas fa-desktop"></i></button>
       <button id="settings-btn" class="navBar-btns" data-toggle="tooltip" data-placement="right" data-html="true"
         title="Settings"><i class="fas fa-cogs"></i></button>
+      <button id="console-btn" class="navBar-btns" data-toggle="tooltip" data-placement="right" data-html="true"
+        title="Console"><i class="fas fa-terminal"></i></button>
     </div>
     <div id="main" class="contentArea">
       <div class="row">
@@ -41,7 +43,6 @@
             <label id="qualityLabel" for="qualitySlider">Quality: 5Mbps</label>
             <input id="qualitySlider" type="range" class="custom-range" min="1" max="80" value="5" />
           </form>
-
           <form class="form-group">
             <button id="startBtn" type="button" class="btn btn-dark btn-lg btn-block">Start Streamer</button>
           </form>
@@ -95,6 +96,10 @@
         </div>
       </form>
     </div>
+    <div id="console" class="contentArea" style="display: none;">
+      <div id="consoleContainer" class="customScroll"></div>
+      <input id="consoleInput" type="text" placeholder="Console command"><br>
+    </div>
   </div>
   <div id="statusbar" class="rainbowBackgroundColor2">
     <span id="statusbartext">Ready!</span>
@@ -120,6 +125,7 @@
   <script src="./js/window.js"></script>
   <script src="./js/main.js"></script>
   <script src="./js/settings.js"></script>
+  <script src="./js/console.js"></script>
 </body>
 
 </html>

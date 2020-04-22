@@ -1,4 +1,4 @@
 @echo off
 cls
-electron-packager . SkyNXStreamer --platform=win32 --arch=x64
+electron-packager . SkyNXStreamer --platform=win32 --arch=ia32
 pause

@@ -4,6 +4,8 @@ const elevate = require("windows-elevate");
 const windowStateKeeper = require('electron-window-state');
 const fs = require('fs');
 const DB = require('./Devlord_modules/DB.js');
+var AU = require('ansi_up');
+var ansi_up = new AU.default;
 // Modules to control application life and create native browser window
 const { app, BrowserWindow, ipcMain } = require('electron')
 // Keep a global reference of the window object, if you don't, the window will
@@ -86,14 +88,14 @@ function startStreamer(arg) {
     { cwd: './NxStreamingService/', stdio: "pipe" }
   );
   streamerProcess.stdout.on("data", data => {
-    console.log(`${data}`);
+    log(`${data}`);
   });
   streamerProcess.stderr.on('data', (data) => {
     console.error(`streamerProcess Error: ${data}`);
   });
   streamerProcess.on('close', (code) => {
     clientSender.send("close");
-    console.log(`streamerProcess process exited with code ${code}`);
+    log(`streamerProcess process exited with code ${code}`);
   });
   clientSender.send("started");
 }
@@ -110,54 +112,72 @@ ipcMain.on('kill', (event, arg) => {
   streamerProcess.kill();
 });
 ipcMain.on('installScpVBus', (event, arg) => {
-  console.log("Installing ScpVBus driver..")
+  log("Installing ScpVBus driver..")
   var df = __dirname + "\\NxStreamingService\\lib\\"
   elevate.exec(df + "devcon.exe", ["install", df + "ScpVBus.inf", "Root\\ScpVBus"],
     function (error, stdout, stderr) {
-      console.log(`${stdout}`);
-      console.log(`${stderr}`);
+      log(`${stdout}`);
+      log(`${stderr}`);
       if (error) {
-        console.log("driver install error: " + error);
+        log("driver install error: " + error);
       } else {
-        console.log("Driver installed!");
+        log("Driver installed!");
       }
     });
 });
 ipcMain.on('unInstallScpVBus', (event, arg) => {
-  console.log("Un-Installing ScpVBus driver..")
+  log("Un-Installing ScpVBus driver..")
   var df = __dirname + "\\NxStreamingService\\lib\\"
   elevate.exec(df + "devcon.exe", ["remove", "Root\\ScpVBus"],
     function (error, stdout, stderr) {
       if (error !== null) {
-        console.log('driver uninstall error: ' + error);
+        log('driver uninstall error: ' + error);
       } else {
-        console.log("Driver un-installed!");
+        log("Driver un-installed!");
       }
     });
 
 });
 
 ipcMain.on('installAudioDriver', (event, arg) => {
-  console.log("Installing audio driver..")
+  log("Installing audio driver..")
   var df = __dirname + "\\NxStreamingService\\lib\\"
   elevate.exec("regsvr32", [df + "audio_sniffer.dll"],
     function (error, stdout, stderr) {
       if (error !== null) {
-        console.log('driver install error: ' + error);
+        log('driver install error: ' + error);
       } else {
-        console.log("Driver installed!");
+        log("Driver installed!");
       }
     });
 });
 ipcMain.on('unInstallAudioDriver', (event, arg) => {
-  console.log("Un-Installing audio driver..")
+  log("Un-Installing audio driver..")
   var df = __dirname + "\\NxStreamingService\\lib\\"
   elevate.exec("regsvr32", ["/u", df + "audio_sniffer.dll"],
     function (error, stdout, stderr) {
       if (error !== null) {
-        console.log('driver uninstall error: ' + error);
+        log('driver uninstall error: ' + error);
       } else {
-        console.log("Driver un-installed!");
+        log("Driver un-installed!");
       }
     });
 });
+
+var htmlLoggingSender
+ipcMain.on('registerForHTMLLogging', (event, arg) => {
+  htmlLoggingSender = event.sender
+})
+
+ipcMain.on('consoleCommand', (event, fullMessage) => {
+  var args = fullMessage.split(" ");
+  var command = args.shift().toLowerCase();
+  //Will add later
+})
+
+function log(str) {
+  console.log(str);
+  if (htmlLoggingSender) {
+    htmlLoggingSender.send('log', ansi_up.ansi_to_html(str.replace("  ", "\xa0")) + "<br>");
+  }
+}
