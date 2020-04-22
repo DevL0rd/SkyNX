@@ -7,8 +7,6 @@ const net = require('net');
 const robot = require("robotjs");
 const VGen = require("vgen-xbox")
 const vgen = new VGen();
-const cc = require('./Devlord_modules/conColors.js');
-const cs = require('./Devlord_modules/conSplash.js');
 var ip = "0.0.0.0"
 var quality = 5;
 var screenSize = robot.getScreenSize();
@@ -51,13 +49,13 @@ function startAudioProcess() {
     { detached: false }
   );
   ffmpegAudioProcess.stdout.on("data", data => {
-    //console.log(`${data}`);
+    console.log(`${data}`);
   });
   ffmpegAudioProcess.stderr.on('data', (data) => {
-    console.error(`ffmpegAudioProcessErr: ${data}`);
+    console.error(`${data}`);
   });
   ffmpegAudioProcess.on('close', (code) => {
-    console.log(`ffmpegAudioProcess process exited with code ${code}`);
+    console.log(`AudioProcess process exited with code ${code}`);
   });
 }
 function startVideoProcess() {
@@ -69,13 +67,13 @@ function startVideoProcess() {
     }
   );
   ffmpegProcess.stdout.on("data", data => {
-    // console.log(`${data}`);
+    console.log(`${data}`);
   });
   ffmpegProcess.stderr.on('data', (data) => {
-    // console.error(`ffmpegProcessErr: ${data}`);
+    console.error(`ffmpegProcessErr: ${data}`);
   });
   ffmpegProcess.on('close', (code) => {
-    console.log(`ffmpegProcess process exited with code ${code}`);
+    console.log(`VideoProcess process exited with code ${code}`);
   });
 }
 hidStreamClient.on('connect', function () {

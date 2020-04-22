@@ -91,7 +91,7 @@ function startStreamer(arg) {
     log(`${data}`);
   });
   streamerProcess.stderr.on('data', (data) => {
-    console.error(`streamerProcess Error: ${data}`);
+    log(`${data}`);
   });
   streamerProcess.on('close', (code) => {
     clientSender.send("close");
