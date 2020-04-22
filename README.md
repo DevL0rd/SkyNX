@@ -24,7 +24,7 @@ The Switch app however has it's roots in the original [In-Home-Switching](https:
 6. Click start streamer.
 
 ## Troubleshooting:
-When the streamer connects it will try to connect the switch as a virtual xBox controller, if for some reason the controllers don't work. Try the following steps.
+If for some reason the controllers don't work. Try the following steps.
 1. Restart windows, and launch it again.
 2. If it still is not working. And you have previously used In-Home-Switching, Try removing the ScpDriverInterface that In-Home-Switching installs. You can use the installer that came with it to uninstall it, or get it [Here](https://github.com/mogzol/ScpDriverInterface/releases/download/1.1/ScpDriverInterface_v1.1.zip).
 
@@ -34,6 +34,12 @@ If the streamer just starts and stops immediately, try the following steps.
 3.  If all else fails, join us in [this thread](https://github.com/DevL0rd/SkyNX/issues/4) to pinpoint this issue.
 
 If there is no audio playing, and you have installed the audio driver. Then for now just install [Screen Capture Recorder](https://github.com/rdp/screen-capture-recorder-to-video-windows-free/releases) to have audio. It is a sad workaround I know but I will get the bugs worked out soon.
+
+If your stream has high latency or is lagging. Try the following fixes and leave a issue here letting me know what fixed it.
+1. Stop and start the streamer.
+2. Make sure your desktop resolution is 1280 X 720
+3. Make sure your game doesn't reset that resolution.
+4. Restart your router and make sure it isn't being bogged down by anything.
 
 ## Known issues
   * So far Switch crashes when put to sleep with app running, please close app beforehand. It will be fixed after optimizations.
