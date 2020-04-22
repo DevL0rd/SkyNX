@@ -4,9 +4,7 @@ If you are not sure what that is, well, it is an app that allows you to stream y
 
 [Downloads are here](https://github.com/DevL0rd/SkyNX/releases).
 
-The desktop streaming client is completely new. Currently the audio is a little buggy but it runs well!
-
-The Switch app however has it's roots in the original [In-Home-Switching](https://github.com/jakibaki/In-Home-Switching/blob/master/README.md) app.
+The desktop streaming client is completely new. The Switch app however has it's roots in the original [In-Home-Switching](https://github.com/jakibaki/In-Home-Switching/blob/master/README.md) app.
 
 ## SkyNX App
 ![SkyNX App](Screenshots/App.jpg "SkyNX App")
