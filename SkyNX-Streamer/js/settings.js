@@ -81,10 +81,20 @@ function applyClientSettings() {
         ipcRenderer.send('installAudioDriver');
         clientSettings.firstInstall = true;
     }
+    if (clientSettings.autoStartStreamer) {
+        connect();
+    }
+
     saveClientSettings();
 }
+
 $("#rainbowEnabled").on('change', function () {
     clientSettings.rainbowEnabled = $("#rainbowEnabled").prop("checked");
+    saveClientSettings();
+    applyClientSettings();
+});
+$("#autoStart").on('change', function () {
+    clientSettings.autoStartStreamer = $("#autoStart").prop("checked");
     saveClientSettings();
     applyClientSettings();
 });

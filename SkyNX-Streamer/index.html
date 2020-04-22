@@ -53,10 +53,25 @@
 
     </div>
     <div id="settings" class="contentArea contentAreaScrollable customScroll" style="display: none;">
-
+      <div class="form-group">
+        <label class="switch">
+          <input id="autoStart" type="checkbox">
+          <span class="slider round"></span>
+        </label>
+        <label class="form-check-label" for="autoStart">
+          Start streamer automatically
+        </label>
+      </div>
+      <div class="form-group">
+        <label class="switch">
+          <input id="rainbowEnabled" type="checkbox">
+          <span class="slider round"></span>
+        </label>
+        <label class="form-check-label" for="rainbowEnabled">
+          Enable Rainbow Accents
+        </label>
+      </div>
       <form class="form-group">
-
-
         <div class="row">
           <div class="col">
             <button id="installScpVBusBtn" type="button" class="btn btn-dark btn-block">Install Controller</button>
@@ -79,15 +94,6 @@
           </div>
         </div>
       </form>
-      <div class="form-group">
-        <label class="switch">
-          <input id="rainbowEnabled" type="checkbox">
-          <span class="slider round"></span>
-        </label>
-        <label class="form-check-label" for="rainbowEnabled">
-          Enable Rainbow Accents
-        </label>
-      </div>
     </div>
   </div>
   <div id="statusbar" class="rainbowBackgroundColor2">
