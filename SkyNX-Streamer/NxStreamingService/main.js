@@ -70,7 +70,7 @@ function startVideoProcess() {
     console.log(`${data}`);
   });
   ffmpegProcess.stderr.on('data', (data) => {
-    console.error(`ffmpegProcessErr: ${data}`);
+    console.error(`${data}`);
   });
   ffmpegProcess.on('close', (code) => {
     console.log(`VideoProcess process exited with code ${code}`);
