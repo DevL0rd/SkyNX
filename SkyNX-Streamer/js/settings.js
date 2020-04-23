@@ -60,7 +60,7 @@ function applyClientSettings() {
     $("#devToolsOnStartup").prop("checked", clientSettings.devToolsOnStartup);
     $("#autoStart").prop("checked", clientSettings.autoStartStreamer);
     $("#qualitySlider").val(clientSettings.quality);
-    $('#qualityLabel').html("Quality: " + clientSettings.quality + "M");
+    $('#qualityLabel').html("Quality: " + clientSettings.quality + "Mbps");
     $("#ipInput").val(clientSettings.ip);
     if (clientSettings.debug) {
         $("#dev-btn").fadeIn(400);
