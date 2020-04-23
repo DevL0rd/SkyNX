@@ -120,9 +120,6 @@ ipcMain.on('kill', (event, arg) => {
 ipcMain.on('installScpVBus', (event, arg) => {
   log("Installing ScpVBus driver..")
   var df = __dirname + "\\NxStreamingService\\lib\\"
-  if (!isDev) {
-    df = __dirname + ".\\resources\\app\\NxStreamingService\\lib\\"
-  }
   elevate.exec(df + "devcon.exe", ["install", df + "ScpVBus.inf", "Root\\ScpVBus"],
     function (error, stdout, stderr) {
       log(`${stdout}`);
@@ -137,9 +134,6 @@ ipcMain.on('installScpVBus', (event, arg) => {
 ipcMain.on('unInstallScpVBus', (event, arg) => {
   log("Un-Installing ScpVBus driver..")
   var df = __dirname + "\\NxStreamingService\\lib\\"
-  if (!isDev) {
-    df = __dirname + ".\\resources\\app\\NxStreamingService\\lib\\"
-  }
   elevate.exec(df + "devcon.exe", ["remove", "Root\\ScpVBus"],
     function (error, stdout, stderr) {
       if (error !== null) {
@@ -154,9 +148,6 @@ ipcMain.on('unInstallScpVBus', (event, arg) => {
 ipcMain.on('installAudioDriver', (event, arg) => {
   log("Installing audio driver..")
   var df = __dirname + "\\NxStreamingService\\lib\\"
-  if (!isDev) {
-    df = __dirname + ".\\resources\\app\\NxStreamingService\\lib\\"
-  }
   elevate.exec("regsvr32", [df + "audio_sniffer.dll"],
     function (error, stdout, stderr) {
       if (error !== null) {
@@ -169,9 +160,6 @@ ipcMain.on('installAudioDriver', (event, arg) => {
 ipcMain.on('unInstallAudioDriver', (event, arg) => {
   log("Un-Installing audio driver..")
   var df = __dirname + "\\NxStreamingService\\lib\\"
-  if (!isDev) {
-    df = __dirname + ".\\resources\\app\\NxStreamingService\\lib\\"
-  }
   elevate.exec("regsvr32", ["/u", df + "audio_sniffer.dll"],
     function (error, stdout, stderr) {
       if (error !== null) {
