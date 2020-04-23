@@ -45,7 +45,7 @@ function plugControllerIn() {
 function startAudioProcess() {
   ffmpegAudioProcess = spawn(
     "./lib/ffmpeg.exe",
-    ["-y", "-f", "dshow", "-i", 'audio=virtual-audio-capturer', "-af", "equalizer=f=100:t=h:width=200:g=-64", "-f", "s16le", "-ar", "16000", "-ac", "2", "-c:a", "pcm_s16le", "udp://" + ip + ":2224?pkt_size=640"],
+    ["-y", "-f", "dshow", "-i", 'audio=virtual-audio-capturer', "-f", "s16le", "-ar", "16000", "-ac", "2", "-c:a", "pcm_s16le", "udp://" + ip + ":2224?pkt_size=640"],
     { detached: false }
   );
   ffmpegAudioProcess.stdout.on("data", data => {
@@ -61,7 +61,7 @@ function startAudioProcess() {
 function startVideoProcess() {
   ffmpegProcess = spawn(
     "./lib/ffmpeg.exe",
-    ["-probesize", "10M", "-f", "gdigrab", "-framerate", "60", "-video_size", swidth + "x" + sheight, "-offset_x", "0", "-offset_y", "0", "-i", "desktop", "-f", "h264", "-vf", "scale=1280x720", "-preset", "ultrafast", "-tune", "zerolatency", "-pix_fmt", "yuv420p", "-profile:v", "baseline", "-x264-params", '"nal-hrd=cbr"', "-b:v", quality + "M", "-minrate", quality + "M", "-maxrate", quality + "M", "-bufsize", "2M", "tcp://" + ip + ":2222"],
+    ["-probesize", "10M", "-f", "gdigrab", "-framerate", "60", "-video_size", swidth + "x" + sheight, "-offset_x", "0", "-offset_y", "0", "-i", "desktop", "-f", "h264", "-vf", "scale=1280x720", "-preset", "ultrafast", "-tune", "zerolatency", "-pix_fmt", "yuv420p", "-profile:v", "baseline", "-x264-params", 'nal-hrd=cbr', "-b:v", quality + "M", "-minrate", quality + "M", "-maxrate", quality + "M", "-bufsize", "2M", "tcp://" + ip + ":2222"],
     {
       detached: false
     }
