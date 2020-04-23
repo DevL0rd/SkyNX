@@ -4,6 +4,7 @@ const elevate = require("windows-elevate");
 const windowStateKeeper = require('electron-window-state');
 const fs = require('fs');
 const DB = require('./Devlord_modules/DB.js');
+const isDev = require('electron-is-dev');
 var AU = require('ansi_up');
 var ansi_up = new AU.default;
 // Modules to control application life and create native browser window
@@ -81,11 +82,16 @@ app.on('browser-window-created', function (e, window) {
 });
 var streamerProcess;
 var clientSender;
+
 function startStreamer(arg) {
+  var cwd = './NxStreamingService/';
+  if (!isDev) {
+    cwd = "./resources/app/NxStreamingService"
+  }
   streamerProcess = spawn(
     "./NxStreamingService.exe",
     ["/ip", arg.ip, "/q", arg.q],
-    { cwd: './NxStreamingService/', stdio: "pipe" }
+    { cwd: cwd, stdio: "pipe" }
   );
   streamerProcess.stdout.on("data", data => {
     log(`${data}`);
@@ -114,6 +120,9 @@ ipcMain.on('kill', (event, arg) => {
 ipcMain.on('installScpVBus', (event, arg) => {
   log("Installing ScpVBus driver..")
   var df = __dirname + "\\NxStreamingService\\lib\\"
+  if (!isDev) {
+    df = __dirname + ".\\resources\\app\\NxStreamingService\\lib\\"
+  }
   elevate.exec(df + "devcon.exe", ["install", df + "ScpVBus.inf", "Root\\ScpVBus"],
     function (error, stdout, stderr) {
       log(`${stdout}`);
@@ -128,6 +137,9 @@ ipcMain.on('installScpVBus', (event, arg) => {
 ipcMain.on('unInstallScpVBus', (event, arg) => {
   log("Un-Installing ScpVBus driver..")
   var df = __dirname + "\\NxStreamingService\\lib\\"
+  if (!isDev) {
+    df = __dirname + ".\\resources\\app\\NxStreamingService\\lib\\"
+  }
   elevate.exec(df + "devcon.exe", ["remove", "Root\\ScpVBus"],
     function (error, stdout, stderr) {
       if (error !== null) {
@@ -142,6 +154,9 @@ ipcMain.on('unInstallScpVBus', (event, arg) => {
 ipcMain.on('installAudioDriver', (event, arg) => {
   log("Installing audio driver..")
   var df = __dirname + "\\NxStreamingService\\lib\\"
+  if (!isDev) {
+    df = __dirname + ".\\resources\\app\\NxStreamingService\\lib\\"
+  }
   elevate.exec("regsvr32", [df + "audio_sniffer.dll"],
     function (error, stdout, stderr) {
       if (error !== null) {
@@ -154,6 +169,9 @@ ipcMain.on('installAudioDriver', (event, arg) => {
 ipcMain.on('unInstallAudioDriver', (event, arg) => {
   log("Un-Installing audio driver..")
   var df = __dirname + "\\NxStreamingService\\lib\\"
+  if (!isDev) {
+    df = __dirname + ".\\resources\\app\\NxStreamingService\\lib\\"
+  }
   elevate.exec("regsvr32", ["/u", df + "audio_sniffer.dll"],
     function (error, stdout, stderr) {
       if (error !== null) {

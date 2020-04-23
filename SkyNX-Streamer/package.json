@@ -14,6 +14,7 @@
     "ansi_up": "^4.0.4",
     "bootstrap": "latest",
     "electron": "latest",
+    "electron-is-dev": "^1.2.0",
     "electron-window-state": "latest",
     "formidable": "latest",
     "jquery": "latest",
