@@ -59,9 +59,11 @@ function startAudioProcess() {
   });
 }
 function startVideoProcess() {
+  var cpuh264 = ["-probesize", "10M", "-threads", "0", "-f", "gdigrab", "-framerate", "80" /*Reduce video stutter by increasing capture rate */, "-video_size", swidth + "x" + sheight, "-offset_x", "0", "-offset_y", "0", "-i", "desktop", "-f", "h264", "-vf", "scale=1280x720", "-preset", "ultrafast", "-tune", "zerolatency", "-pix_fmt", "yuv420p", "-profile:v", "baseline", "-x264-params", 'nal-hrd=cbr', "-b:v", quality + "M", "-minrate", quality - 3 + "M", "-maxrate", quality + "M", "-bufsize", (quality / 2) + "M", "tcp://" + ip + ":2222"];
+  var h264_nvenc_ARGS = ["-probesize", "10M", "-f", "gdigrab", "-framerate", "80", "-video_size", swidth + "x" + sheight, "-offset_x", "0", "-offset_y", "0", "-i", "desktop", "-c:v", "h264_nvenc", "-gpu", "0", "-rc", "cbr_ld_hq", "-zerolatency", "true", "-f", "h264", "-vf", "scale=1280x720", "-preset", "losslesshp", "-pix_fmt", "yuv420p", "-profile:v", "baseline", "-b:v", quality + "M", "-minrate", quality - 3 + "M", "-maxrate", quality + "M", "tcp://" + ip + ":2222"];
   ffmpegProcess = spawn(
     "./lib/ffmpeg.exe",
-    ["-probesize", "10M", "-f", "gdigrab", "-framerate", "60", "-video_size", swidth + "x" + sheight, "-offset_x", "0", "-offset_y", "0", "-i", "desktop", "-f", "h264", "-vf", "scale=1280x720", "-preset", "ultrafast", "-tune", "zerolatency", "-pix_fmt", "yuv420p", "-profile:v", "baseline", "-x264-params", 'nal-hrd=cbr', "-b:v", quality + "M", "-minrate", quality + "M", "-maxrate", quality + "M", "-bufsize", "2M", "tcp://" + ip + ":2222"],
+    cpuh264,
     {
       detached: false
     }
