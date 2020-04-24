@@ -18,7 +18,8 @@ The desktop streaming client is completely new. The Switch app however has it's 
 ![SkyNX App](Screenshots/App.jpg "SkyNX App")
 
 ## SkyNX Streamer
-![SkyNX Streamer](Screenshots/Streamer.png "SkyNX Streamer")
+![SkyNX Streamer](Screenshots/Main.png "SkyNX Streamer")![SkyNX Settings](Screenshots/Settings.png "SkyNX Settings")
+![SkyNX Stats](Screenshots/Stats.png "SkyNX Stats")![SkyNX Console](Screenshots/Console.png "SkyNX Console")
 
 ## Instructions:
 1. Copy the switch folder in SkyNX.zip, to the root of your sd card.
