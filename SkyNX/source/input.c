@@ -57,8 +57,11 @@ void gamePadSend(JoyConSocket *connection)
 
     touchPosition touch;
     hidTouchRead(&touch, 0);
-    pkg.touchX = touch.px;
-    pkg.touchY = touch.py;
+    pkg.touchX1 = touch.px;
+    pkg.touchY1 = touch.py;
+    hidTouchRead(&touch, 1);
+    pkg.touchX2 = touch.px;
+    pkg.touchY2 = touch.py;
     sendJoyConInput(connection, &pkg);
 }
 

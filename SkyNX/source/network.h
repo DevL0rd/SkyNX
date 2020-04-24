@@ -30,8 +30,10 @@ typedef struct
     short lJoyY4;
     short rJoyX4;
     short rJoyY4;
-    short touchX;
-    short touchY;
+    short touchX1;
+    short touchY1;
+    short touchX2;
+    short touchY2;
     short controllerCount;
 } JoyPkg;
 

@@ -109,8 +109,10 @@ function parseInputStruct(buff) {
     .word16Ule('LJoyY4')
     .word16Ule('RJoyX4')
     .word16Ule('RJoyY4')
-    .word16Ule('touchX')
-    .word16Ule('touchY')
+    .word16Ule('touchX1')
+    .word16Ule('touchY1')
+    .word16Ule('touchX2')
+    .word16Ule('touchY2')
     .word16Ule('controllerCount')
   input._setBuff(buff);
   return input;
@@ -138,9 +140,8 @@ function heldKeysBitmask(HeldKeys) {
     Down: isOdd(HeldKeys >> 15)
   }
 }
-var touchXold;
-var touchYold;
 var mouseIsDown = false;
+var rightTouchTime = 0;
 function handleControllerInput(hid, controllerId, playerNumber) {
   var heldKeys = hid.get("HeldKeys" + playerNumber);
   var LJoyX = hid.get("LJoyX" + playerNumber);
@@ -240,6 +241,10 @@ function handleControllerInput(hid, controllerId, playerNumber) {
   }
 
 }
+var touchX1old = 0;
+var touchY1old = 0;
+var rightClicking = false;
+var scrolling = false;
 hidStreamClient.on('data', function (data) {
   switchHidBuffer = new Buffer.from(data);
   var hid = parseInputStruct(switchHidBuffer)
@@ -250,19 +255,48 @@ hidStreamClient.on('data', function (data) {
   for (i in controllerIds) {
     handleControllerInput(hid, controllerIds[i], parseInt(i) + 1);
   }
-  var touchX = hid.get("touchX");
-  var touchY = hid.get("touchY");
-  if (touchX && touchY) {
-    touchX -= 15;
-    touchY -= 15;
-    var posXPercent = touchX / 1249
-    var posYPercent = touchY / 689
-    var posX = Math.floor(swidth * posXPercent)
-    var posY = Math.floor(sheight * posYPercent)
-    robot.moveMouse(posX, posY);
-    if (!mouseIsDown) {
-      robot.mouseToggle("down");
-      mouseIsDown = true;
+  var touchX1 = hid.get("touchX1");
+  var touchY1 = hid.get("touchY1");
+  if (touchX1 && touchY1) {
+    touchX1 -= 15;
+    touchY1 -= 15;
+    touchX1 = Math.floor(swidth * (touchX1 / 1249))
+    touchY1 = Math.floor(sheight * (touchY1 / 689))
+    var touchX2 = hid.get("touchX2");
+    var touchY2 = hid.get("touchY2");
+    if (touchX2 && touchY2) {
+      rightTouchTime++;
+      if (rightTouchTime > 10) {
+        if (!touchX1old) touchX1old = touchX1;
+        if (!touchY1old) touchY1old = touchY1;
+        var xDiff = touchX1old - touchX1;
+        var yDiff = touchY1old - touchY1;
+        console.log(yDiff);
+        robot.scrollMouse(0, yDiff);
+        touchX1old = touchX1;
+        touchY1old = touchY1;
+        scrolling = true;
+        rightClicking = false;
+      } else {
+        rightClicking = true;
+      }
+    } else {
+      if (rightClicking) {
+        robot.mouseClick("right");
+        rightClicking = false
+      }
+      scrolling = false;
+      rightTouchTime = 0;
+    }
+    if (!scrolling) {
+      robot.moveMouse(touchX1, touchY1);
+      if (!mouseIsDown) {
+        robot.mouseToggle("down");
+        mouseIsDown = true;
+      }
+    } else {
+      robot.mouseToggle("up");
+      mouseIsDown = false;
     }
   } else {
     if (mouseIsDown) {
