@@ -42,3 +42,8 @@ $(document).on('input', '#ipInput', function () {
     saveClientSettings();
 });
 
+$("#main-btn").click(function () {
+    $(".contentArea").hide();
+    $("#main").fadeIn(400);
+    $('#main-btn').tooltip('hide');
+});

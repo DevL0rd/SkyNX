@@ -42,17 +42,3 @@ document.getElementById("rld-btn").addEventListener("click", function (e) {
 window.addEventListener('load', function () {
     $("#loadingCover").fadeOut(1000);
 })
-
-//PROJECT CODE STARTS HERE
-
-
-$("#main-btn").click(function () {
-    $(".contentArea").hide();
-    $("#main").fadeIn(400);
-    $('#main-btn').tooltip('hide');
-});
-$("#settings-btn").click(function () {
-    $(".contentArea").hide();
-    $("#settings").fadeIn(400);
-    $('#settings-btn').tooltip('hide');
-});

@@ -2,29 +2,20 @@
 var debug = true;
 var clientSettings = {};
 var clientSettingsPath = "./settings.json";
+
 if (fs.existsSync(clientSettingsPath)) {
     loadClientSettings();
 } else {
-    DB.save(clientSettingsPath, {}); //init file
-}
-var saveSettingsTO
-function saveClientSettingsTimeout() {
-    clearTimeout(saveSettingsTO);
-    saveSettingsTO = setTimeout(saveClientSettings, 500);
+    initSettings();
 }
 function saveClientSettings() {
-    verifySettings();
     DB.save(clientSettingsPath, clientSettings);
 }
-function verifySettings() {
-
-}
-function loadClientSettings() {
-    clientSettings = DB.load(clientSettingsPath)
-    if (clientSettings.debug == undefined) {
+function initSettings() {
+    if (!clientSettings.hasOwnProperty("debug")) {
         clientSettings.debug = false;
     }
-    if (clientSettings.accentColor == undefined) {
+    if (!clientSettings.hasOwnProperty("accentColor")) {
         clientSettings.accentColor = {
             "r": 50,
             "g": 50,
@@ -32,26 +23,27 @@ function loadClientSettings() {
             "a": 0.9
         };
     }
-    if (clientSettings.rainbowEnabled == undefined) {
+    if (!clientSettings.hasOwnProperty("rainbowEnabled")) {
         clientSettings.rainbowEnabled = true;
     }
-    if (clientSettings.devToolsOnStartup == undefined) {
+    if (!clientSettings.hasOwnProperty("devToolsOnStartup")) {
         clientSettings.devToolsOnStartup = false;
     }
-    if (clientSettings.devToolsOnStartup == undefined) {
-        clientSettings.devToolsOnStartup = false;
-    }
-    if (clientSettings.ip == undefined) {
+    if (!clientSettings.hasOwnProperty("ip")) {
         clientSettings.ip = "0.0.0.0";
     }
-    if (clientSettings.quality == undefined) {
+    if (!clientSettings.hasOwnProperty("quality")) {
         clientSettings.quality = 5;
     }
-    if (clientSettings.firstInstall == undefined) {
+    if (!clientSettings.hasOwnProperty("firstInstall")) {
         clientSettings.firstInstall = false;
     }
-
     applyClientSettings();
+}
+function loadClientSettings() {
+    clientSettings = DB.load(clientSettingsPath);
+    initSettings();
+    saveClientSettings();
 }
 
 function applyClientSettings() {
@@ -81,12 +73,11 @@ function applyClientSettings() {
         ipcRenderer.send('installScpVBus');
         ipcRenderer.send('installAudioDriver');
         clientSettings.firstInstall = true;
+        saveClientSettings();
     }
     if (clientSettings.autoStartStreamer) {
         connect();
     }
-
-    saveClientSettings();
 }
 
 $("#rainbowEnabled").on('change', function () {
@@ -121,4 +112,10 @@ $('#installAudioDriverBtn').click(function () {
 });
 $('#unInstallAudioDriverBtn').click(function () {
     ipcRenderer.send('unInstallAudioDriver');
+});
+
+$("#settings-btn").click(function () {
+    $(".contentArea").hide();
+    $("#settings").fadeIn(400);
+    $('#settings-btn').tooltip('hide');
 });

@@ -7,12 +7,11 @@ function load(path) {
 	var contents = fs.readFileSync(path).toString('utf-8');
 	return JSON.parse(contents)
 }
-
 function save(path, obj) {
 	var contents = JSON.stringify(obj, null, "\t")
 	fs.mkdir(getDirName(path), { recursive: true }, function (err) {
 		if (err) throw err;
-		fs.writeFileSync(path, contents, function (err) {
+		fs.writeFile(path, contents, function (err) {
 			if (err) throw err;
 		});
 	});
