@@ -37,9 +37,9 @@ DATA			:=	data
 INCLUDES		:=	include
 EXEFS_SRC		:=	exefs_src
 
-APP_AUTHOR		:=	jakibaki, D-VAmpire, DevL0rd
+APP_AUTHOR		:=	DevL0rd
 APP_TITLE		:=	SkyNX
-APP_VERSION		:=	0.0.1
+APP_VERSION		:=	1.0
 
 
 

@@ -10,13 +10,29 @@
 /* Data to send to server */
 typedef struct
 {
-    unsigned long heldKeys;
-    short lJoyX;
-    short lJoyY;
-    short rJoyX;
-    short rJoyY;
+    unsigned long heldKeys1;
+    short lJoyX1;
+    short lJoyY1;
+    short rJoyX1;
+    short rJoyY1;
+    unsigned long heldKeys2;
+    short lJoyX2;
+    short lJoyY2;
+    short rJoyX2;
+    short rJoyY2;
+    unsigned long heldKeys3;
+    short lJoyX3;
+    short lJoyY3;
+    short rJoyX3;
+    short rJoyY3;
+    unsigned long heldKeys4;
+    short lJoyX4;
+    short lJoyY4;
+    short rJoyX4;
+    short rJoyY4;
     short touchX;
     short touchY;
+    short controllerCount;
 } JoyPkg;
 
 /* Init nx network and av network */
