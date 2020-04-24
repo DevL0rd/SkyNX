@@ -8,8 +8,9 @@ The desktop streaming client is completely new. The Switch app however has it's 
 ## Features
  * Stream PC games with audio to switch at 60fps!
  * Handles up to 4 JoyCon pairs. (4 Players at once!)
- * Optionally disable video to use the JoyCons as remotes on PC!
- * Disabling video doesn't disale audio so you can use you Switch as a remote with audio through headphones!
+ * Optionally disable video  to use the JoyCons as remotes on PC!
+ * Optionally disable audio.
+ * Optionally swap A and B AND X and Y.
  * Handles basic touch input.
  * Handles right click. (Touch with 1 finger, tap with the second)
  * Handles scrolling. (Your standard 2 finger scroll.)
