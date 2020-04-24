@@ -140,8 +140,6 @@ function heldKeysBitmask(HeldKeys) {
     Down: isOdd(HeldKeys >> 15)
   }
 }
-var mouseIsDown = false;
-var rightTouchTime = 0;
 function handleControllerInput(hid, controllerId, playerNumber) {
   var heldKeys = hid.get("HeldKeys" + playerNumber);
   var LJoyX = hid.get("LJoyX" + playerNumber);
@@ -243,6 +241,10 @@ function handleControllerInput(hid, controllerId, playerNumber) {
 }
 var touchX1old = 0;
 var touchY1old = 0;
+
+var leftClicking = false;
+var rightTouchTime = 0;
+var leftTouchTime = 0;
 var rightClicking = false;
 var scrolling = false;
 hidStreamClient.on('data', function (data) {
@@ -266,7 +268,7 @@ hidStreamClient.on('data', function (data) {
     var touchY2 = hid.get("touchY2");
     if (touchX2 && touchY2) {
       rightTouchTime++;
-      if (rightTouchTime > 10) {
+      if (rightTouchTime > 5) { //Handle scrolling
         if (!touchX1old) touchX1old = touchX1;
         if (!touchY1old) touchY1old = touchY1;
         var xDiff = touchX1old - touchX1;
@@ -276,7 +278,7 @@ hidStreamClient.on('data', function (data) {
         touchY1old = touchY1;
         scrolling = true;
         rightClicking = false;
-      } else {
+      } else { //Handle left click
         rightClicking = true;
       }
     } else {
@@ -288,20 +290,26 @@ hidStreamClient.on('data', function (data) {
       rightTouchTime = 0;
     }
     if (!scrolling) {
+      leftTouchTime++;
       robot.moveMouse(touchX1, touchY1);
-      if (!mouseIsDown) {
+      if (!leftClicking) {
         robot.mouseToggle("down");
-        mouseIsDown = true;
+        leftClicking = true;
       }
     } else {
       robot.mouseToggle("up");
-      mouseIsDown = false;
+      leftClicking = false;
     }
   } else {
-    if (mouseIsDown) {
+    if (leftClicking) { //release left click
       robot.mouseToggle("up");
-      mouseIsDown = false;
+      leftClicking = false;
+      if (leftTouchTime < 3) {
+        robot.mouseClick("left", true); //double click
+      }
     }
+    leftTouchTime = 0;
+    rightTouchTime = 0;
   }
 
 });

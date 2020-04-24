@@ -9,10 +9,19 @@ void gamePadSend(JoyConSocket *connection)
     JoystickPosition lJoy;
     JoystickPosition rJoy;
     JoyPkg pkg;
-    HidControllerID conID;
     /* Recieve switch input and generate the package */
     hidScanInput();
     short controllersConnected = 0;
+    HidControllerID player1Id;
+    if (hidGetHandheldMode())
+    {
+        player1Id = CONTROLLER_HANDHELD;
+        controllersConnected++;
+    }
+    else
+    {
+        player1Id = CONTROLLER_PLAYER_1;
+    }
     for (short i = 0; i < 4; i++)
     {
         if (hidIsControllerConnected(i))
@@ -21,11 +30,9 @@ void gamePadSend(JoyConSocket *connection)
         }
     }
     pkg.controllerCount = controllersConnected;
-
-    conID = hidGetHandheldMode() ? CONTROLLER_HANDHELD : CONTROLLER_PLAYER_1;
-    pkg.heldKeys1 = hidKeysHeld(conID);
-    hidJoystickRead(&lJoy, conID, JOYSTICK_LEFT);
-    hidJoystickRead(&rJoy, conID, JOYSTICK_RIGHT);
+    pkg.heldKeys1 = hidKeysHeld(player1Id);
+    hidJoystickRead(&lJoy, player1Id, JOYSTICK_LEFT);
+    hidJoystickRead(&rJoy, player1Id, JOYSTICK_RIGHT);
     pkg.lJoyX1 = lJoy.dx;
     pkg.lJoyY1 = lJoy.dy;
     pkg.rJoyX1 = rJoy.dx;
