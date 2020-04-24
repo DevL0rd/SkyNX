@@ -271,8 +271,7 @@ hidStreamClient.on('data', function (data) {
         if (!touchY1old) touchY1old = touchY1;
         var xDiff = touchX1old - touchX1;
         var yDiff = touchY1old - touchY1;
-        console.log(yDiff);
-        robot.scrollMouse(0, yDiff);
+        robot.scrollMouse(xDiff, yDiff);
         touchX1old = touchX1;
         touchY1old = touchY1;
         scrolling = true;
