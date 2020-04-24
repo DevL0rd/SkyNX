@@ -14,13 +14,6 @@ The desktop streaming client is completely new. The Switch app however has it's 
  * Handles right click. (Touch with 1 finger, tap with the second)
  * Handles scrolling. (Your standard 2 finger scroll.)
 
-## SkyNX App
-![SkyNX App](Screenshots/App.jpg "SkyNX App")
-
-## SkyNX Streamer
-![SkyNX Streamer](Screenshots/Main.png "SkyNX Streamer")![SkyNX Settings](Screenshots/Settings.png "SkyNX Settings")
-![SkyNX Stats](Screenshots/Stats.png "SkyNX Stats")![SkyNX Console](Screenshots/Console.png "SkyNX Console")
-
 ## Instructions:
 1. Copy the switch folder in SkyNX.zip, to the root of your sd card.
 2. Install the forwarder with a nsp installer such as Goldleaf.
@@ -30,6 +23,13 @@ The desktop streaming client is completely new. The Switch app however has it's 
 6. Launch SkyNX on switch.
 7. Put the IP showed on the app into the streamer.
 8. Click start streamer.
+
+## SkyNX App
+![SkyNX App](Screenshots/App.jpg "SkyNX App")
+
+## SkyNX Streamer
+![SkyNX Streamer](Screenshots/Main.png "SkyNX Streamer")![SkyNX Settings](Screenshots/Settings.png "SkyNX Settings")
+![SkyNX Stats](Screenshots/Stats.png "SkyNX Stats")![SkyNX Console](Screenshots/Console.png "SkyNX Console")
 
 ## Troubleshooting:
 If for some reason the controllers don't work. Try the following steps.
