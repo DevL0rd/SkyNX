@@ -5,6 +5,11 @@
     padding: 8px;
 }
 label {
+    padding-left: 6px;
+    color: white;
+}
+h2 {
+    padding-left: 12px;
     color: white;
 }
 #consoleContainer {
@@ -44,3 +49,13 @@ label {
 .chartTitle{
     margin-left: 8px;
 }
+.comment {
+    font-size: 10px;
+    color: rgba(126, 126, 126, 0.8) ;
+}
+hr {
+    margin-top: 3px;
+    margin-bottom: 8px;
+    border: 0;
+    border-top: 3px solid rgba(100, 100, 100, 0.8);
+  }

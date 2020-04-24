@@ -35,6 +35,9 @@ function initSettings() {
     if (!clientSettings.hasOwnProperty("quality")) {
         clientSettings.quality = 5;
     }
+    if (!clientSettings.hasOwnProperty("disableVideo")) {
+        clientSettings.disableVideo = false;
+    }
     if (!clientSettings.hasOwnProperty("firstInstall")) {
         clientSettings.firstInstall = false;
     }
@@ -53,6 +56,8 @@ function applyClientSettings() {
     $("#autoStart").prop("checked", clientSettings.autoStartStreamer);
     $("#qualitySlider").val(clientSettings.quality);
     $('#qualityLabel').html("Quality: " + clientSettings.quality + "Mbps");
+    $('#disableVideo').prop("checked", clientSettings.disableVideo);
+
     $("#ipInput").val(clientSettings.ip);
     if (clientSettings.debug) {
         $("#dev-btn").fadeIn(400);
@@ -85,11 +90,6 @@ $("#rainbowEnabled").on('change', function () {
     saveClientSettings();
     applyClientSettings();
 });
-$("#autoStart").on('change', function () {
-    clientSettings.autoStartStreamer = $("#autoStart").prop("checked");
-    saveClientSettings();
-    applyClientSettings();
-});
 // $("#debugEnabled").on('change', function () {
 //     clientSettings.debug = $("#debugEnabled").prop("checked");
 //     saveClientSettings();
@@ -101,6 +101,11 @@ $("#autoStart").on('change', function () {
 //     applyClientSettings();
 // });
 
+$("#autoStart").on('change', function () {
+    clientSettings.autoStartStreamer = $("#autoStart").prop("checked");
+    saveClientSettings();
+    applyClientSettings();
+});
 $('#installScpVBusBtn').click(function () {
     ipcRenderer.send('installScpVBus');
 });
@@ -113,7 +118,27 @@ $('#installAudioDriverBtn').click(function () {
 $('#unInstallAudioDriverBtn').click(function () {
     ipcRenderer.send('unInstallAudioDriver');
 });
+var qualityChangeTimeout;
+$(document).on('input', '#qualitySlider', function () {
+    $('#qualityLabel').html("Quality: " + $(this).val() + "Mbps");
+    clientSettings.quality = $(this).val();
+    saveClientSettings();
+    if (running) {
+        clearTimeout(qualityChangeTimeout);
+        qualityChangeTimeout = setTimeout(restart, 1000)
+    }
+});
 
+$(document).on('input', '#ipInput', function () {
+    clientSettings.ip = $(this).val();
+    saveClientSettings();
+});
+$("#disableVideo").on('change', function () {
+    clientSettings.disableVideo = $("#disableVideo").prop("checked");
+    restart();
+    saveClientSettings();
+    applyClientSettings();
+});
 $("#settings-btn").click(function () {
     $(".contentArea").hide();
     $("#settings").fadeIn(400);

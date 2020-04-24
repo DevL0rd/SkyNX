@@ -81,7 +81,9 @@ function startVideoProcess() {
 }
 hidStreamClient.on('connect', function () {
   console.log('Connected to Switch!');
-  startVideoProcess();
+  if (usingVideo) {
+    startVideoProcess();
+  }
   startAudioProcess();
 });
 var switchHidBuffer = new Buffer.alloc(0);
@@ -250,29 +252,23 @@ hidStreamClient.on('data', function (data) {
   }
   var touchX = hid.get("touchX");
   var touchY = hid.get("touchY");
-  if (touchX != touchXold || touchY != touchYold) {
-    if (touchX && touchY) {
-      touchX -= 15;
-      touchY -= 15;
-      var posXPercent = touchX / 1249
-      var posYPercent = touchY / 689
-      var posX = Math.floor(swidth * posXPercent)
-      var posY = Math.floor(sheight * posYPercent)
-      robot.moveMouse(posX, posY);
-      if (!mouseIsDown) {
-        robot.mouseToggle("down");
-        mouseIsDown = true;
-      }
-      touchTime++;
-    } else {
-      if (mouseIsDown) {
-        robot.mouseToggle("up");
-        mouseIsDown = false;
-      }
-      touchTime = 0;
+  if (touchX && touchY) {
+    touchX -= 15;
+    touchY -= 15;
+    var posXPercent = touchX / 1249
+    var posYPercent = touchY / 689
+    var posX = Math.floor(swidth * posXPercent)
+    var posY = Math.floor(sheight * posYPercent)
+    robot.moveMouse(posX, posY);
+    if (!mouseIsDown) {
+      robot.mouseToggle("down");
+      mouseIsDown = true;
     }
-    touchXold = touchX;
-    touchYold = touchY;
+  } else {
+    if (mouseIsDown) {
+      robot.mouseToggle("up");
+      mouseIsDown = false;
+    }
   }
 
 });
@@ -286,14 +282,15 @@ hidStreamClient.on('end', function () {
   } catch (error) {
 
   }
-  ffmpegProcess.kill();
+  if (usingVideo) {
+    ffmpegProcess.kill();
+  }
   ffmpegAudioProcess.kill();
   setTimeout(connect, 1000);
 });
 
 
 var args = process.argv.slice(" ");
-
 if (args.length > 1) {
   if (args.includes("/ip") && args[args.indexOf("/ip") + 1]) {
     ip = args[args.indexOf("/ip") + 1];

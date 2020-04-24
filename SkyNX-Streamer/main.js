@@ -26,7 +26,7 @@ function createWindow() {
     y: mainWindowState.y,
     // width: mainWindowState.width,
     // height: mainWindowState.height,
-    width: 400,
+    width: 500,
     height: 280,
     // minWidth: 350,
     // minHeight: 300,
@@ -88,9 +88,13 @@ function startStreamer(arg) {
   if (!isDev) {
     cwd = "./resources/app/NxStreamingService"
   }
+  var args = ["/ip", arg.ip, "/q", arg.q];
+  if (arg.disableVideo) {
+    args.push("/noVideo");
+  }
   streamerProcess = spawn(
     "./NxStreamingService.exe",
-    ["/ip", arg.ip, "/q", arg.q],
+    args,
     { cwd: cwd, stdio: "pipe" }
   );
   streamerProcess.stdout.on("data", data => {

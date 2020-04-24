@@ -36,7 +36,7 @@
     </div>
     <div id="main" class="contentArea">
       <div class="row">
-        <div class="col-8">
+        <div class="col-7">
           <div class="form-group">
             <label for="ipInput">Switch IP Address</label>
             <input id="ipInput" type="text" class="form-control" placeholder="Switch IP">
@@ -49,8 +49,19 @@
             <button id="startBtn" type="button" class="btn btn-dark btn-lg btn-block">Start Streamer</button>
           </form>
         </div>
-        <div class="col-4 sidePanel">
-          <label>More Settings coming soon..</label>
+        <div class="col-5 sidePanel">
+          <div class="form-group">
+            <label class="switch">
+              <input id="disableVideo" type="checkbox">
+              <span class="slider round"></span>
+            </label>
+            <label class="form-check-label" for="rainbowEnabled">
+              Disable Video
+            </label>
+          </div>
+          <hr />
+          <div class="comment">Useful for using your JoyCons on PC and streaming the audio to headphones or the switch
+            speakers.</div>
         </div>
       </div>
     </div>
@@ -63,6 +74,9 @@
       </div>
     </div>
     <div id="settings" class="contentArea contentAreaScrollable customScroll" style="display: none;">
+      <hr />
+      <h2>General</h2>
+      <hr />
       <div class="form-group">
         <label class="switch">
           <input id="autoStart" type="checkbox">
@@ -81,6 +95,10 @@
           Enable Rainbow Accents
         </label>
       </div>
+
+      <hr />
+      <h2>Drivers</h2>
+      <hr />
       <form class="form-group">
         <div class="row">
           <div class="col">
