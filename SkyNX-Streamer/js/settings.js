@@ -38,6 +38,12 @@ function initSettings() {
     if (!clientSettings.hasOwnProperty("disableVideo")) {
         clientSettings.disableVideo = false;
     }
+    if (!clientSettings.hasOwnProperty("disableAudio")) {
+        clientSettings.disableAudio = false;
+    }
+    if (!clientSettings.hasOwnProperty("abxySwap")) {
+        clientSettings.abxySwap = false;
+    }
     if (!clientSettings.hasOwnProperty("firstInstall")) {
         clientSettings.firstInstall = false;
     }
@@ -57,7 +63,8 @@ function applyClientSettings() {
     $("#qualitySlider").val(clientSettings.quality);
     $('#qualityLabel').html("Quality: " + clientSettings.quality + "Mbps");
     $('#disableVideo').prop("checked", clientSettings.disableVideo);
-
+    $('#disableAudio').prop("checked", clientSettings.disableAudio);
+    $('#abxySwap').prop("checked", clientSettings.abxySwap);
     $("#ipInput").val(clientSettings.ip);
     if (clientSettings.debug) {
         $("#dev-btn").fadeIn(400);
@@ -122,11 +129,11 @@ var qualityChangeTimeout;
 $(document).on('input', '#qualitySlider', function () {
     $('#qualityLabel').html("Quality: " + $(this).val() + "Mbps");
     clientSettings.quality = $(this).val();
-    saveClientSettings();
     if (running) {
         clearTimeout(qualityChangeTimeout);
         qualityChangeTimeout = setTimeout(restart, 1000)
     }
+    saveClientSettings();
 });
 
 $(document).on('input', '#ipInput', function () {
@@ -135,7 +142,25 @@ $(document).on('input', '#ipInput', function () {
 });
 $("#disableVideo").on('change', function () {
     clientSettings.disableVideo = $("#disableVideo").prop("checked");
-    restart();
+    if (running) {
+        restart();
+    }
+    saveClientSettings();
+    applyClientSettings();
+});
+$("#disableAudio").on('change', function () {
+    clientSettings.disableAudio = $("#disableAudio").prop("checked");
+    if (running) {
+        restart();
+    }
+    saveClientSettings();
+    applyClientSettings();
+});
+$("#abxySwap").on('change', function () {
+    clientSettings.abxySwap = $("#abxySwap").prop("checked");
+    if (running) {
+        restart();
+    }
     saveClientSettings();
     applyClientSettings();
 });

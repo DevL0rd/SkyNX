@@ -82,7 +82,7 @@ app.on('browser-window-created', function (e, window) {
 });
 var streamerProcess;
 var clientSender;
-
+var streamerProcessIsRunning = false;
 function startStreamer(arg) {
   var cwd = './NxStreamingService/';
   if (!isDev) {
@@ -92,22 +92,38 @@ function startStreamer(arg) {
   if (arg.disableVideo) {
     args.push("/noVideo");
   }
+  if (arg.disableAudio) {
+    args.push("/noAudio");
+  }
+  if (arg.abxySwap) {
+    args.push("/abxySwap");
+  }
+
   streamerProcess = spawn(
     "./NxStreamingService.exe",
     args,
     { cwd: cwd, stdio: "pipe" }
   );
+
   streamerProcess.stdout.on("data", data => {
     log(`${data}`);
+    if (!streamerProcessIsRunning) {
+      streamerProcessIsRunning = true;
+      clientSender.send("started");
+    }
   });
   streamerProcess.stderr.on('data', (data) => {
     log(`${data}`);
+    if (!streamerProcessIsRunning) {
+      streamerProcessIsRunning = true;
+      clientSender.send("started");
+    }
   });
   streamerProcess.on('close', (code) => {
     clientSender.send("close");
     log(`streamerProcess process exited with code ${code}`);
+    streamerProcessIsRunning = false;
   });
-  clientSender.send("started");
 }
 ipcMain.on('connect', (event, arg) => {
   clientSender = event.sender;

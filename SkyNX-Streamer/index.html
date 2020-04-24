@@ -59,102 +59,116 @@
               Disable Video
             </label>
           </div>
-          <hr />
-          <div class="comment">Useful for using your JoyCons on PC and streaming the audio to headphones or the switch
-            speakers.</div>
+          <div class="form-group">
+            <label class="switch">
+              <input id="disableAudio" type="checkbox">
+              <span class="slider round"></span>
+            </label>
+            <label class="form-check-label" for="rainbowEnabled">
+              Disable Audio
+            </label>
+          </div>
+          <div class="form-group">
+            <label class="switch">
+              <input id="abxySwap" type="checkbox">
+              <span class="slider round"></span>
+            </label>
+            <label class="form-check-label" for="rainbowEnabled">
+              Swap A-B X-Y
+            </label>
+          </div>
         </div>
       </div>
-    </div>
-    <div id="stats" class="contentArea contentAreaScrollable customScroll" style="display: none;">
-      <div class="chartpanel">
-        <h5 class="chartTitle">FPS</h5>
-        <div style="width: 100%; height: 150px;">
-          <canvas id="fpsChart"></canvas>
+      <div id="stats" class="contentArea contentAreaScrollable customScroll" style="display: none;">
+        <div class="chartpanel">
+          <h5 class="chartTitle">FPS</h5>
+          <div style="width: 100%; height: 150px;">
+            <canvas id="fpsChart"></canvas>
+          </div>
         </div>
       </div>
-    </div>
-    <div id="settings" class="contentArea contentAreaScrollable customScroll" style="display: none;">
-      <hr />
-      <h2>General</h2>
-      <hr />
-      <div class="form-group">
-        <label class="switch">
-          <input id="autoStart" type="checkbox">
-          <span class="slider round"></span>
-        </label>
-        <label class="form-check-label" for="autoStart">
-          Start streamer automatically
-        </label>
-      </div>
-      <div class="form-group">
-        <label class="switch">
-          <input id="rainbowEnabled" type="checkbox">
-          <span class="slider round"></span>
-        </label>
-        <label class="form-check-label" for="rainbowEnabled">
-          Enable Rainbow Accents
-        </label>
-      </div>
+      <div id="settings" class="contentArea contentAreaScrollable customScroll" style="display: none;">
+        <hr />
+        <h2>General</h2>
+        <hr />
+        <div class="form-group">
+          <label class="switch">
+            <input id="autoStart" type="checkbox">
+            <span class="slider round"></span>
+          </label>
+          <label class="form-check-label" for="autoStart">
+            Start streamer automatically
+          </label>
+        </div>
+        <div class="form-group">
+          <label class="switch">
+            <input id="rainbowEnabled" type="checkbox">
+            <span class="slider round"></span>
+          </label>
+          <label class="form-check-label" for="rainbowEnabled">
+            Enable Rainbow Accents
+          </label>
+        </div>
 
-      <hr />
-      <h2>Drivers</h2>
-      <hr />
-      <form class="form-group">
-        <div class="row">
-          <div class="col">
-            <button id="installScpVBusBtn" type="button" class="btn btn-dark btn-block">Install Controller</button>
+        <hr />
+        <h2>Drivers</h2>
+        <hr />
+        <form class="form-group">
+          <div class="row">
+            <div class="col">
+              <button id="installScpVBusBtn" type="button" class="btn btn-dark btn-block">Install Controller</button>
+            </div>
+            <div class="col">
+              <button id="unInstallScpVBusBtn" type="button" class="btn btn-danger btn-block">Un-Install
+                Controller</button>
+            </div>
           </div>
-          <div class="col">
-            <button id="unInstallScpVBusBtn" type="button" class="btn btn-danger btn-block">Un-Install
-              Controller</button>
+        </form>
+        <form class="form-group">
+          <div class="row">
+            <div class="col">
+              <button id="installAudioDriverBtn" type="button" class="btn btn-dark btn-block">Install Audio
+                Driver</button>
+            </div>
+            <div class="col">
+              <button id="unInstallAudioDriverBtn" type="button" class="btn btn-danger btn-block">Un-Install Audio
+                Driver</button>
+            </div>
           </div>
-        </div>
-      </form>
-      <form class="form-group">
-        <div class="row">
-          <div class="col">
-            <button id="installAudioDriverBtn" type="button" class="btn btn-dark btn-block">Install Audio
-              Driver</button>
-          </div>
-          <div class="col">
-            <button id="unInstallAudioDriverBtn" type="button" class="btn btn-danger btn-block">Un-Install Audio
-              Driver</button>
-          </div>
-        </div>
-      </form>
+        </form>
+      </div>
+      <div id="console" class="contentArea" style="display: none;">
+        <div id="consoleContainer" class="customScroll"></div>
+        <input id="consoleInput" type="text" placeholder="Console command"><br>
+      </div>
     </div>
-    <div id="console" class="contentArea" style="display: none;">
-      <div id="consoleContainer" class="customScroll"></div>
-      <input id="consoleInput" type="text" placeholder="Console command"><br>
+    <div id="statusbar" class="rainbowBackgroundColor2">
+      <span id="statusbartext">Streamer stopped.</span>
     </div>
-  </div>
-  <div id="statusbar" class="rainbowBackgroundColor2">
-    <span id="statusbartext">Streamer stopped.</span>
-  </div>
-  <div id="loadingCover">
-    <div class="centerVert">
-      <img src="img/loading.gif" class="loadingGif">
-      <h1 style="color:rgb(206, 206, 206); font-size: 16px;">
-        Application loading...
-      </h1>
+    <div id="loadingCover">
+      <div class="centerVert">
+        <img src="img/loading.gif" class="loadingGif">
+        <h1 style="color:rgb(206, 206, 206); font-size: 16px;">
+          Application loading...
+        </h1>
+      </div>
     </div>
-  </div>
-  <script src="js/fontawesome-all.min.js"></script>
-  <script src="js/Chart.min.js"></script>
-  <script>
-    let $ = require('jquery');
-    require('popper.js');
-    require('bootstrap');
-    $(function () {
-      $('[data-toggle="tooltip"]').tooltip({ boundary: 'window' })
-    })
-  </script>
-  <script src="./js/animations.js"></script>
-  <script src="./js/window.js"></script>
-  <script src="./js/settings.js"></script>
-  <script src="./js/main.js"></script>
-  <script src="./js/stats.js"></script>
-  <script src="./js/console.js"></script>
+    <script src="js/fontawesome-all.min.js"></script>
+    <script src="js/Chart.min.js"></script>
+    <script>
+      let $ = require('jquery');
+      require('popper.js');
+      require('bootstrap');
+      $(function () {
+        $('[data-toggle="tooltip"]').tooltip({ boundary: 'window' })
+      })
+    </script>
+    <script src="./js/animations.js"></script>
+    <script src="./js/window.js"></script>
+    <script src="./js/settings.js"></script>
+    <script src="./js/main.js"></script>
+    <script src="./js/stats.js"></script>
+    <script src="./js/console.js"></script>
 </body>
 
 </html>

@@ -14,6 +14,8 @@ var sheight = screenSize.height;
 var swidth = screenSize.width;
 var hidStreamClient = new net.Socket();
 var usingVideo = true;
+var usingAudio = true;
+var abxySwap = false;
 function connect() {
   hidStreamClient.connect({
     host: ip,
@@ -84,7 +86,9 @@ hidStreamClient.on('connect', function () {
   if (usingVideo) {
     startVideoProcess();
   }
-  startAudioProcess();
+  if (usingAudio) {
+    startAudioProcess();
+  }
 });
 var switchHidBuffer = new Buffer.alloc(0);
 function parseInputStruct(buff) {
@@ -186,10 +190,18 @@ function handleControllerInput(hid, controllerId, playerNumber) {
 
   var inputStates = heldKeysBitmask(heldKeys);
   //Button mapping
-  vgen.setButton(controllerId, vgen.Buttons.B, inputStates.A);
-  vgen.setButton(controllerId, vgen.Buttons.A, inputStates.B);
-  vgen.setButton(controllerId, vgen.Buttons.X, inputStates.Y);
-  vgen.setButton(controllerId, vgen.Buttons.Y, inputStates.X);
+  if (!abxySwap) {
+    vgen.setButton(controllerId, vgen.Buttons.B, inputStates.A);
+    vgen.setButton(controllerId, vgen.Buttons.A, inputStates.B);
+    vgen.setButton(controllerId, vgen.Buttons.X, inputStates.Y);
+    vgen.setButton(controllerId, vgen.Buttons.Y, inputStates.X);
+  } else {
+    vgen.setButton(controllerId, vgen.Buttons.B, inputStates.B);
+    vgen.setButton(controllerId, vgen.Buttons.A, inputStates.A);
+    vgen.setButton(controllerId, vgen.Buttons.X, inputStates.X);
+    vgen.setButton(controllerId, vgen.Buttons.Y, inputStates.Y);
+  }
+
   vgen.setButton(controllerId, vgen.Buttons.BACK, inputStates.Minus);
   vgen.setButton(controllerId, vgen.Buttons.START, inputStates.Plus);
   vgen.setButton(controllerId, vgen.Buttons.LEFT_SHOULDER, inputStates.L);
@@ -326,7 +338,9 @@ hidStreamClient.on('end', function () {
   if (usingVideo) {
     ffmpegProcess.kill();
   }
-  ffmpegAudioProcess.kill();
+  if (usingAudio) {
+    ffmpegAudioProcess.kill();
+  }
   setTimeout(connect, 1000);
 });
 
@@ -346,9 +360,19 @@ if (args.length > 1) {
     } else {
       usingVideo = true;
     }
+    if (args.includes("/noAudio")) {
+      usingAudio = false;
+    } else {
+      usingAudio = true;
+    }
+    if (args.includes("/abxySwap")) {
+      abxySwap = true;
+    } else {
+      abxySwap = false;
+    }
     connect();
   } else {
-    console.log('Error: Usage NXStreamer.exe ip 0.0.0.0 q 5');
+    console.log('Error: Usage NXStreamer.exe ip 0.0.0.0 q 5 /noVideo /noAudio /abxySwap');
   }
 } else {
   console.log('Error: Usage NXStreamer.exe ip 0.0.0.0 q 5');

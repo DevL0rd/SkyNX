@@ -11,13 +11,13 @@ ipcRenderer.on('started', function (event, data) {
 })
 var running = false;
 function connect() {
-    ipcRenderer.send('connect', { ip: clientSettings.ip, q: clientSettings.quality, disableVideo: clientSettings.disableVideo });
+    ipcRenderer.send('connect', { ip: clientSettings.ip, q: clientSettings.quality, disableVideo: clientSettings.disableVideo, disableAudio: clientSettings.disableAudio, abxySwap: clientSettings.abxySwap });
 }
 function disconnect() {
     ipcRenderer.send('kill');
 }
 function restart() {
-    ipcRenderer.send('restart', { ip: clientSettings.ip, q: clientSettings.quality, disableVideo: clientSettings.disableVideo });
+    ipcRenderer.send('restart', { ip: clientSettings.ip, q: clientSettings.quality, disableVideo: clientSettings.disableVideo, disableAudio: clientSettings.disableAudio, abxySwap: clientSettings.abxySwap });
 }
 $('#startBtn').click(function () {
     if (!running) {
