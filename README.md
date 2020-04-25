@@ -12,6 +12,7 @@ The desktop streaming client is completely new. The Switch app however has it's 
 ## Features
  * Stream PC games with audio to switch at 60fps!
  * Handles up to 4 JoyCon pairs. (4 Players at once!)
+ * Motion control support for Cemu.
  * Optionally disable video  to use the JoyCons as remotes on PC!
  * Optionally disable audio.
  * Optionally swap A and B AND X and Y.
