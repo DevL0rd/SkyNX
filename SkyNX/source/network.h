@@ -34,6 +34,12 @@ typedef struct
     short touchY1;
     short touchX2;
     short touchY2;
+    float accelX;
+    float accelY;
+    float accelZ;
+    float gyroX;
+    float gyroY;
+    float gyroZ;
     short controllerCount;
 } JoyPkg;
 

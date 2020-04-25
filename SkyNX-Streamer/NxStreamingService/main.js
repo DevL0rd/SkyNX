@@ -7,6 +7,7 @@ const net = require('net');
 const robot = require("robotjs");
 const VGen = require("vgen-xbox")
 const vgen = new VGen();
+const GyroServ = require("./Devlord_modules/GyroServ.js");
 var ip = "0.0.0.0"
 var quality = 5;
 var screenSize = robot.getScreenSize();
@@ -90,6 +91,23 @@ hidStreamClient.on('connect', function () {
     startAudioProcess();
   }
 });
+function toFixed(x) {
+  if (Math.abs(x) < 1.0) {
+    var e = parseInt(x.toString().split('e-')[1]);
+    if (e) {
+      x *= Math.pow(10, e - 1);
+      x = '0.' + (new Array(e)).join('0') + x.toString().substring(2);
+    }
+  } else {
+    var e = parseInt(x.toString().split('+')[1]);
+    if (e > 20) {
+      e -= 20;
+      x /= Math.pow(10, e);
+      x += (new Array(e + 1)).join('0');
+    }
+  }
+  return x;
+}
 var switchHidBuffer = new Buffer.alloc(0);
 function parseInputStruct(buff) {
   var input = Struct()
@@ -117,6 +135,12 @@ function parseInputStruct(buff) {
     .word16Ule('touchY1')
     .word16Ule('touchX2')
     .word16Ule('touchY2')
+    .floatle('accelX')
+    .floatle('accelY')
+    .floatle('accelZ')
+    .floatle('gyroX')
+    .floatle('gyroY')
+    .floatle('gyroZ')
     .word16Ule('controllerCount')
   input._setBuff(buff);
   return input;
@@ -323,6 +347,13 @@ hidStreamClient.on('data', function (data) {
     leftTouchTime = 0;
     rightTouchTime = 0;
   }
+  var gyro = { x: hid.get("gyroX"), y: hid.get("gyroY"), z: hid.get("gyroZ") }
+  for (axis in gyro) {
+    gyro[axis] *= 250;
+  }
+  gyro.y *= -1;
+  var accel = { x: hid.get("accelX"), y: hid.get("accelY"), z: hid.get("accelZ") }
+  GyroServ.sendMotionData(gyro, accel);
 
 });
 hidStreamClient.on('end', function () {

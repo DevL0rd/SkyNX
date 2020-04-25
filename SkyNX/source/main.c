@@ -56,15 +56,31 @@ static const SocketInitConfig socketInitConf = {
 
     .sb_efficiency = 2,
 };
+u32 gyroHandles[4];
+void initGyro()
+{
+    hidGetSixAxisSensorHandles(&gyroHandles[0], 2, CONTROLLER_PLAYER_1, TYPE_JOYCON_PAIR);
+    hidGetSixAxisSensorHandles(&gyroHandles[2], 1, CONTROLLER_PLAYER_1, TYPE_PROCONTROLLER);
+    hidGetSixAxisSensorHandles(&gyroHandles[3], 1, CONTROLLER_HANDHELD, TYPE_HANDHELD);
+    hidStartSixAxisSensor(gyroHandles[0]);
+    hidStartSixAxisSensor(gyroHandles[1]);
+    hidStartSixAxisSensor(gyroHandles[2]);
+    hidStartSixAxisSensor(gyroHandles[3]);
+}
+void unInitGyro()
+{
 
+    hidStopSixAxisSensor(gyroHandles[0]);
+    hidStopSixAxisSensor(gyroHandles[1]);
+    hidStopSixAxisSensor(gyroHandles[2]);
+    hidStopSixAxisSensor(gyroHandles[3]);
+}
 void switchInit()
 {
     plInitialize();
     pcvInitialize();
-
     romfsInit();
     networkInit(&socketInitConf);
-
     audoutInitialize();
     audoutStartAudioOut();
 }
@@ -107,21 +123,19 @@ void init()
     /* Init all switch required systems */
     switchInit();
     pcvSetClockRate(PcvModule_CpuBus, 1785000000); //Overclock CPU
-
     renderContext = createRenderer();
     videoContext = createVideoContext();
     videoContext->renderContext = renderContext;
-    /* Run audio handling in background */
     startAudio();
-    /* Run input handling in background */
     startInput();
-    /* Run input handling in background */
     startRender(videoContext);
+    initGyro();
 }
 void unInit()
 {
     freeRenderer(renderContext);
     freeVideoContext(videoContext);
+    unInitGyro();
     pcvSetClockRate(PcvModule_CpuBus, 1020000000); //Reset CPU clock to default
 }
 int main(int argc, char **argv)

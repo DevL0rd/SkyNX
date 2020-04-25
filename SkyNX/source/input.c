@@ -69,6 +69,16 @@ void gamePadSend(JoyConSocket *connection)
     hidTouchRead(&touch, 1);
     pkg.touchX2 = touch.px;
     pkg.touchY2 = touch.py;
+
+    SixAxisSensorValues sixaxis;
+    // You can read back up to 17 successive values at once
+    hidSixAxisSensorValuesRead(&sixaxis, player1Id, 1);
+    pkg.accelX = sixaxis.accelerometer.x;
+    pkg.accelY = sixaxis.accelerometer.y;
+    pkg.accelZ = sixaxis.accelerometer.z;
+    pkg.gyroX = sixaxis.gyroscope.x;
+    pkg.gyroY = sixaxis.gyroscope.y;
+    pkg.gyroZ = sixaxis.gyroscope.z;
     sendJoyConInput(connection, &pkg);
 }
 
