@@ -3,6 +3,7 @@ Stream your PC games to your Nintendo Switch without Android! Now on the Homebre
 This is replacement for the abandoned [In-Home-Switching](https://github.com/jakibaki/In-Home-Switching/blob/master/README.md).
 
 [Downloads are here](https://github.com/DevL0rd/SkyNX/releases).
+[Video Instructions / Review Here] (https://www.youtube.com/watch?v=YtnIqVdYbf4). Big shout out to Jonny Troche for this high quality tutorial! Make sure to like and subscribe guys ;D
 
 If your interested in using SkyNX to turn your Nintendo Switch into a WiiU gamepad using Cemu. Here is a link with my tutorial on how to set it up! [Nintendo Switch as a WiiU Gamepad](https://gbatemp.net/threads/how-to-use-your-switch-as-a-wiiu-game-pad-in-cemu-using-skynx.563405/)
 
