@@ -4,7 +4,7 @@ This is replacement for the abandoned [In-Home-Switching](https://github.com/jak
 
 [Downloads are here](https://github.com/DevL0rd/SkyNX/releases).
 
-If your interested in using SkyNX to turn your Nintendo Switch into a WiiU gamepad using Cemu. Here is a link with my tutorial on how to set it up! Nintendo Switch as a WiiU Gamepad
+If your interested in using SkyNX to turn your Nintendo Switch into a WiiU gamepad using Cemu. Here is a link with my tutorial on how to set it up! [Nintendo Switch as a WiiU Gamepad](https://www.reddit.com/r/SwitchHaxing/comments/g7nti1/how_to_use_your_switch_as_a_wiiu_game_pad_in_cemu/)
 
 The desktop streaming client is completely new. The Switch app however has it's roots in the original [In-Home-Switching](https://github.com/jakibaki/In-Home-Switching) app.
 ## Features
