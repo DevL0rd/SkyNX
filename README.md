@@ -1,5 +1,5 @@
 # SkyNX
-Stream your PC games to your Nintendo Switch!
+Stream your PC games to your Nintendo Switch without Android!
 This is replacement for the abandoned [In-Home-Switching](https://github.com/jakibaki/In-Home-Switching/blob/master/README.md).
 
 [Downloads are here](https://github.com/DevL0rd/SkyNX/releases).
