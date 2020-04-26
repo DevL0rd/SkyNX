@@ -39,7 +39,7 @@ EXEFS_SRC		:=	exefs_src
 
 APP_AUTHOR		:=	DevL0rd
 APP_TITLE		:=	SkyNX
-APP_VERSION		:=	1.0
+APP_VERSION		:=	1.1
 
 
 
