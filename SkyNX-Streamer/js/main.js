@@ -26,7 +26,9 @@ $('#startBtn').click(function () {
         disconnect();
     }
 });
-
+$('#donateBtn').click(function () {
+    ipcRenderer.send('donate');
+});
 $("#main-btn").click(function () {
     $(".contentArea").hide();
     $("#main").fadeIn(400);

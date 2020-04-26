@@ -1,5 +1,6 @@
 
 const { spawn } = require("child_process");
+const { exec } = require('child_process');
 const elevate = require("windows-elevate");
 const windowStateKeeper = require('electron-window-state');
 const fs = require('fs');
@@ -7,15 +8,11 @@ const DB = require('./Devlord_modules/DB.js');
 const isDev = require('electron-is-dev');
 var AU = require('ansi_up');
 var ansi_up = new AU.default;
-// Modules to control application life and create native browser window
 const { app, BrowserWindow, ipcMain } = require('electron')
-// Keep a global reference of the window object, if you don't, the window will
-// be closed automatically when the JavaScript object is garbage collected.
 let mainWindow
 var usingUI = true;
 
 function createWindow() {
-  // Load the previous state with fallback to defaults
   let mainWindowState = windowStateKeeper({
     defaultWidth: 350,
     defaultHeight: 250
@@ -39,16 +36,13 @@ function createWindow() {
   })
   mainWindowState.manage(mainWindow);
   mainWindow.setMenu(null);
-  // and load the index.html of the app.
+  // load the index.html of the app.
   mainWindow.loadFile('index.html');
   //fix transparency bug in windows 10
   mainWindow.reload();
 
   // Emitted when the window is closed.
   mainWindow.on('closed', function () {
-    // Dereference the window object, usually you would store windows
-    // in an array if your app supports multi windows, this is the time
-    // when you should delete the corresponding element.
     mainWindow = null
     try {
       streamerProcess.kill();
@@ -58,15 +52,10 @@ function createWindow() {
   });
 }
 
-// This method will be called when Electron has finished
-// initialization and is ready to create browser windows.
-// Some APIs can only be used after this event occurs.
 app.on('ready', function () { if (usingUI) setTimeout(createWindow, 300); });
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
-  // On macOS it is common for applications and their menu bar
-  // to stay active until the user quits explicitly with Cmd + Q
   if (process.platform !== 'darwin') app.quit()
   streamerProcess.kill();
 })
@@ -207,3 +196,10 @@ function log(str) {
     htmlLoggingSender.send('log', ansi_up.ansi_to_html(str.replace("  ", "\xa0")) + "<br>");
   }
 }
+
+ipcMain.on('donate', (event, fullMessage) => {
+  var url = 'https://www.paypal.me/SkyNX';
+  var start = (process.platform == 'darwin' ? 'open' : process.platform == 'win32' ? 'start' : 'xdg-open');
+  require('child_process').exec(start + ' ' + url);
+})
+
