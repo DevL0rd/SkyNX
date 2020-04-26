@@ -10,6 +10,7 @@ If your interested in using SkyNX to turn your Nintendo Switch into a WiiU gamep
 
 As per user suggestions I have made a patreon and a paypal.
 If you think this app is Useful, Plese consider donating to support its development.
+
 https://www.paypal.me/SkyNX
 
 https://www.patreon.com/DevL0rd
