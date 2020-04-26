@@ -14,8 +14,8 @@ var usingUI = true;
 
 function createWindow() {
   let mainWindowState = windowStateKeeper({
-    defaultWidth: 350,
-    defaultHeight: 250
+    defaultWidth: 500,
+    defaultHeight: 400
   });
   // Create the browser window.
   mainWindow = new BrowserWindow({
@@ -24,7 +24,7 @@ function createWindow() {
     // width: mainWindowState.width,
     // height: mainWindowState.height,
     width: 500,
-    height: 280,
+    height: 320,
     // minWidth: 350,
     // minHeight: 300,
     webPreferences: {
@@ -86,6 +86,10 @@ function startStreamer(arg) {
   }
   if (arg.abxySwap) {
     args.push("/abxySwap");
+  }
+  if (arg.encoding == "NVENC") {
+    args.push("/e");
+    args.push("NVENC");
   }
 
   streamerProcess = spawn(
@@ -202,4 +206,3 @@ ipcMain.on('donate', (event, fullMessage) => {
   var start = (process.platform == 'darwin' ? 'open' : process.platform == 'win32' ? 'start' : 'xdg-open');
   require('child_process').exec(start + ' ' + url);
 })
-

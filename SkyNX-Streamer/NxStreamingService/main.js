@@ -17,6 +17,7 @@ var hidStreamClient = new net.Socket();
 var usingVideo = true;
 var usingAudio = true;
 var abxySwap = false;
+var encoding = "CPU";
 function connect() {
   hidStreamClient.connect({
     host: ip,
@@ -63,11 +64,17 @@ function startAudioProcess() {
   });
 }
 function startVideoProcess() {
-  var cpuh264 = ["-probesize", "50M", "-threads", "0", "-f", "gdigrab", "-framerate", "60", "-video_size", swidth + "x" + sheight, "-offset_x", "0", "-offset_y", "0", "-show_region", "0", "-draw_mouse", "1", "-i", "desktop", "-f", "h264", "-vf", "scale=1280x720", "-preset", "ultrafast", "-tune", "zerolatency", "-pix_fmt", "yuv420p", "-profile:v", "baseline", "-x264-params", 'nal-hrd=cbr', "-b:v", quality + "M", "-minrate", quality - 3 + "M", "-maxrate", quality + "M", "-bufsize", (quality / 2) + "M", "tcp://" + ip + ":2222"];
-  var h264_nvenc_ARGS = ["-probesize", "10M", "-f", "gdigrab", "-framerate", "80", "-video_size", swidth + "x" + sheight, "-offset_x", "0", "-offset_y", "0", "-i", "desktop", "-c:v", "h264_nvenc", "-gpu", "0", "-rc", "cbr_ld_hq", "-zerolatency", "true", "-f", "h264", "-vf", "scale=1280x720", "-preset", "losslesshp", "-pix_fmt", "yuv420p", "-profile:v", "baseline", "-b:v", quality + "M", "-minrate", quality - 3 + "M", "-maxrate", quality + "M", "tcp://" + ip + ":2222"];
+  var ffmpegVideoArgs = [];
+  if (encoding == "NVENC") {
+    ffmpegVideoArgs = ["-probesize", "50M", "-threads", "0", "-f", "gdigrab", "-framerate", "60", "-video_size", swidth + "x" + sheight, "-offset_x", "0", "-offset_y", "0", "-draw_mouse", "1", "-i", "desktop", "-c:v", "h264_nvenc", "-gpu", "0", "-rc", "cbr_ld_hq", "-zerolatency", "true", "-f", "h264", "-vf", "scale=1280x720", "-pix_fmt", "yuv420p", "-profile:v", "baseline", "-b:v", quality + "M", "-minrate", quality - 3 + "M", "-maxrate", quality + "M", "-bufsize", (quality / 2) + "M", "tcp://" + ip + ":2222"];
+    console.log("Using Nvidia Encoding");
+  } else {
+    ffmpegVideoArgs = ["-probesize", "50M", "-threads", "0", "-f", "gdigrab", "-framerate", "60", "-video_size", swidth + "x" + sheight, "-offset_x", "0", "-offset_y", "0", "-draw_mouse", "1", "-i", "desktop", "-f", "h264", "-vf", "scale=1280x720", "-preset", "ultrafast", "-tune", "zerolatency", "-pix_fmt", "yuv420p", "-profile:v", "baseline", "-x264-params", 'nal-hrd=cbr', "-b:v", quality + "M", "-minrate", quality - 3 + "M", "-maxrate", quality + "M", "-bufsize", (quality / 2) + "M", "tcp://" + ip + ":2222"];
+    console.log("Using CPU Encoding");
+  }
   ffmpegProcess = spawn(
     "./lib/ffmpeg.exe",
-    cpuh264,
+    ffmpegVideoArgs,
     {
       detached: false
     }
@@ -401,10 +408,20 @@ if (args.length > 1) {
     } else {
       abxySwap = false;
     }
+    if (args.includes("/abxySwap")) {
+      abxySwap = true;
+    } else {
+      abxySwap = false;
+    }
+    if (args.includes("/e") && args[args.indexOf("/e") + 1]) {
+      encoding = args[args.indexOf("/e") + 1];
+    } else {
+      encoding = "CPU";
+    }
     connect();
   } else {
-    console.log('Error: Usage NXStreamer.exe ip 0.0.0.0 q 5 /noVideo /noAudio /abxySwap');
+    console.log('Error: Usage NXStreamer.exe ip 0.0.0.0 q 10 /noVideo /noAudio /abxySwap /e NVCENC');
   }
 } else {
-  console.log('Error: Usage NXStreamer.exe ip 0.0.0.0 q 5');
+  console.log('Error: Usage NXStreamer.exe ip 0.0.0.0 q 10 /noVideo /noAudio /abxySwap /e NVCENC');
 }

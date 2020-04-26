@@ -44,6 +44,9 @@ function initSettings() {
     if (!clientSettings.hasOwnProperty("abxySwap")) {
         clientSettings.abxySwap = false;
     }
+    if (!clientSettings.hasOwnProperty("encoding")) {
+        clientSettings.encoding = "CPU";
+    }
     if (!clientSettings.hasOwnProperty("firstInstall")) {
         clientSettings.firstInstall = false;
     }
@@ -66,6 +69,13 @@ function applyClientSettings() {
     $('#disableAudio').prop("checked", clientSettings.disableAudio);
     $('#abxySwap').prop("checked", clientSettings.abxySwap);
     $("#ipInput").val(clientSettings.ip);
+    if (clientSettings.encoding == "NVENC") {
+        $("#encodingDrop").html("Encoding (Nvidia)");
+    } else {
+        $("#encodingDrop").html("Encoding (CPU)");
+        clientSettings.encoding = "CPU"
+    }
+
     if (clientSettings.debug) {
         $("#dev-btn").fadeIn(400);
         $("#rld-btn").fadeIn(400);
@@ -169,3 +179,12 @@ $("#settings-btn").click(function () {
     $("#settings").fadeIn(400);
     $('#settings-btn').tooltip('hide');
 });
+
+function setEncoding(encoding) {
+    clientSettings.encoding = encoding;
+    if (running) {
+        restart();
+    }
+    saveClientSettings();
+    applyClientSettings();
+}

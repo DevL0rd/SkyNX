@@ -11,13 +11,13 @@ ipcRenderer.on('started', function (event, data) {
 })
 var running = false;
 function connect() {
-    ipcRenderer.send('connect', { ip: clientSettings.ip, q: clientSettings.quality, disableVideo: clientSettings.disableVideo, disableAudio: clientSettings.disableAudio, abxySwap: clientSettings.abxySwap });
+    ipcRenderer.send('connect', { ip: clientSettings.ip, q: clientSettings.quality, disableVideo: clientSettings.disableVideo, disableAudio: clientSettings.disableAudio, abxySwap: clientSettings.abxySwap, encoding: clientSettings.encoding });
 }
 function disconnect() {
     ipcRenderer.send('kill');
 }
 function restart() {
-    ipcRenderer.send('restart', { ip: clientSettings.ip, q: clientSettings.quality, disableVideo: clientSettings.disableVideo, disableAudio: clientSettings.disableAudio, abxySwap: clientSettings.abxySwap });
+    ipcRenderer.send('restart', { ip: clientSettings.ip, q: clientSettings.quality, disableVideo: clientSettings.disableVideo, disableAudio: clientSettings.disableAudio, abxySwap: clientSettings.abxySwap, encoding: clientSettings.encoding });
 }
 $('#startBtn').click(function () {
     if (!running) {
@@ -34,5 +34,3 @@ $("#main-btn").click(function () {
     $("#main").fadeIn(400);
     $('#main-btn').tooltip('hide');
 });
-
-disableVideo

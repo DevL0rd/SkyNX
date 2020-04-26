@@ -45,6 +45,18 @@
             <label id="qualityLabel" for="qualitySlider">Quality: 5Mbps</label>
             <input id="qualitySlider" type="range" class="custom-range" min="4" max="20" value="5" />
           </form>
+          <div class="form-group">
+            <div class="dropdown">
+              <button class="btn btn-secondary dropdown-toggle btn-block" type="button" id="encodingDrop"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Encoding (CPU)
+              </button>
+              <div class="dropdown-menu" aria-labelledby="encodingDrop">
+                <a class="dropdown-item" href="javascript:setEncoding('CPU')">CPU</a>
+                <a class="dropdown-item" href="javascript:setEncoding('NVENC')">Nvidia Encoding</a>
+              </div>
+            </div>
+          </div>
           <form class="form-group">
             <button id="startBtn" type="button" class="btn btn-dark btn-lg btn-block">Start Streamer</button>
           </form>
