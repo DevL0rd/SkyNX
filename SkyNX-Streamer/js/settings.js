@@ -50,6 +50,10 @@ function initSettings() {
     if (!clientSettings.hasOwnProperty("firstInstall")) {
         clientSettings.firstInstall = false;
     }
+    if (!clientSettings.hasOwnProperty("autoStartup")) {
+        clientSettings.autoStartup = false;
+    }
+
     applyClientSettings();
 }
 function loadClientSettings() {
@@ -63,6 +67,7 @@ function applyClientSettings() {
     $("#rainbowEnabled").prop("checked", clientSettings.rainbowEnabled);
     $("#devToolsOnStartup").prop("checked", clientSettings.devToolsOnStartup);
     $("#autoStart").prop("checked", clientSettings.autoStartStreamer);
+    $("#autoStartup").prop("checked", clientSettings.autoStartup);
     $("#qualitySlider").val(clientSettings.quality);
     $('#qualityLabel').html("Quality: " + clientSettings.quality + "Mbps");
     $('#disableVideo').prop("checked", clientSettings.disableVideo);
@@ -100,6 +105,11 @@ function applyClientSettings() {
     if (clientSettings.autoStartStreamer) {
         connect();
     }
+    if (clientSettings.autoStartup) {
+        ipcRenderer.send('autoStartupOn');
+    } else {
+        ipcRenderer.send('autoStartupOff');
+    }
 }
 
 $("#rainbowEnabled").on('change', function () {
@@ -122,7 +132,12 @@ $("#autoStart").on('change', function () {
     clientSettings.autoStartStreamer = $("#autoStart").prop("checked");
     saveClientSettings();
     applyClientSettings();
+}); $("#autoStartup").on('change', function () {
+    clientSettings.autoStartup = $("#autoStartup").prop("checked");
+    saveClientSettings();
+    applyClientSettings();
 });
+
 $('#installScpVBusBtn').click(function () {
     ipcRenderer.send('installScpVBus');
 });

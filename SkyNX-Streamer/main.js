@@ -6,12 +6,13 @@ const windowStateKeeper = require('electron-window-state');
 const fs = require('fs');
 const DB = require('./Devlord_modules/DB.js');
 const isDev = require('electron-is-dev');
+var AutoLaunch = require('auto-launch');
 var AU = require('ansi_up');
 var ansi_up = new AU.default;
-const { app, BrowserWindow, ipcMain } = require('electron')
+const { app, BrowserWindow, ipcMain, Menu, Tray } = require('electron')
 let mainWindow
 var usingUI = true;
-
+var minimizeToTray = false;
 function createWindow() {
   let mainWindowState = windowStateKeeper({
     defaultWidth: 500,
@@ -50,8 +51,35 @@ function createWindow() {
 
     }
   });
+  // mainWindow.on('minimize', function (event) {
+  //   if (minimizeToTray) {
+  //     event.preventDefault();
+  //     mainWindow.hide();
+  //   }
+  // })
+  // var iconPath = "icon.ico";
+  // if (isDev) {
+  //   iconPath = __dirname + "/resources/app/icon.ico"
+  // }
+  // var appIcon = new Tray(iconPath)
+  // var contextMenu = Menu.buildFromTemplate([
+  //   {
+  //     label: 'Show App', click: function () {
+  //       mainWindow.show();
+  //     }
+  //   },
+  //   {
+  //     label: 'Quit', click: function () {
+  //       application.isQuiting = true;
+  //       application.quit();
+  //     }
+  //   }
+  // ]);
+  // appIcon.setContextMenu(contextMenu);
+  mainWindow.on('show', function () {
+    appIcon.setHighlightMode('always');
+  });
 }
-
 app.on('ready', function () { if (usingUI) setTimeout(createWindow, 300); });
 
 // Quit when all windows are closed.
@@ -206,3 +234,17 @@ ipcMain.on('donate', (event, fullMessage) => {
   var start = (process.platform == 'darwin' ? 'open' : process.platform == 'win32' ? 'start' : 'xdg-open');
   require('child_process').exec(start + ' ' + url);
 })
+var autoLauncher = new AutoLaunch({
+  name: 'SkyNX',
+  path: __dirname.replace("resources\\app\\", "") + '\\SkyNXStreamer.exe',
+});
+ipcMain.on('autoStartupOn', (event, fullMessage) => {
+  if (!autoLauncher.isEnabled) {
+    autoLauncher.enable();
+  }
+});
+ipcMain.on('autoStartupOff', (event, fullMessage) => {
+  if (autoLauncher.isEnabled) {
+    autoLauncher.disable();
+  }
+});
