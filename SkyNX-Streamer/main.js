@@ -142,6 +142,14 @@ function startStreamer(arg) {
   if (arg.limitFPS) {
     args.push("/limitFPS");
   }
+  args.push("/m");
+  if (arg.mouseControl == "ANALOG") {
+    args.push("ANALOG");
+  } else if (arg.mouseControl == "GYRO") {
+    args.push("GYRO");
+  } else {
+    args.push("TOUCH");
+  }
   streamerProcess = spawn(
     "./NxStreamingService.exe",
     args,

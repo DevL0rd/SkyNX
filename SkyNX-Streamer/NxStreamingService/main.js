@@ -19,6 +19,7 @@ var encoding = "CPU";
 var screenWidth = 1280;
 var screenHeight = 720;
 var screenScale = 1;
+var mouseControl = "TOUCH";
 function connect() {
   hidStreamClient.connect({
     host: ip,
@@ -103,23 +104,6 @@ hidStreamClient.on('connect', function () {
     startAudioProcess();
   }
 });
-function toFixed(x) {
-  if (Math.abs(x) < 1.0) {
-    var e = parseInt(x.toString().split('e-')[1]);
-    if (e) {
-      x *= Math.pow(10, e - 1);
-      x = '0.' + (new Array(e)).join('0') + x.toString().substring(2);
-    }
-  } else {
-    var e = parseInt(x.toString().split('+')[1]);
-    if (e > 20) {
-      e -= 20;
-      x /= Math.pow(10, e);
-      x += (new Array(e + 1)).join('0');
-    }
-  }
-  return x;
-}
 var switchHidBuffer = new Buffer.alloc(0);
 function parseInputStruct(buff) {
   var input = Struct()
@@ -305,61 +289,146 @@ hidStreamClient.on('data', function (data) {
   for (i in controllerIds) {
     handleControllerInput(hid, controllerIds[i], parseInt(i) + 1);
   }
-  var touchX1 = hid.get("touchX1");
-  var touchY1 = hid.get("touchY1");
-  if (touchX1 && touchY1) {
-    touchX1 -= 15;
-    touchY1 -= 15;
-    touchX1 = Math.floor(screenWidth * (touchX1 / 1280))
-    touchY1 = Math.floor(screenHeight * (touchY1 / 720))
-    var touchX2 = hid.get("touchX2");
-    var touchY2 = hid.get("touchY2");
-    if (touchX2 && touchY2) {
-      rightTouchTime++;
-      if (rightTouchTime > 5) { //Handle scrolling
-        if (!touchX1old) touchX1old = touchX1;
-        if (!touchY1old) touchY1old = touchY1;
-        var xDiff = touchX1old - touchX1;
-        var yDiff = touchY1old - touchY1;
-        robot.scrollMouse(xDiff, yDiff);
-        touchX1old = touchX1;
-        touchY1old = touchY1;
-        scrolling = true;
-        rightClicking = false;
-      } else { //Handle left click
-        rightClicking = true;
-      }
-    } else {
-      if (rightClicking) {
-        robot.mouseClick("right");
-        rightClicking = false
-      }
-      scrolling = false;
-      rightTouchTime = 0;
+  var gyro = { x: hid.get("gyroX"), y: hid.get("gyroY"), z: hid.get("gyroZ") }
+  if (mouseControl == "ANALOG") {
+    var RJoyX = hid.get("RJoyX1");
+    var RJoyY = hid.get("RJoyY1");
+    var nrjx;
+    var nrjy;
+    if (RJoyX) {
+      nrjx = RJoyX / 32767.5
     }
-    if (!scrolling) {
-      leftTouchTime++;
-      robot.moveMouse(touchX1 / screenScale, touchY1 / screenScale);
+    if (nrjx > 1) {
+      nrjx = 2 - nrjx
+      nrjx = -nrjx
+    }
+
+    if (RJoyY) {
+      nrjy = RJoyY / 32767.5
+    }
+    if (nrjy > 1) {
+      nrjy = 2 - nrjy
+      nrjy = -nrjy
+    }
+    var mouse = robot.getMousePos();
+    mx = mouse.x + (nrjx * 16);
+    my = mouse.y - (nrjy * 16);
+    if (mx && my) {
+      robot.moveMouse(mx, my);
+    }
+    var heldKeys = hid.get("HeldKeys1");
+    var inputStates = heldKeysBitmask(heldKeys);
+    if (inputStates.ZR) {
       if (!leftClicking) {
         robot.mouseToggle("down");
         leftClicking = true;
       }
     } else {
-      robot.mouseToggle("up");
-      leftClicking = false;
-    }
-  } else {
-    if (leftClicking) { //release left click
-      robot.mouseToggle("up");
-      leftClicking = false;
-      if (leftTouchTime < 3) {
-        robot.mouseClick("left", true); //double click
+      if (leftClicking) {
+        robot.mouseToggle("up");
+        leftClicking = false;
       }
     }
-    leftTouchTime = 0;
-    rightTouchTime = 0;
+    if (inputStates.ZL) {
+      if (!rightClicking) {
+        robot.mouseToggle("down", "right");
+        rightClicking = true;
+      }
+    } else {
+      if (rightClicking) {
+        robot.mouseToggle("up", "right");
+        rightClicking = false;
+      }
+    }
+  } else if (mouseControl == "GYRO") {
+    var mouse = robot.getMousePos();
+    var ngx = gyro.x * -1;
+    var ngz = gyro.z * -1
+    mx = mouse.x + (ngz * ((screenWidth) / 3));
+    my = mouse.y + (ngx * ((screenHeight) / 2));
+    if (mx && my) {
+      robot.moveMouse(mx, my);
+    }
+    var heldKeys = hid.get("HeldKeys1");
+    var inputStates = heldKeysBitmask(heldKeys);
+    if (inputStates.ZR) {
+      if (!leftClicking) {
+        robot.mouseToggle("down");
+        leftClicking = true;
+      }
+    } else {
+      if (leftClicking) {
+        robot.mouseToggle("up");
+        leftClicking = false;
+      }
+    }
+    if (inputStates.R) {
+      if (!rightClicking) {
+        robot.mouseToggle("down", "right");
+        rightClicking = true;
+      }
+    } else {
+      if (rightClicking) {
+        robot.mouseToggle("up", "right");
+        rightClicking = false;
+      }
+    }
+  } else {
+    var touchX1 = hid.get("touchX1");
+    var touchY1 = hid.get("touchY1");
+    if (touchX1 && touchY1) {
+      touchX1 -= 15;
+      touchY1 -= 15;
+      touchX1 = Math.floor(screenWidth * (touchX1 / 1280))
+      touchY1 = Math.floor(screenHeight * (touchY1 / 720))
+      var touchX2 = hid.get("touchX2");
+      var touchY2 = hid.get("touchY2");
+      if (touchX2 && touchY2) {
+        rightTouchTime++;
+        if (rightTouchTime > 5) { //Handle scrolling
+          if (!touchX1old) touchX1old = touchX1;
+          if (!touchY1old) touchY1old = touchY1;
+          var xDiff = touchX1old - touchX1;
+          var yDiff = touchY1old - touchY1;
+          robot.scrollMouse(xDiff, yDiff);
+          touchX1old = touchX1;
+          touchY1old = touchY1;
+          scrolling = true;
+          rightClicking = false;
+        } else { //Handle left click
+          rightClicking = true;
+        }
+      } else {
+        if (rightClicking) {
+          robot.mouseClick("right");
+          rightClicking = false
+        }
+        scrolling = false;
+        rightTouchTime = 0;
+      }
+      if (!scrolling) {
+        leftTouchTime++;
+        robot.moveMouse(touchX1 / screenScale, touchY1 / screenScale);
+        if (!leftClicking) {
+          robot.mouseToggle("down");
+          leftClicking = true;
+        }
+      } else {
+        robot.mouseToggle("up");
+        leftClicking = false;
+      }
+    } else {
+      if (leftClicking) { //release left click
+        robot.mouseToggle("up");
+        leftClicking = false;
+        if (leftTouchTime < 3) {
+          robot.mouseClick("left", true); //double click
+        }
+      }
+      leftTouchTime = 0;
+      rightTouchTime = 0;
+    }
   }
-  var gyro = { x: hid.get("gyroX"), y: hid.get("gyroY"), z: hid.get("gyroZ") }
   for (axis in gyro) {
     gyro[axis] *= 250;
   }
@@ -413,7 +482,11 @@ if (args.length > 1) {
     } else {
       screenScale = 1;
     }
-
+    if (args.includes("/m") && args[args.indexOf("/m") + 1]) {
+      mouseControl = args[args.indexOf("/m") + 1];
+    } else {
+      mouseControl = "TOUCH";
+    }
     if (args.includes("/noVideo")) {
       usingVideo = false;
     } else {

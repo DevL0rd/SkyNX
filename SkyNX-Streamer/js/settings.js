@@ -53,6 +53,9 @@ function initSettings() {
     if (!clientSettings.hasOwnProperty("encoding")) {
         clientSettings.encoding = "CPU";
     }
+    if (!clientSettings.hasOwnProperty("mouseControl")) {
+        clientSettings.mouseControl = "TOUCH";
+    }
     if (!clientSettings.hasOwnProperty("firstInstall")) {
         clientSettings.firstInstall = false;
     }
@@ -91,9 +94,16 @@ function applyClientSettings() {
         $("#encodingDrop").html("Encoding (Nvidia)");
     } else {
         $("#encodingDrop").html("Encoding (CPU)");
-        clientSettings.encoding = "CPU"
+        clientSettings.encoding = "CPU";
     }
-
+    if (clientSettings.mouseControl == "ANALOG") {
+        $("#mouseControlDrop").html("Mouse Control (Analog)");
+    } else if (clientSettings.mouseControl == "GYRO") {
+        $("#mouseControlDrop").html("Mouse Control (Gyro)");
+    } else {
+        $("#mouseControlDrop").html("Mouse Control (Touch)");
+        clientSettings.mouseControl = "TOUCH";
+    }
     if (clientSettings.debug) {
         $("#dev-btn").fadeIn(400);
         $("#rld-btn").fadeIn(400);
@@ -225,6 +235,14 @@ $("#settings-btn").click(function () {
 
 function setEncoding(encoding) {
     clientSettings.encoding = encoding;
+    if (running) {
+        restart();
+    }
+    saveClientSettings();
+    applyClientSettings();
+}
+function setMouseControl(mouseControl) {
+    clientSettings.mouseControl = mouseControl;
     if (running) {
         restart();
     }
