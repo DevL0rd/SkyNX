@@ -28,6 +28,7 @@ The desktop streaming client is completely new. The Switch app however has it's 
  * Handles scrolling. (Your standard 2 finger scroll.)
 
 ## Instructions:
+NOTE if you have a issue installing the audio driver, make sure you have the latest [VCRedist](https://www.microsoft.com/en-us/download/confirmation.aspx?id=5555)
 1. Copy the switch folder in SkyNX.zip, to the root of your sd card.
 2. Install the forwarder with a nsp installer such as Goldleaf.
 3. Extract SkyNXStreamer-win32-ia32.zip to somewhere safe.
