@@ -84,15 +84,14 @@ function createWindow() {
     appIcon.setHighlightMode('always');
   });
 }
-var screenWidth;
-var screenHeight;
-var screenScale;
+var mainScreen;
+var originalW;
+var originalH;
 app.on('ready', function () {
   if (usingUI) setTimeout(createWindow, 300);
-  var mainScreen = screen.getPrimaryDisplay();
-  screenScale = screen.getPrimaryDisplay().scaleFactor;
-  screenWidth = mainScreen.bounds.width * screenScale;
-  screenHeight = mainScreen.bounds.height * screenScale;
+  mainScreen = screen.getPrimaryDisplay();
+  originalW = mainScreen.bounds.width * screen.getPrimaryDisplay().scaleFactor;
+  originalH = mainScreen.bounds.height * screen.getPrimaryDisplay().scaleFactor;
 });
 
 // Quit when all windows are closed.
@@ -114,9 +113,10 @@ var streamerProcess;
 var clientSender;
 var streamerProcessIsRunning = false;
 function startStreamer(arg) {
-  var captureW = screenWidth;
-  var captureH = screenHeight;
-  if (autoChangeResolution) {
+
+  var captureW = mainScreen.bounds.width * screen.getPrimaryDisplay().scaleFactor;
+  var captureH = mainScreen.bounds.height * screen.getPrimaryDisplay().scaleFactor;
+  if (autoChangeResolution && !restartingStream) {
     changeScreenRes("1280", "720");
     captureW = "1280";
     captureH = "720";
@@ -125,7 +125,7 @@ function startStreamer(arg) {
   if (!isDev) {
     cwd = "./resources/app/NxStreamingService"
   }
-  var args = ["/ip", arg.ip, "/q", arg.q, "/w", captureW, "/h", captureH, "/s", screenScale];
+  var args = ["/ip", arg.ip, "/q", arg.q, "/w", captureW, "/h", captureH, "/s", screen.getPrimaryDisplay().scaleFactor];
   if (arg.disableVideo) {
     args.push("/noVideo");
   }
@@ -155,11 +155,11 @@ function startStreamer(arg) {
     args,
     { cwd: cwd, stdio: "pipe" }
   );
-
   streamerProcess.stdout.on("data", data => {
     log(`${data}`);
     if (!streamerProcessIsRunning) {
       streamerProcessIsRunning = true;
+      restartingStream = false;
       clientSender.send("started");
     }
   });
@@ -167,6 +167,7 @@ function startStreamer(arg) {
     log(`${data}`);
     if (!streamerProcessIsRunning) {
       streamerProcessIsRunning = true;
+      restartingStream = false;
       clientSender.send("started");
     }
   });
@@ -174,8 +175,8 @@ function startStreamer(arg) {
     clientSender.send("close");
     log(`streamerProcess process exited with code ${code}`);
     streamerProcessIsRunning = false;
-    if (autoChangeResolution) {
-      changeScreenRes(screenWidth, screenHeight);
+    if (autoChangeResolution && !restartingStream) {
+      changeScreenRes(originalW, originalH);
     }
   });
 }
@@ -183,9 +184,10 @@ ipcMain.on('connect', (event, arg) => {
   clientSender = event.sender;
   startStreamer(arg);
 })
-
+var restartingStream = false;
 ipcMain.on('restart', (event, arg) => {
   streamerProcess.kill();
+  restartingStream = true;
   startStreamer(arg);
 });
 ipcMain.on('kill', (event, arg) => {
@@ -286,7 +288,7 @@ ipcMain.on('autoChangeResolutionOn', (event, fullMessage) => {
 });
 ipcMain.on('autoChangeResolutionOff', (event, fullMessage) => {
   if (autoChangeResolution) {
-    changeScreenRes(screenWidth, screenHeight);
+    changeScreenRes(originalW, originalH);
   }
   autoChangeResolution = false;
 });
