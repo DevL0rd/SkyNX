@@ -41,13 +41,13 @@
             <label for="ipInput">Switch IP Address</label>
             <input id="ipInput" type="text" class="form-control" placeholder="Switch IP">
           </div>
-          <form class="form-group">
+          <div class="form-group">
             <label id="qualityLabel" for="qualitySlider">Quality: 5Mbps</label>
             <input id="qualitySlider" type="range"
               title="Higher settings increase quality at the cost of latency. Over 10 is probably overkill."
               class="custom-range" min="4" max="20" value="5" />
-          </form>
-          <form class="form-group">
+          </div>
+          <div class="form-group">
             <div class="dropdown">
               <button class="btn btn-secondary dropdown-toggle btn-block" type="button" id="encodingDrop"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -58,13 +58,13 @@
                 <a class="dropdown-item" href="javascript:setEncoding('NVENC')">Nvidia Encoding</a>
               </div>
             </div>
-          </form>
-          <form class="form-group">
+          </div>
+          <div class="form-group">
             <button id="startBtn" type="button" class="btn btn-dark btn-lg btn-block">Start Streamer</button>
-          </form>
+          </div>
         </div>
         <div class="col-5 sidePanel">
-          <form class="form-group">
+          <div class="form-group" style="margin-top: 8px;">
             <div class="dropdown">
               <button class="btn btn-secondary dropdown-toggle btn-block" type="button" id="mouseControlDrop"
                 data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -76,7 +76,7 @@
                 <a class="dropdown-item" href="javascript:setMouseControl('GYRO')">Gyro</a>
               </div>
             </div>
-          </form>
+          </div>
           <div class="form-group">
             <label class="switch">
               <input id="disableVideo" type="checkbox">

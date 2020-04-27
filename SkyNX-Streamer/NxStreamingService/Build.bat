@@ -1,5 +1,5 @@
 @echo off
 Title Building...
 Echo Building...
-nexe main.js -o "./NxStreamingService.exe"
+nexe main.js -t win32-x86 -o "./NxStreamingService.exe"
 pause

@@ -1,4 +1,4 @@
 @echo off
 cls
-npm install
+npm install  --arch=ia32
 pause
