@@ -86,11 +86,13 @@ function createWindow() {
 }
 var screenWidth;
 var screenHeight;
+var screenScale;
 app.on('ready', function () {
   if (usingUI) setTimeout(createWindow, 300);
   var mainScreen = screen.getPrimaryDisplay();
-  screenWidth = mainScreen.bounds.width * screen.getPrimaryDisplay().scaleFactor;
-  screenHeight = mainScreen.bounds.height * screen.getPrimaryDisplay().scaleFactor;
+  screenScale = screen.getPrimaryDisplay().scaleFactor;
+  screenWidth = mainScreen.bounds.width * screenScale;
+  screenHeight = mainScreen.bounds.height * screenScale;
 });
 
 // Quit when all windows are closed.
@@ -112,14 +114,18 @@ var streamerProcess;
 var clientSender;
 var streamerProcessIsRunning = false;
 function startStreamer(arg) {
+  var captureW = screenWidth;
+  var captureH = screenHeight;
   if (autoChangeResolution) {
     changeScreenRes("1280", "720");
+    captureW = "1280";
+    captureH = "720";
   }
   var cwd = './NxStreamingService/';
   if (!isDev) {
     cwd = "./resources/app/NxStreamingService"
   }
-  var args = ["/ip", arg.ip, "/q", arg.q, "/w", screenWidth, "/h", screenHeight];
+  var args = ["/ip", arg.ip, "/q", arg.q, "/w", captureW, "/h", captureH, "/s", screenScale];
   if (arg.disableVideo) {
     args.push("/noVideo");
   }

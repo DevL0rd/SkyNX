@@ -18,6 +18,7 @@ var limitFPS = false;
 var encoding = "CPU";
 var screenWidth = 1280;
 var screenHeight = 720;
+var screenScale = 1;
 function connect() {
   hidStreamClient.connect({
     host: ip,
@@ -309,8 +310,8 @@ hidStreamClient.on('data', function (data) {
   if (touchX1 && touchY1) {
     touchX1 -= 15;
     touchY1 -= 15;
-    touchX1 = Math.floor(swidth * (touchX1 / 1249))
-    touchY1 = Math.floor(sheight * (touchY1 / 689))
+    touchX1 = Math.floor(screenWidth * (touchX1 / 1280))
+    touchY1 = Math.floor(screenHeight * (touchY1 / 720))
     var touchX2 = hid.get("touchX2");
     var touchY2 = hid.get("touchY2");
     if (touchX2 && touchY2) {
@@ -338,7 +339,7 @@ hidStreamClient.on('data', function (data) {
     }
     if (!scrolling) {
       leftTouchTime++;
-      robot.moveMouse(touchX1, touchY1);
+      robot.moveMouse(touchX1 / screenScale, touchY1 / screenScale);
       if (!leftClicking) {
         robot.mouseToggle("down");
         leftClicking = true;
@@ -407,6 +408,12 @@ if (args.length > 1) {
     } else {
       screenHeight = 720;
     }
+    if (args.includes("/s") && args[args.indexOf("/s") + 1]) {
+      screenScale = args[args.indexOf("/s") + 1];
+    } else {
+      screenScale = 1;
+    }
+
     if (args.includes("/noVideo")) {
       usingVideo = false;
     } else {
