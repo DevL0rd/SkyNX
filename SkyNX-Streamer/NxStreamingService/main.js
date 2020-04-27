@@ -10,15 +10,14 @@ const vgen = new VGen();
 const GyroServ = require("./Devlord_modules/GyroServ.js");
 var ip = "0.0.0.0"
 var quality = 5;
-var screenSize = robot.getScreenSize();
-var sheight = screenSize.height;
-var swidth = screenSize.width;
 var hidStreamClient = new net.Socket();
 var usingVideo = true;
 var usingAudio = true;
 var abxySwap = false;
 var limitFPS = false;
 var encoding = "CPU";
+var screenWidth = 1280;
+var screenHeight = 720;
 function connect() {
   hidStreamClient.connect({
     host: ip,
@@ -71,10 +70,10 @@ function startVideoProcess() {
   }
   var ffmpegVideoArgs = [];
   if (encoding == "NVENC") {
-    ffmpegVideoArgs = ["-probesize", "50M", "-threads", "0", "-f", "gdigrab", "-framerate", fps, "-video_size", swidth + "x" + sheight, "-offset_x", "0", "-offset_y", "0", "-draw_mouse", "1", "-i", "desktop", "-c:v", "h264_nvenc", "-gpu", "0", "-rc", "cbr_ld_hq", "-zerolatency", "true", "-f", "h264", "-vf", "scale=1280x720", "-pix_fmt", "yuv420p", "-profile:v", "baseline", "-b:v", quality + "M", "-minrate", quality - 3 + "M", "-maxrate", quality + "M", "-bufsize", (quality / 2) + "M", "tcp://" + ip + ":2222"];
+    ffmpegVideoArgs = ["-probesize", "50M", "-threads", "0", "-f", "gdigrab", "-framerate", fps, "-video_size", screenWidth + "x" + screenHeight, "-offset_x", "0", "-offset_y", "0", "-draw_mouse", "1", "-i", "desktop", "-c:v", "h264_nvenc", "-gpu", "0", "-rc", "cbr_ld_hq", "-zerolatency", "true", "-f", "h264", "-vf", "scale=1280x720", "-pix_fmt", "yuv420p", "-profile:v", "baseline", "-b:v", quality + "M", "-minrate", quality - 3 + "M", "-maxrate", quality + "M", "-bufsize", (quality / 2) + "M", "tcp://" + ip + ":2222"];
     console.log("Using Nvidia Encoding");
   } else {
-    ffmpegVideoArgs = ["-probesize", "50M", "-threads", "0", "-f", "gdigrab", "-framerate", fps, "-video_size", swidth + "x" + sheight, "-offset_x", "0", "-offset_y", "0", "-draw_mouse", "1", "-i", "desktop", "-f", "h264", "-vf", "scale=1280x720", "-preset", "ultrafast", "-tune", "zerolatency", "-pix_fmt", "yuv420p", "-profile:v", "baseline", "-x264-params", 'nal-hrd=cbr', "-b:v", quality + "M", "-minrate", quality - 3 + "M", "-maxrate", quality + "M", "-bufsize", (quality / 2) + "M", "tcp://" + ip + ":2222"];
+    ffmpegVideoArgs = ["-probesize", "50M", "-threads", "0", "-f", "gdigrab", "-framerate", fps, "-video_size", screenWidth + "x" + screenHeight, "-offset_x", "0", "-offset_y", "0", "-draw_mouse", "1", "-i", "desktop", "-f", "h264", "-vf", "scale=1280x720", "-preset", "ultrafast", "-tune", "zerolatency", "-pix_fmt", "yuv420p", "-profile:v", "baseline", "-x264-params", 'nal-hrd=cbr', "-b:v", quality + "M", "-minrate", quality - 3 + "M", "-maxrate", quality + "M", "-bufsize", (quality / 2) + "M", "tcp://" + ip + ":2222"];
     console.log("Using CPU Encoding");
   }
   ffmpegProcess = spawn(
@@ -397,6 +396,16 @@ if (args.length > 1) {
       quality = args[args.indexOf("/q") + 1];
     } else {
       quality = 5;
+    }
+    if (args.includes("/w") && args[args.indexOf("/w") + 1]) {
+      screenWidth = args[args.indexOf("/w") + 1];
+    } else {
+      screenWidth = 1280;
+    }
+    if (args.includes("/h") && args[args.indexOf("/h") + 1]) {
+      screenHeight = args[args.indexOf("/h") + 1];
+    } else {
+      screenHeight = 720;
     }
     if (args.includes("/noVideo")) {
       usingVideo = false;

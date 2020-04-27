@@ -9,10 +9,14 @@ const isDev = require('electron-is-dev');
 var AutoLaunch = require('auto-launch');
 var AU = require('ansi_up');
 var ansi_up = new AU.default;
-const { app, BrowserWindow, ipcMain, Menu, Tray } = require('electron')
+const { app, BrowserWindow, ipcMain, Menu, Tray, screen } = require('electron')
 let mainWindow
 var usingUI = true;
 var minimizeToTray = false;
+var autoChangeResolution = false;
+app.commandLine.appendSwitch('high-dpi-support', 'true');
+//var sr = require('screenres');
+// sr.set(800, 600);
 function createWindow() {
   let mainWindowState = windowStateKeeper({
     defaultWidth: 500,
@@ -80,7 +84,14 @@ function createWindow() {
     appIcon.setHighlightMode('always');
   });
 }
-app.on('ready', function () { if (usingUI) setTimeout(createWindow, 300); });
+var screenWidth;
+var screenHeight;
+app.on('ready', function () {
+  if (usingUI) setTimeout(createWindow, 300);
+  var mainScreen = screen.getPrimaryDisplay();
+  screenWidth = mainScreen.bounds.width * screen.getPrimaryDisplay().scaleFactor;
+  screenHeight = mainScreen.bounds.height * screen.getPrimaryDisplay().scaleFactor;
+});
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
@@ -101,11 +112,14 @@ var streamerProcess;
 var clientSender;
 var streamerProcessIsRunning = false;
 function startStreamer(arg) {
+  if (autoChangeResolution) {
+    changeScreenRes("1280", "720");
+  }
   var cwd = './NxStreamingService/';
   if (!isDev) {
     cwd = "./resources/app/NxStreamingService"
   }
-  var args = ["/ip", arg.ip, "/q", arg.q];
+  var args = ["/ip", arg.ip, "/q", arg.q, "/w", screenWidth, "/h", screenHeight];
   if (arg.disableVideo) {
     args.push("/noVideo");
   }
@@ -146,6 +160,9 @@ function startStreamer(arg) {
     clientSender.send("close");
     log(`streamerProcess process exited with code ${code}`);
     streamerProcessIsRunning = false;
+    if (autoChangeResolution) {
+      changeScreenRes(screenWidth, screenHeight);
+    }
   });
 }
 ipcMain.on('connect', (event, arg) => {
@@ -250,7 +267,20 @@ ipcMain.on('autoStartupOff', (event, fullMessage) => {
     autoLauncher.disable();
   }
 });
+ipcMain.on('autoChangeResolutionOn', (event, fullMessage) => {
+  autoChangeResolution = true;
+});
+ipcMain.on('autoChangeResolutionOff', (event, fullMessage) => {
+  if (autoChangeResolution) {
+    changeScreenRes(screenWidth, screenHeight);
+  }
+  autoChangeResolution = false;
+});
 
 ipcMain.on("restartComputer", (event, fullMessage) => {
   exec("shutdown -r -t 0");
 });
+function changeScreenRes(width, height) {
+  var df = __dirname + "\\NxStreamingService\\lib\\ChangeScreenResolution.exe"
+  exec(df + " /w=" + width + " /h=" + height + " /d=0");
+}

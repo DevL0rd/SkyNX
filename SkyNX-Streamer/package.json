@@ -21,6 +21,7 @@
     "jquery": "latest",
     "popper.js": "latest",
     "readdirp": "latest",
+    "screenres": "^2.0.1",
     "windows-elevate": "^1.0.1"
   }
 }
