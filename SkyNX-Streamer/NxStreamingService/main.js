@@ -72,10 +72,10 @@ function startVideoProcess() {
   }
   var ffmpegVideoArgs = [];
   if (encoding == "NVENC") {
-    ffmpegVideoArgs = ["-probesize", "50M", "-threads", "0", "-f", "gdigrab", "-framerate", fps, "-video_size", screenWidth + "x" + screenHeight, "-offset_x", "0", "-offset_y", "0", "-draw_mouse", "1", "-i", "desktop", "-c:v", "h264_nvenc", "-gpu", "0", "-rc", "cbr_ld_hq", "-zerolatency", "true", "-f", "h264", "-vf", "scale=1280x720", "-pix_fmt", "yuv420p", "-profile:v", "baseline", "-b:v", quality + "M", "-minrate", quality - 3 + "M", "-maxrate", quality + "M", "-bufsize", (quality / 2) + "M", "tcp://" + ip + ":2222"];
+    ffmpegVideoArgs = ["-probesize", "50M", "-hwaccel", "auto", "-f", "gdigrab", "-framerate", fps, "-video_size", screenWidth + "x" + screenHeight, "-offset_x", "0", "-offset_y", "0", "-draw_mouse", "1", "-i", "desktop", "-c:v", "h264_nvenc", "-gpu", "0", "-rc", "cbr_ld_hq", "-zerolatency", "1", "-f", "h264", "-vf", "scale=1280x720", "-pix_fmt", "yuv420p", "-profile:v", "baseline", "-cq:v", "19", "-g", "999999", "-b:v", quality + "M", "-minrate", quality - 3 + "M", "-maxrate", quality + "M", "-bufsize", (quality / (fps / 4)) + "M", "tcp://" + ip + ":2222"];
     console.log("Using Nvidia Encoding");
   } else {
-    ffmpegVideoArgs = ["-probesize", "50M", "-threads", "0", "-f", "gdigrab", "-framerate", fps, "-video_size", screenWidth + "x" + screenHeight, "-offset_x", "0", "-offset_y", "0", "-draw_mouse", "1", "-i", "desktop", "-f", "h264", "-vf", "scale=1280x720", "-preset", "ultrafast", "-tune", "zerolatency", "-pix_fmt", "yuv420p", "-profile:v", "baseline", "-x264-params", 'nal-hrd=cbr', "-b:v", quality + "M", "-minrate", quality - 3 + "M", "-maxrate", quality + "M", "-bufsize", (quality / 2) + "M", "tcp://" + ip + ":2222"];
+    ffmpegVideoArgs = ["-probesize", "50M", "-hwaccel", "auto", "-f", "gdigrab", "-framerate", fps, "-video_size", screenWidth + "x" + screenHeight, "-offset_x", "0", "-offset_y", "0", "-draw_mouse", "1", "-i", "desktop", "-f", "h264", "-vf", "scale=1280x720", "-preset", "ultrafast", "-tune", "zerolatency", "-pix_fmt", "yuv420p", "-profile:v", "baseline", "-x264-params", 'nal-hrd=cbr', "-b:v", quality + "M", "-minrate", quality - 3 + "M", "-maxrate", quality + "M", "-bufsize", (quality / 2) + "M", "tcp://" + ip + ":2222"];
     console.log("Using CPU Encoding");
   }
   ffmpegProcess = spawn(
