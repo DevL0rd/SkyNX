@@ -20,6 +20,10 @@ The desktop streaming client is completely new. The Switch app however has it's 
  * Stream PC games with audio to switch at 60fps!
  * Handles up to 4 JoyCon pairs. (4 Players at once!)
  * Motion control support for Cemu.
+ * Use Analog sticks and triggers to control mouse
+ * Use gyro to control mouse like a Wii remote.
+ * Built in Nvidia encoding for low latency.
+ * Automatically sets desktop resolution for max performance. (Optional)
  * Optionally disable video  to use the JoyCons as remotes on PC!
  * Optionally disable audio.
  * Optionally swap A and B AND X and Y.
@@ -32,11 +36,10 @@ NOTE if you have a issue installing the audio driver, make sure you have the lat
 1. Copy the switch folder in SkyNX.zip, to the root of your sd card.
 2. Install the forwarder with a nsp installer such as Goldleaf.
 3. Extract SkyNXStreamer-win32-ia32.zip to somewhere safe.
-4. Set desktop and game resolution to 1280 X 720. (Massively improves latency to match switch resolution.)
-5. Open SkyNXStreamer-win32-ia32/SkyNXStreamer.exe
-6. Launch SkyNX on switch.
-7. Put the IP showed on the app into the streamer.
-8. Click start streamer.
+4. Open SkyNXStreamer-win32-ia32/SkyNXStreamer.exe
+5. Launch SkyNX on switch.
+6. Put the IP showed on the app into the streamer.
+7. Click start streamer.
 
 ## SkyNX App
 ![SkyNX App](Screenshots/App.jpg "SkyNX App")
