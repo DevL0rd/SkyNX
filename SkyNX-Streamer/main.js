@@ -232,7 +232,7 @@ function log(str) {
 ipcMain.on('donate', (event, fullMessage) => {
   var url = 'https://www.paypal.me/SkyNX';
   var start = (process.platform == 'darwin' ? 'open' : process.platform == 'win32' ? 'start' : 'xdg-open');
-  require('child_process').exec(start + ' ' + url);
+  exec(start + ' ' + url);
 })
 var autoLauncher = new AutoLaunch({
   name: 'SkyNX',
@@ -247,4 +247,8 @@ ipcMain.on('autoStartupOff', (event, fullMessage) => {
   if (autoLauncher.isEnabled) {
     autoLauncher.disable();
   }
+});
+
+ipcMain.on("restartComputer", (event, fullMessage) => {
+  exec("shutdown -r -t 0");
 });

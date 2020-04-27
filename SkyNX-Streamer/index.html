@@ -43,7 +43,9 @@
           </div>
           <form class="form-group">
             <label id="qualityLabel" for="qualitySlider">Quality: 5Mbps</label>
-            <input id="qualitySlider" type="range" class="custom-range" min="4" max="20" value="5" />
+            <input id="qualitySlider" type="range"
+              title="Higher settings increase quality at the cost of latency. Over 10 is probably overkill."
+              class="custom-range" min="4" max="20" value="5" />
           </form>
           <div class="form-group">
             <div class="dropdown">
@@ -138,7 +140,8 @@
       <form class="form-group">
         <div class="row">
           <div class="col">
-            <button id="installScpVBusBtn" type="button" class="btn btn-dark btn-block">Install Controller</button>
+            <button id="installScpVBusBtn" type="button" class="btn btn-dark btn-block" data-toggle="modal"
+              data-target="#restartModal">Install Controller</button>
           </div>
           <div class="col">
             <button id="unInstallScpVBusBtn" type="button" class="btn btn-danger btn-block">Un-Install
@@ -149,7 +152,8 @@
       <form class="form-group">
         <div class="row">
           <div class="col">
-            <button id="installAudioDriverBtn" type="button" class="btn btn-dark btn-block">Install Audio
+            <button id="installAudioDriverBtn" type="button" class="btn btn-dark btn-block" data-toggle="modal"
+              data-target="#restartModal">Install Audio
               Driver</button>
           </div>
           <div class="col">
@@ -174,6 +178,22 @@
       <h1 style="color:rgb(206, 206, 206); font-size: 16px;">
         Application loading...
       </h1>
+    </div>
+  </div>
+  <div class="modal" id="restartModal" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content modalPanel">
+        <div class="modal-header">
+          <h5 class="modal-title">Restart required</h5>
+        </div>
+        <div class="modal-body">
+          <p>This change requires a restart.</p>
+        </div>
+        <div class="modal-footer">
+          <button id="restartBtn" type="button" class="btn btn-primary" data-dismiss="modal">Restart</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+        </div>
+      </div>
     </div>
   </div>
   <script src="js/fontawesome-all.min.js"></script>

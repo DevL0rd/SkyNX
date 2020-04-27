@@ -242,3 +242,18 @@ color: white;
 .selected{
     background: rgba(255, 255, 255, 0.1);
 }
+
+.modalPanel {
+    position: relative;
+    margin: 0 auto;
+    margin-top: 30px;
+    padding: 10px;
+    background-color: rgba(20, 20, 20, 0.8);
+    border: none;
+    border-radius: 5px 5px 8px 8px;
+    -webkit-box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.75);
+    -moz-box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.75);
+    box-shadow: 2px 2px 4px 0px rgba(0, 0, 0, 0.75);
+    width: 60%;
+    color: white;
+}

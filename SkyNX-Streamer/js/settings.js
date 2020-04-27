@@ -99,6 +99,7 @@ function applyClientSettings() {
     if (!clientSettings.firstInstall) {
         ipcRenderer.send('installScpVBus');
         ipcRenderer.send('installAudioDriver');
+        $('#restartModal').modal('show');
         clientSettings.firstInstall = true;
         saveClientSettings();
     }
@@ -203,3 +204,6 @@ function setEncoding(encoding) {
     saveClientSettings();
     applyClientSettings();
 }
+$("#restartBtn").click(function () {
+    ipcRenderer.send('restartComputer');
+});
