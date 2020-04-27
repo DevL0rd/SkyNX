@@ -119,7 +119,9 @@ function startStreamer(arg) {
     args.push("/e");
     args.push("NVENC");
   }
-
+  if (arg.limitFPS) {
+    args.push("/limitFPS");
+  }
   streamerProcess = spawn(
     "./NxStreamingService.exe",
     args,

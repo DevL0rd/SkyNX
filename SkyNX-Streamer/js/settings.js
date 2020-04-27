@@ -44,6 +44,9 @@ function initSettings() {
     if (!clientSettings.hasOwnProperty("abxySwap")) {
         clientSettings.abxySwap = false;
     }
+    if (!clientSettings.hasOwnProperty("limitFPS")) {
+        clientSettings.limitFPS = false;
+    }
     if (!clientSettings.hasOwnProperty("encoding")) {
         clientSettings.encoding = "CPU";
     }
@@ -73,6 +76,7 @@ function applyClientSettings() {
     $('#disableVideo').prop("checked", clientSettings.disableVideo);
     $('#disableAudio').prop("checked", clientSettings.disableAudio);
     $('#abxySwap').prop("checked", clientSettings.abxySwap);
+    $('#limitFPS').prop("checked", clientSettings.limitFPS);
     $("#ipInput").val(clientSettings.ip);
     if (clientSettings.encoding == "NVENC") {
         $("#encodingDrop").html("Encoding (Nvidia)");
@@ -190,6 +194,15 @@ $("#abxySwap").on('change', function () {
     saveClientSettings();
     applyClientSettings();
 });
+$("#limitFPS").on('change', function () {
+    clientSettings.limitFPS = $("#limitFPS").prop("checked");
+    if (running) {
+        restart();
+    }
+    saveClientSettings();
+    applyClientSettings();
+});
+
 $("#settings-btn").click(function () {
     $(".contentArea").hide();
     $("#settings").fadeIn(400);
