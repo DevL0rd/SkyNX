@@ -164,50 +164,29 @@ function heldKeysBitmask(HeldKeys) {
     Down: isOdd(HeldKeys >> 15)
   }
 }
+function convertAnalog(axis) {
+  var na;
+  if (axis) {
+    na = axis / 32767.5
+  }
+  if (na > 1) {
+    na = 2 - na
+    na = -na
+  }
+  return na;
+}
+function convertAnalogXY(x, y) {
+  return { x: convertAnalog(x), y: convertAnalog(y) };
+
+}
 function handleControllerInput(hid, controllerId, playerNumber) {
   var heldKeys = hid.get("HeldKeys" + playerNumber);
-  var LJoyX = hid.get("LJoyX" + playerNumber);
-  var LJoyY = hid.get("LJoyY" + playerNumber);
-  var RJoyX = hid.get("RJoyX" + playerNumber);
-  var RJoyY = hid.get("RJoyY" + playerNumber);
-  var nljx;
-  var nljy;
-  if (LJoyX) {
-    nljx = LJoyX / 32767.5
-  }
-  if (nljx > 1) {
-    nljx = 2 - nljx
-    nljx = -nljx
-  }
-
-  if (LJoyY) {
-    nljy = LJoyY / 32767.5
-  }
-  if (nljy > 1) {
-    nljy = 2 - nljy
-    nljy = -nljy
-  }
-  vgen.setAxisL(controllerId, nljx, nljy);
-
-  var nrjx;
-  var nrjy;
-  if (RJoyX) {
-    nrjx = RJoyX / 32767.5
-  }
-  if (nrjx > 1) {
-    nrjx = 2 - nrjx
-    nrjx = -nrjx
-  }
-
-  if (RJoyY) {
-    nrjy = RJoyY / 32767.5
-  }
-  if (nrjy > 1) {
-    nrjy = 2 - nrjy
-    nrjy = -nrjy
-  }
-  vgen.setAxisR(controllerId, nrjx, nrjy);
-
+  var LJoyX = convertAnalog(hid.get("LJoyX" + playerNumber));
+  var LJoyY = convertAnalog(hid.get("LJoyY" + playerNumber));
+  var RJoyX = convertAnalog(hid.get("RJoyX" + playerNumber));
+  var RJoyY = convertAnalog(hid.get("RJoyY" + playerNumber));
+  vgen.setAxisL(controllerId, LJoyX, LJoyY);
+  vgen.setAxisR(controllerId, RJoyX, RJoyY);
   var inputStates = heldKeysBitmask(heldKeys);
   //Button mapping
   if (!abxySwap) {
@@ -273,12 +252,174 @@ function handleControllerInput(hid, controllerId, playerNumber) {
 }
 var touchX1old = 0;
 var touchY1old = 0;
-
 var leftClicking = false;
 var rightTouchTime = 0;
 var leftTouchTime = 0;
 var rightClicking = false;
 var scrolling = false;
+var toggledMouseInput = false;
+var mouseInput = false;
+function handleMouseInputToggling(hid, playerNumber) {
+  var heldKeys = hid.get("HeldKeys" + playerNumber);
+  var inputStates = heldKeysBitmask(heldKeys);
+  if (inputStates.LS && inputStates.RS) {
+    if (!toggledMouseInput) {
+      if (mouseInput) {
+        mouseInput = false;
+      } else {
+        mouseInput = true;
+      }
+      toggledMouseInput = true;
+    }
+  } else {
+    toggledMouseInput = false;
+  }
+}
+function handleAnalogMouse(hid, playerNumber) {
+  var RJoyX = convertAnalog(hid.get("RJoyX" + playerNumber));
+  var RJoyY = convertAnalog(hid.get("RJoyY" + playerNumber));
+  var LJoyX = convertAnalog(hid.get("LJoyX" + playerNumber));
+  var LJoyY = convertAnalog(hid.get("LJoyY" + playerNumber));
+  var heldKeys = hid.get("HeldKeys" + playerNumber);
+  var inputStates = heldKeysBitmask(heldKeys);
+  var mouse = robot.getMousePos();
+  mx = mouse.x + (RJoyX * 25);
+  my = mouse.y - (RJoyY * 25);
+  if (mx && my) {
+    robot.moveMouse(mx, my);
+  }
+  if (LJoyX || LJoyY) {
+    robot.scrollMouse(LJoyX, LJoyY);
+  }
+  if (inputStates.ZR) {
+    if (!leftClicking) {
+      robot.mouseToggle("down");
+      leftClicking = true;
+    }
+  } else {
+    if (leftClicking) {
+      robot.mouseToggle("up");
+      leftClicking = false;
+    }
+  }
+  if (inputStates.ZL) {
+    if (!rightClicking) {
+      robot.mouseToggle("down", "right");
+      rightClicking = true;
+    }
+  } else {
+    if (rightClicking) {
+      robot.mouseToggle("up", "right");
+      rightClicking = false;
+    }
+  }
+}
+function handleGyroMouse(hid, playerNumber) {
+  var RJoyX = convertAnalog(hid.get("RJoyX" + playerNumber));
+  var RJoyY = convertAnalog(hid.get("RJoyY" + playerNumber));
+  var heldKeys = hid.get("HeldKeys" + playerNumber);
+  var inputStates = heldKeysBitmask(heldKeys);
+  var gyro = { x: hid.get("gyroX"), y: hid.get("gyroY"), z: hid.get("gyroZ") }
+  var mouse = robot.getMousePos();
+  var ngx = gyro.x * -1;
+  var ngz = gyro.z * -1
+  mx = mouse.x + (ngz * ((screenWidth) / 3));
+  my = mouse.y + (ngx * ((screenHeight) / 2));
+  if (mx && my) {
+    robot.moveMouse(mx, my);
+  }
+  if (RJoyX || RJoyY) {
+    robot.scrollMouse(LJoyX, LJoyY);
+  }
+  if (inputStates.ZR) {
+    if (!leftClicking) {
+      robot.mouseToggle("down");
+      leftClicking = true;
+    }
+  } else {
+    if (leftClicking) {
+      robot.mouseToggle("up");
+      leftClicking = false;
+    }
+  }
+  if (inputStates.R) {
+    if (!rightClicking) {
+      robot.mouseToggle("down", "right");
+      rightClicking = true;
+    }
+  } else {
+    if (rightClicking) {
+      robot.mouseToggle("up", "right");
+      rightClicking = false;
+    }
+  }
+}
+function handleTouchInput(hid) {
+  var touchX1 = hid.get("touchX1");
+  var touchY1 = hid.get("touchY1");
+  if (touchX1 && touchY1) {
+    touchX1 -= 15;
+    touchY1 -= 15;
+    touchX1 = Math.floor(screenWidth * (touchX1 / 1280))
+    touchY1 = Math.floor(screenHeight * (touchY1 / 720))
+    var touchX2 = hid.get("touchX2");
+    var touchY2 = hid.get("touchY2");
+    if (touchX2 && touchY2) {
+      rightTouchTime++;
+      if (rightTouchTime > 5) { //Handle scrolling
+        if (!touchX1old) touchX1old = touchX1;
+        if (!touchY1old) touchY1old = touchY1;
+        var xDiff = touchX1old - touchX1;
+        var yDiff = touchY1old - touchY1;
+        robot.scrollMouse(xDiff, yDiff);
+        touchX1old = touchX1;
+        touchY1old = touchY1;
+        scrolling = true;
+        rightClicking = false;
+      } else { //Handle left click
+        rightClicking = true;
+      }
+    } else {
+      if (rightClicking) {
+        robot.mouseClick("right");
+        rightClicking = false
+      }
+      scrolling = false;
+      rightTouchTime = 0;
+    }
+    if (!scrolling) {
+      leftTouchTime++;
+      robot.moveMouse(touchX1 / screenScale, touchY1 / screenScale);
+      if (!leftClicking) {
+        robot.mouseToggle("down");
+        leftClicking = true;
+      }
+    } else {
+      robot.mouseToggle("up");
+      leftClicking = false;
+    }
+  } else {
+    if (leftClicking) { //release left click
+      robot.mouseToggle("up");
+      leftClicking = false;
+      if (leftTouchTime < 3) {
+        robot.mouseClick("left", true); //double click
+      }
+    }
+    leftTouchTime = 0;
+    rightTouchTime = 0;
+  }
+}
+function handleGyroAndAccel(hid) {
+  var gyro = { x: hid.get("gyroX"), y: hid.get("gyroY"), z: hid.get("gyroZ") }
+  var accel = { x: hid.get("accelX"), y: hid.get("accelY"), z: hid.get("accelZ") }
+  for (axis in gyro) {
+    gyro[axis] *= 250;
+  }
+  gyro.y *= -1;
+  GyroServ.sendMotionData(gyro, accel);
+}
+
 hidStreamClient.on('data', function (data) {
   switchHidBuffer = new Buffer.from(data);
   var hid = parseInputStruct(switchHidBuffer)
@@ -286,156 +427,19 @@ hidStreamClient.on('data', function (data) {
   if (controllerCount > controllerIds.length) {
     plugControllerIn();
   }
+  var playerNumber;
   for (i in controllerIds) {
-    handleControllerInput(hid, controllerIds[i], parseInt(i) + 1);
+    playerNumber = parseInt(i) + 1;
+    handleControllerInput(hid, controllerIds[i], playerNumber);
   }
-  var gyro = { x: hid.get("gyroX"), y: hid.get("gyroY"), z: hid.get("gyroZ") }
-  if (mouseControl == "ANALOG") {
-    var RJoyX = hid.get("RJoyX1");
-    var RJoyY = hid.get("RJoyY1");
-    var nrjx;
-    var nrjy;
-    if (RJoyX) {
-      nrjx = RJoyX / 32767.5
-    }
-    if (nrjx > 1) {
-      nrjx = 2 - nrjx
-      nrjx = -nrjx
-    }
-
-    if (RJoyY) {
-      nrjy = RJoyY / 32767.5
-    }
-    if (nrjy > 1) {
-      nrjy = 2 - nrjy
-      nrjy = -nrjy
-    }
-    var mouse = robot.getMousePos();
-    mx = mouse.x + (nrjx * 16);
-    my = mouse.y - (nrjy * 16);
-    if (mx && my) {
-      robot.moveMouse(mx, my);
-    }
-    var heldKeys = hid.get("HeldKeys1");
-    var inputStates = heldKeysBitmask(heldKeys);
-    if (inputStates.ZR) {
-      if (!leftClicking) {
-        robot.mouseToggle("down");
-        leftClicking = true;
-      }
-    } else {
-      if (leftClicking) {
-        robot.mouseToggle("up");
-        leftClicking = false;
-      }
-    }
-    if (inputStates.ZL) {
-      if (!rightClicking) {
-        robot.mouseToggle("down", "right");
-        rightClicking = true;
-      }
-    } else {
-      if (rightClicking) {
-        robot.mouseToggle("up", "right");
-        rightClicking = false;
-      }
-    }
-  } else if (mouseControl == "GYRO") {
-    var mouse = robot.getMousePos();
-    var ngx = gyro.x * -1;
-    var ngz = gyro.z * -1
-    mx = mouse.x + (ngz * ((screenWidth) / 3));
-    my = mouse.y + (ngx * ((screenHeight) / 2));
-    if (mx && my) {
-      robot.moveMouse(mx, my);
-    }
-    var heldKeys = hid.get("HeldKeys1");
-    var inputStates = heldKeysBitmask(heldKeys);
-    if (inputStates.ZR) {
-      if (!leftClicking) {
-        robot.mouseToggle("down");
-        leftClicking = true;
-      }
-    } else {
-      if (leftClicking) {
-        robot.mouseToggle("up");
-        leftClicking = false;
-      }
-    }
-    if (inputStates.R) {
-      if (!rightClicking) {
-        robot.mouseToggle("down", "right");
-        rightClicking = true;
-      }
-    } else {
-      if (rightClicking) {
-        robot.mouseToggle("up", "right");
-        rightClicking = false;
-      }
-    }
-  } else {
-    var touchX1 = hid.get("touchX1");
-    var touchY1 = hid.get("touchY1");
-    if (touchX1 && touchY1) {
-      touchX1 -= 15;
-      touchY1 -= 15;
-      touchX1 = Math.floor(screenWidth * (touchX1 / 1280))
-      touchY1 = Math.floor(screenHeight * (touchY1 / 720))
-      var touchX2 = hid.get("touchX2");
-      var touchY2 = hid.get("touchY2");
-      if (touchX2 && touchY2) {
-        rightTouchTime++;
-        if (rightTouchTime > 5) { //Handle scrolling
-          if (!touchX1old) touchX1old = touchX1;
-          if (!touchY1old) touchY1old = touchY1;
-          var xDiff = touchX1old - touchX1;
-          var yDiff = touchY1old - touchY1;
-          robot.scrollMouse(xDiff, yDiff);
-          touchX1old = touchX1;
-          touchY1old = touchY1;
-          scrolling = true;
-          rightClicking = false;
-        } else { //Handle left click
-          rightClicking = true;
-        }
-      } else {
-        if (rightClicking) {
-          robot.mouseClick("right");
-          rightClicking = false
-        }
-        scrolling = false;
-        rightTouchTime = 0;
-      }
-      if (!scrolling) {
-        leftTouchTime++;
-        robot.moveMouse(touchX1 / screenScale, touchY1 / screenScale);
-        if (!leftClicking) {
-          robot.mouseToggle("down");
-          leftClicking = true;
-        }
-      } else {
-        robot.mouseToggle("up");
-        leftClicking = false;
-      }
-    } else {
-      if (leftClicking) { //release left click
-        robot.mouseToggle("up");
-        leftClicking = false;
-        if (leftTouchTime < 3) {
-          robot.mouseClick("left", true); //double click
-        }
-      }
-      leftTouchTime = 0;
-      rightTouchTime = 0;
-    }
+  handleMouseInputToggling(hid, 1);
+  if (mouseControl == "ANALOG" && mouseInput) {
+    handleAnalogMouse(hid, 1);
+  } else if (mouseControl == "GYRO" && mouseInput) {
+    handleGyroMouse(hid, 1);
   }
-  for (axis in gyro) {
-    gyro[axis] *= 250;
-  }
-  gyro.y *= -1;
-  var accel = { x: hid.get("accelX"), y: hid.get("accelY"), z: hid.get("accelZ") }
-  GyroServ.sendMotionData(gyro, accel);
-
+  handleTouchInput(hid);
+  handleGyroAndAccel(hid);
 });
 hidStreamClient.on('end', function () {
   console.log('hidStreamClient Disconnected.');
