@@ -19,7 +19,7 @@ var encoding = "CPU";
 var screenWidth = 1280;
 var screenHeight = 720;
 var screenScale = 1;
-var mouseControl = "TOUCH";
+var mouseControl = "ANALOG";
 function connect() {
   hidStreamClient.connect({
     host: ip,
@@ -513,7 +513,7 @@ if (args.length > 1) {
     if (args.includes("/m") && args[args.indexOf("/m") + 1]) {
       mouseControl = args[args.indexOf("/m") + 1];
     } else {
-      mouseControl = "TOUCH";
+      mouseControl = "ANALOG";
     }
     if (args.includes("/noVideo")) {
       usingVideo = false;

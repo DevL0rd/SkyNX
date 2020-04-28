@@ -151,7 +151,7 @@ function startStreamer(arg) {
   } else if (arg.mouseControl == "GYRO") {
     args.push("GYRO");
   } else {
-    args.push("TOUCH");
+    args.push("ANALOG");
   }
   streamerProcess = spawn(
     "./NxStreamingService.exe",

@@ -54,7 +54,7 @@ function initSettings() {
         clientSettings.encoding = "CPU";
     }
     if (!clientSettings.hasOwnProperty("mouseControl")) {
-        clientSettings.mouseControl = "TOUCH";
+        clientSettings.mouseControl = "ANALOG";
     }
     if (!clientSettings.hasOwnProperty("firstInstall")) {
         clientSettings.firstInstall = false;
@@ -101,8 +101,8 @@ function applyClientSettings() {
     } else if (clientSettings.mouseControl == "GYRO") {
         $("#mouseControlDrop").html("Mouse Control (Gyro)");
     } else {
-        $("#mouseControlDrop").html("Mouse Control (Touch)");
-        clientSettings.mouseControl = "TOUCH";
+        $("#mouseControlDrop").html("Mouse Control (Analog)");
+        clientSettings.mouseControl = "ANALOG";
     }
     if (clientSettings.debug) {
         $("#dev-btn").fadeIn(400);
