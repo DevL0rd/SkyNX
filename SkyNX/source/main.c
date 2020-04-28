@@ -123,6 +123,8 @@ void init()
     /* Init all switch required systems */
     switchInit();
     pcvSetClockRate(PcvModule_CpuBus, 1785000000); //Overclock CPU
+    pcvSetClockRate(PcvModule_GPU, 921000000);     //Overclock GPU
+    pcvSetClockRate(PcvModule_EMC, 1600000000);    //OC memory to docked frequency
     renderContext = createRenderer();
     videoContext = createVideoContext();
     videoContext->renderContext = renderContext;
@@ -137,6 +139,8 @@ void unInit()
     freeVideoContext(videoContext);
     unInitGyro();
     pcvSetClockRate(PcvModule_CpuBus, 1020000000); //Reset CPU clock to default
+    pcvSetClockRate(PcvModule_GPU, 768000000);     //Reset GPU clock to docked frequency
+    // pcvSetClockRate(PcvModule_EMC, 1600000000);    //Leave memory in docked frequency
 }
 int main(int argc, char **argv)
 {
@@ -152,7 +156,7 @@ int main(int argc, char **argv)
         {
             drawSplash(renderContext);
         }
-        svcSleepThread(12500000); //Nano sleep to keep at 80fps to handle drop frames without stutter
+        svcSleepThread(14285714); //Nano sleep to keep at 70fps to handle drop frames without stutter
     }
     /* Deinitialize all used systems */
     unInit();

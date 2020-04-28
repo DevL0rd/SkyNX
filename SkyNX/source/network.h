@@ -30,6 +30,26 @@ typedef struct
     short lJoyY4;
     short rJoyX4;
     short rJoyY4;
+    unsigned long heldKeys5;
+    short lJoyX5;
+    short lJoyY5;
+    short rJoyX5;
+    short rJoyY5;
+    unsigned long heldKeys6;
+    short lJoyX6;
+    short lJoyY6;
+    short rJoyX6;
+    short rJoyY6;
+    unsigned long heldKeys7;
+    short lJoyX7;
+    short lJoyY7;
+    short rJoyX7;
+    short rJoyY7;
+    unsigned long heldKeys8;
+    short lJoyX8;
+    short lJoyY8;
+    short rJoyX8;
+    short rJoyY8;
     short touchX1;
     short touchY1;
     short touchX2;
@@ -40,7 +60,8 @@ typedef struct
     float gyroX;
     float gyroY;
     float gyroZ;
-    short controllerCount;
+    unsigned int controllerCount;
+    unsigned int frameRate;
 } JoyPkg;
 
 /* Init nx network and av network */

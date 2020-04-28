@@ -9,6 +9,7 @@
 float timeThen = 0;
 float timeNow = 1;
 float delta = 1;
+unsigned int frameRate = 0;
 void initDelta()
 {
     timeThen = svcGetSystemTick();
@@ -489,16 +490,13 @@ void handleFrame(RenderContext *renderContext, VideoContext *videoContext)
     if (++videoContext->video_frame_count % 60 == 0)
     {
         new_time = svcGetSystemTick();
-        printf("Framerate: %f\n", 60.0 / ((new_time - old_time) / 19200000.0));
+        frameRate = (unsigned int)(60.0 / ((new_time - old_time) / 19200000.0));
         old_time = new_time;
     }
 }
 
 void displayFrame(RenderContext *renderContext)
 {
-    // while (!checkFrameAvail(renderContext))
-    // {
-    // }
     if (checkFrameAvail(renderContext))
     {
         SDL_RenderClear(renderContext->renderer);

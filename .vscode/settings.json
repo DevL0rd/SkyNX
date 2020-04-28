@@ -5,6 +5,7 @@
         "functional": "c",
         "iosfwd": "c",
         "queue": "c",
-        "sdl.h": "c"
+        "sdl.h": "c",
+        "context.h": "c"
     }
 }

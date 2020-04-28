@@ -1,18 +1,32 @@
 var logTimeout
+var Encodingfps = "0";
+var fps = "0";
+var bitrate = "";
 ipcRenderer.on('log', function (event, genHtml) {
     $("#consoleContainer").append(genHtml);
-    // $("#statusbartext").html("Console: " + genHtml);
     if (genHtml.includes("fps=")) {
-        var fps = 0;
         if (genHtml.includes("fps= ")) {
-            fps = genHtml.split("fps= ")[1].split(" ")[0];
+            Encodingfps = genHtml.split("fps= ")[1].split(" ")[0];
         } else {
-            fps = genHtml.split("fps=")[1].split(" ")[0];
+            Encodingfps = genHtml.split("fps=")[1].split(" ")[0];
         }
-        var bitrate = genHtml.split("bitrate=")[1].split(" ")[0];
-        $("#statusbartext").html("Framrate: " + fps + " Bitrate: " + bitrate);
+        if (genHtml.includes("bitrate=")) {
+            bitrate = genHtml.split("bitrate=")[1].split(" ")[0];
+        }
+        $("#statusbartext").html("FPS: " + fps + "     Encoding FPS: " + Encodingfps + "     Bitrate: " + bitrate);
+        encodingFpsChartData.datasets[0].data.push(parseInt(Encodingfps));
+        if (encodingFpsChartData.datasets[0].data.length > 40) {
+            encodingFpsChartData.datasets[0].data.shift();
+        }
+        if ($("#stats").is(":visible")) {
+            encodingFpsChartData.labels = genrateLabelList("FPS", encodingFpsChartData.datasets[0].data.length);
+            encodingFpsChart.update(0);
+        }
+    } else if (genHtml.includes("switchFps=")) {
+        fps = genHtml.split("switchFps=")[1].split(" ")[0].replace("<br>", "");
+        $("#statusbartext").html("FPS: " + fps + "     Encoding FPS: " + Encodingfps + "     Bitrate: " + bitrate);
         fpsChartData.datasets[0].data.push(parseInt(fps));
-        if (fpsChartData.datasets[0].data.length > 20) {
+        if (fpsChartData.datasets[0].data.length > 40) {
             fpsChartData.datasets[0].data.shift();
         }
         if ($("#stats").is(":visible")) {

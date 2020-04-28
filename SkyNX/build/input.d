@@ -74,8 +74,10 @@ input.o: C:/Github/SkyNX/SkyNX/source/input.c \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_loadso.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_log.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_messagebox.h \
+ C:/devkitPro/portlibs/switch/include/SDL2/SDL_metal.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_power.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_render.h \
+ C:/devkitPro/portlibs/switch/include/SDL2/SDL_sensor.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_shape.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_system.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_timer.h \
@@ -85,7 +87,10 @@ input.o: C:/Github/SkyNX/SkyNX/source/input.c \
  C:/Github/SkyNX/SkyNX/source/SDL_FontCache.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_ttf.h \
  C:/Github/SkyNX/SkyNX/source/input.h \
- C:/Github/SkyNX/SkyNX/source/network.h
+ C:/Github/SkyNX/SkyNX/source/network.h \
+ C:/Github/SkyNX/SkyNX/source/renderer.h \
+ C:/devkitPro/portlibs/switch/include/libswscale/swscale.h \
+ C:/devkitPro/portlibs/switch/include/libswscale/version.h
 
 C:/Github/SkyNX/SkyNX/source/context.h:
 
@@ -237,9 +242,13 @@ C:/devkitPro/portlibs/switch/include/SDL2/SDL_log.h:
 
 C:/devkitPro/portlibs/switch/include/SDL2/SDL_messagebox.h:
 
+C:/devkitPro/portlibs/switch/include/SDL2/SDL_metal.h:
+
 C:/devkitPro/portlibs/switch/include/SDL2/SDL_power.h:
 
 C:/devkitPro/portlibs/switch/include/SDL2/SDL_render.h:
+
+C:/devkitPro/portlibs/switch/include/SDL2/SDL_sensor.h:
 
 C:/devkitPro/portlibs/switch/include/SDL2/SDL_shape.h:
 
@@ -260,3 +269,9 @@ C:/devkitPro/portlibs/switch/include/SDL2/SDL_ttf.h:
 C:/Github/SkyNX/SkyNX/source/input.h:
 
 C:/Github/SkyNX/SkyNX/source/network.h:
+
+C:/Github/SkyNX/SkyNX/source/renderer.h:
+
+C:/devkitPro/portlibs/switch/include/libswscale/swscale.h:
+
+C:/devkitPro/portlibs/switch/include/libswscale/version.h:

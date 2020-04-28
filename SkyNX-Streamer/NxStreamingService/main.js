@@ -127,6 +127,26 @@ function parseInputStruct(buff) {
     .word16Ule('LJoyY4')
     .word16Ule('RJoyX4')
     .word16Ule('RJoyY4')
+    .word64Ule('HeldKeys5')
+    .word16Ule('LJoyX5')
+    .word16Ule('LJoyY5')
+    .word16Ule('RJoyX5')
+    .word16Ule('RJoyY5')
+    .word64Ule('HeldKeys6')
+    .word16Ule('LJoyX6')
+    .word16Ule('LJoyY6')
+    .word16Ule('RJoyX6')
+    .word16Ule('RJoyY6')
+    .word64Ule('HeldKeys7')
+    .word16Ule('LJoyX7')
+    .word16Ule('LJoyY7')
+    .word16Ule('RJoyX7')
+    .word16Ule('RJoyY7')
+    .word64Ule('HeldKeys8')
+    .word16Ule('LJoyX8')
+    .word16Ule('LJoyY8')
+    .word16Ule('RJoyX8')
+    .word16Ule('RJoyY8')
     .word16Ule('touchX1')
     .word16Ule('touchY1')
     .word16Ule('touchX2')
@@ -137,7 +157,8 @@ function parseInputStruct(buff) {
     .floatle('gyroX')
     .floatle('gyroY')
     .floatle('gyroZ')
-    .word16Ule('controllerCount')
+    .word32Ule('controllerCount')
+    .word32Ule('frameRate')
   input._setBuff(buff);
   return input;
 };
@@ -427,6 +448,7 @@ hidStreamClient.on('data', function (data) {
   if (controllerCount > controllerIds.length) {
     plugControllerIn();
   }
+  console.log("switchFps=" + hid.get("frameRate"))
   var playerNumber;
   for (i in controllerIds) {
     playerNumber = parseInt(i) + 1;

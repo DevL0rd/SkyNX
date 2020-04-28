@@ -51,8 +51,10 @@ main.o: C:/Github/SkyNX/SkyNX/source/main.c \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_loadso.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_log.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_messagebox.h \
+ C:/devkitPro/portlibs/switch/include/SDL2/SDL_metal.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_power.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_render.h \
+ C:/devkitPro/portlibs/switch/include/SDL2/SDL_sensor.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_shape.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_system.h \
  C:/devkitPro/portlibs/switch/include/SDL2/SDL_timer.h \
@@ -196,9 +198,13 @@ C:/devkitPro/portlibs/switch/include/SDL2/SDL_log.h:
 
 C:/devkitPro/portlibs/switch/include/SDL2/SDL_messagebox.h:
 
+C:/devkitPro/portlibs/switch/include/SDL2/SDL_metal.h:
+
 C:/devkitPro/portlibs/switch/include/SDL2/SDL_power.h:
 
 C:/devkitPro/portlibs/switch/include/SDL2/SDL_render.h:
+
+C:/devkitPro/portlibs/switch/include/SDL2/SDL_sensor.h:
 
 C:/devkitPro/portlibs/switch/include/SDL2/SDL_shape.h:
 

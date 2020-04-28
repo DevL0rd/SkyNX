@@ -3,7 +3,7 @@
 #include "context.h"
 #include "input.h"
 #include "network.h"
-
+#include "renderer.h"
 void gamePadSend(JoyConSocket *connection)
 {
     JoystickPosition lJoy;
@@ -11,7 +11,7 @@ void gamePadSend(JoyConSocket *connection)
     JoyPkg pkg;
     /* Recieve switch input and generate the package */
     hidScanInput();
-    short controllersConnected = 0;
+    unsigned int controllersConnected = 0;
     HidControllerID player1Id;
     if (hidGetHandheldMode())
     {
@@ -29,6 +29,7 @@ void gamePadSend(JoyConSocket *connection)
             controllersConnected++;
         }
     }
+    pkg.frameRate = frameRate;
     pkg.controllerCount = controllersConnected;
     pkg.heldKeys1 = hidKeysHeld(player1Id);
     hidJoystickRead(&lJoy, player1Id, JOYSTICK_LEFT);
