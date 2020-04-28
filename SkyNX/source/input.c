@@ -31,7 +31,7 @@ void gamePadSend(JoyConSocket *connection)
     }
     pkg.frameRate = frameRate;
     pkg.controllerCount = controllersConnected;
-    pkg.heldKeys1 = hidKeysHeld(player1Id);
+    pkg.heldKeys1 = (u32)hidKeysHeld(player1Id);
     hidJoystickRead(&lJoy, player1Id, JOYSTICK_LEFT);
     hidJoystickRead(&rJoy, player1Id, JOYSTICK_RIGHT);
     pkg.lJoyX1 = lJoy.dx;
@@ -39,7 +39,7 @@ void gamePadSend(JoyConSocket *connection)
     pkg.rJoyX1 = rJoy.dx;
     pkg.rJoyY1 = rJoy.dy;
 
-    pkg.heldKeys2 = hidKeysHeld(CONTROLLER_PLAYER_2);
+    pkg.heldKeys2 = (u32)hidKeysHeld(CONTROLLER_PLAYER_2);
     hidJoystickRead(&lJoy, CONTROLLER_PLAYER_2, JOYSTICK_LEFT);
     hidJoystickRead(&rJoy, CONTROLLER_PLAYER_2, JOYSTICK_RIGHT);
     pkg.lJoyX2 = lJoy.dx;
@@ -47,7 +47,7 @@ void gamePadSend(JoyConSocket *connection)
     pkg.rJoyX2 = rJoy.dx;
     pkg.rJoyY2 = rJoy.dy;
 
-    pkg.heldKeys3 = hidKeysHeld(CONTROLLER_PLAYER_3);
+    pkg.heldKeys3 = (u32)hidKeysHeld(CONTROLLER_PLAYER_3);
     hidJoystickRead(&lJoy, CONTROLLER_PLAYER_3, JOYSTICK_LEFT);
     hidJoystickRead(&rJoy, CONTROLLER_PLAYER_3, JOYSTICK_RIGHT);
     pkg.lJoyX3 = lJoy.dx;
@@ -55,7 +55,7 @@ void gamePadSend(JoyConSocket *connection)
     pkg.rJoyX3 = rJoy.dx;
     pkg.rJoyY3 = rJoy.dy;
 
-    pkg.heldKeys4 = hidKeysHeld(CONTROLLER_PLAYER_4);
+    pkg.heldKeys4 = (u32)hidKeysHeld(CONTROLLER_PLAYER_4);
     hidJoystickRead(&lJoy, CONTROLLER_PLAYER_4, JOYSTICK_LEFT);
     hidJoystickRead(&rJoy, CONTROLLER_PLAYER_4, JOYSTICK_RIGHT);
     pkg.lJoyX4 = lJoy.dx;
@@ -63,6 +63,37 @@ void gamePadSend(JoyConSocket *connection)
     pkg.rJoyX4 = rJoy.dx;
     pkg.rJoyY4 = rJoy.dy;
 
+    pkg.heldKeys5 = (u32)hidKeysHeld(CONTROLLER_PLAYER_5);
+    hidJoystickRead(&lJoy, CONTROLLER_PLAYER_5, JOYSTICK_LEFT);
+    hidJoystickRead(&rJoy, CONTROLLER_PLAYER_5, JOYSTICK_RIGHT);
+    pkg.lJoyX5 = lJoy.dx;
+    pkg.lJoyY5 = lJoy.dy;
+    pkg.rJoyX5 = rJoy.dx;
+    pkg.rJoyY5 = rJoy.dy;
+
+    pkg.heldKeys6 = (u32)hidKeysHeld(CONTROLLER_PLAYER_6);
+    hidJoystickRead(&lJoy, CONTROLLER_PLAYER_6, JOYSTICK_LEFT);
+    hidJoystickRead(&rJoy, CONTROLLER_PLAYER_6, JOYSTICK_RIGHT);
+    pkg.lJoyX6 = lJoy.dx;
+    pkg.lJoyY6 = lJoy.dy;
+    pkg.rJoyX6 = rJoy.dx;
+    pkg.rJoyY6 = rJoy.dy;
+
+    pkg.heldKeys7 = (u32)hidKeysHeld(CONTROLLER_PLAYER_7);
+    hidJoystickRead(&lJoy, CONTROLLER_PLAYER_7, JOYSTICK_LEFT);
+    hidJoystickRead(&rJoy, CONTROLLER_PLAYER_7, JOYSTICK_RIGHT);
+    pkg.lJoyX7 = lJoy.dx;
+    pkg.lJoyY7 = lJoy.dy;
+    pkg.rJoyX7 = rJoy.dx;
+    pkg.rJoyY7 = rJoy.dy;
+
+    pkg.heldKeys8 = (u32)hidKeysHeld(CONTROLLER_PLAYER_8);
+    hidJoystickRead(&lJoy, CONTROLLER_PLAYER_8, JOYSTICK_LEFT);
+    hidJoystickRead(&rJoy, CONTROLLER_PLAYER_8, JOYSTICK_RIGHT);
+    pkg.lJoyX8 = lJoy.dx;
+    pkg.lJoyY8 = lJoy.dy;
+    pkg.rJoyX8 = rJoy.dx;
+    pkg.rJoyY8 = rJoy.dy;
     touchPosition touch;
     hidTouchRead(&touch, 0);
     pkg.touchX1 = touch.px;

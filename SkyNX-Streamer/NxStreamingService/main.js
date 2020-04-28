@@ -107,50 +107,50 @@ hidStreamClient.on('connect', function () {
 var switchHidBuffer = new Buffer.alloc(0);
 function parseInputStruct(buff) {
   var input = Struct()
-    .word64Ule('HeldKeys1')
-    .word16Ule('LJoyX1')
-    .word16Ule('LJoyY1')
-    .word16Ule('RJoyX1')
-    .word16Ule('RJoyY1')
-    .word64Ule('HeldKeys2')
-    .word16Ule('LJoyX2')
-    .word16Ule('LJoyY2')
-    .word16Ule('RJoyX2')
-    .word16Ule('RJoyY2')
-    .word64Ule('HeldKeys3')
-    .word16Ule('LJoyX3')
-    .word16Ule('LJoyY3')
-    .word16Ule('RJoyX3')
-    .word16Ule('RJoyY3')
-    .word64Ule('HeldKeys4')
-    .word16Ule('LJoyX4')
-    .word16Ule('LJoyY4')
-    .word16Ule('RJoyX4')
-    .word16Ule('RJoyY4')
-    .word64Ule('HeldKeys5')
-    .word16Ule('LJoyX5')
-    .word16Ule('LJoyY5')
-    .word16Ule('RJoyX5')
-    .word16Ule('RJoyY5')
-    .word64Ule('HeldKeys6')
-    .word16Ule('LJoyX6')
-    .word16Ule('LJoyY6')
-    .word16Ule('RJoyX6')
-    .word16Ule('RJoyY6')
-    .word64Ule('HeldKeys7')
-    .word16Ule('LJoyX7')
-    .word16Ule('LJoyY7')
-    .word16Ule('RJoyX7')
-    .word16Ule('RJoyY7')
-    .word64Ule('HeldKeys8')
-    .word16Ule('LJoyX8')
-    .word16Ule('LJoyY8')
-    .word16Ule('RJoyX8')
-    .word16Ule('RJoyY8')
-    .word16Ule('touchX1')
-    .word16Ule('touchY1')
-    .word16Ule('touchX2')
-    .word16Ule('touchY2')
+    .word32Ule('HeldKeys1')
+    .word32Sle('LJoyX1')
+    .word32Sle('LJoyY1')
+    .word32Sle('RJoyX1')
+    .word32Sle('RJoyY1')
+    .word32Ule('HeldKeys2')
+    .word32Sle('LJoyX2')
+    .word32Sle('LJoyY2')
+    .word32Sle('RJoyX2')
+    .word32Sle('RJoyY2')
+    .word32Ule('HeldKeys3')
+    .word32Sle('LJoyX3')
+    .word32Sle('LJoyY3')
+    .word32Sle('RJoyX3')
+    .word32Sle('RJoyY3')
+    .word32Ule('HeldKeys4')
+    .word32Sle('LJoyX4')
+    .word32Sle('LJoyY4')
+    .word32Sle('RJoyX4')
+    .word32Sle('RJoyY4')
+    .word32Ule('HeldKeys5')
+    .word32Sle('LJoyX5')
+    .word32Sle('LJoyY5')
+    .word32Sle('RJoyX5')
+    .word32Sle('RJoyY5')
+    .word32Ule('HeldKeys6')
+    .word32Sle('LJoyX6')
+    .word32Sle('LJoyY6')
+    .word32Sle('RJoyX6')
+    .word32Sle('RJoyY6')
+    .word32Ule('HeldKeys7')
+    .word32Sle('LJoyX7')
+    .word32Sle('LJoyY7')
+    .word32Sle('RJoyX7')
+    .word32Sle('RJoyY7')
+    .word32Ule('HeldKeys8')
+    .word32Sle('LJoyX8')
+    .word32Sle('LJoyY8')
+    .word32Sle('RJoyX8')
+    .word32Sle('RJoyY8')
+    .word32Ule('touchX1')
+    .word32Ule('touchY1')
+    .word32Ule('touchX2')
+    .word32Ule('touchY2')
     .floatle('accelX')
     .floatle('accelY')
     .floatle('accelZ')
@@ -280,6 +280,8 @@ var rightClicking = false;
 var scrolling = false;
 var toggledMouseInput = false;
 var mouseInput = false;
+var touchLeftClicking = false;
+var touchRightClicking = false;
 function handleMouseInputToggling(hid, playerNumber) {
   var heldKeys = hid.get("HeldKeys" + playerNumber);
   var inputStates = heldKeysBitmask(heldKeys);
@@ -396,14 +398,14 @@ function handleTouchInput(hid) {
         touchX1old = touchX1;
         touchY1old = touchY1;
         scrolling = true;
-        rightClicking = false;
+        touchRightClicking = false;
       } else { //Handle left click
-        rightClicking = true;
+        touchRightClicking = true;
       }
     } else {
-      if (rightClicking) {
+      if (touchRightClicking) {
         robot.mouseClick("right");
-        rightClicking = false
+        touchRightClicking = false
       }
       scrolling = false;
       rightTouchTime = 0;
@@ -411,18 +413,18 @@ function handleTouchInput(hid) {
     if (!scrolling) {
       leftTouchTime++;
       robot.moveMouse(touchX1 / screenScale, touchY1 / screenScale);
-      if (!leftClicking) {
+      if (!touchLeftClicking) {
         robot.mouseToggle("down");
-        leftClicking = true;
+        touchLeftClicking = true;
       }
     } else {
       robot.mouseToggle("up");
-      leftClicking = false;
+      touchLeftClicking = false;
     }
   } else {
-    if (leftClicking) { //release left click
+    if (touchLeftClicking) { //release left click
       robot.mouseToggle("up");
-      leftClicking = false;
+      touchLeftClicking = false;
       if (leftTouchTime < 3) {
         robot.mouseClick("left", true); //double click
       }
