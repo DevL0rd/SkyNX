@@ -352,7 +352,7 @@ function handleGyroMouse(hid, playerNumber) {
     robot.moveMouse(mx, my);
   }
   if (RJoyX || RJoyY) {
-    robot.scrollMouse(LJoyX, LJoyY);
+    robot.scrollMouse(RJoyX, RJoyY);
   }
   if (inputStates.ZR) {
     if (!leftClicking) {
