@@ -108,6 +108,7 @@ hidStreamClient.on('connect', function () {
 var switchHidBuffer = new Buffer.alloc(0);
 function parseInputStruct(buff) {
   var input = Struct()
+    .word8('streamStart')
     .word32Ule('HeldKeys1')
     .word32Sle('LJoyX1')
     .word32Sle('LJoyY1')
@@ -160,6 +161,7 @@ function parseInputStruct(buff) {
     .floatle('gyroZ')
     .word32Ule('controllerCount')
     .word32Ule('frameRate')
+    .word8('streamEnd')
   input._setBuff(buff);
   return input;
 };
@@ -478,7 +480,7 @@ function handleGyroAndAccel(hid) {
 var fpsPrintTimer = 0;
 hidStreamClient.on('data', function (data) {
   if (data.length < 208) {
-    console.log("Data incorrect length. Data length: " + data.length)
+    console.log("HID data too short. Data length: " + data.length)
     return;
   } //packet is 208 in length. anyless then the data is bad
   if (data.length > 208) {
@@ -487,6 +489,12 @@ hidStreamClient.on('data', function (data) {
   }
   switchHidBuffer = new Buffer.from(data);
   var hid = parseInputStruct(switchHidBuffer)
+  if (!(hid.get("streamStart") === 255 && hid.get("streamEnd") === 255)) {
+    console.log("HID data malformed: " + data.length);
+    return;
+  }
+
+
   var controllerCount = hid.get("controllerCount");
   if (controllerCount > controllerIds.length) {
     plugControllerIn();

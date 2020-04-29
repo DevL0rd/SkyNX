@@ -29,6 +29,8 @@ void gamePadSend(JoyConSocket *connection)
             controllersConnected++;
         }
     }
+    pkg.streamStart = 255;
+    pkg.streamEnd = 255;
     pkg.frameRate = frameRate;
     pkg.controllerCount = controllersConnected;
 
@@ -138,6 +140,5 @@ void inputHandlerLoop(void *dummy)
         handleInput(connection);
         svcSleepThread(23333333ULL);
     }
-
     freeJoyConSocket(connection);
 }
