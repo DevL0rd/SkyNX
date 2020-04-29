@@ -96,6 +96,7 @@ function startVideoProcess() {
   });
 }
 hidStreamClient.on('connect', function () {
+  hidStreamClient.setNoDelay(true);
   console.log('Connected to Switch!');
   if (usingVideo) {
     startVideoProcess();
@@ -476,8 +477,15 @@ function handleGyroAndAccel(hid) {
 }
 var fpsPrintTimer = 0;
 hidStreamClient.on('data', function (data) {
+  if (data.length < 208) {
+    console.log("Data incorrect length. Data length: " + data.length)
+    return;
+  } //packet is 208 in length. anyless then the data is bad
+  if (data.length > 208) {
+    data.length = 208; //ignore extra data
+    // console.log(data.length / 208)
+  }
   switchHidBuffer = new Buffer.from(data);
-
   var hid = parseInputStruct(switchHidBuffer)
   var controllerCount = hid.get("controllerCount");
   if (controllerCount > controllerIds.length) {

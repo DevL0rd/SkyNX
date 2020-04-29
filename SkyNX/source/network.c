@@ -81,6 +81,7 @@ int connectJoyConSocket(JoyConSocket *connection, int port)
 
 void sendJoyConInput(JoyConSocket *connection, const JoyPkg *pkg)
 {
+    // printf("%lu\n", sizeof(JoyPkg));
     if (send(connection->sock, pkg, sizeof(JoyPkg), 0) != sizeof(JoyPkg))
     {
         connection->sock = -1;

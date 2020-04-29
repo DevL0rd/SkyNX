@@ -153,7 +153,7 @@ int main(int argc, char **argv)
         {
             drawSplash(renderContext);
         }
-        svcSleepThread(14285714); //Nano sleep to keep at 70fps to handle drop frames without stutter
+        svcSleepThread(14285714ULL); //Nano sleep to keep at 70fps to handle drop frames without stutter
     }
     /* Deinitialize all used systems */
     unInit();

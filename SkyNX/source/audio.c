@@ -134,7 +134,6 @@ void audioHandlerLoop()
         resample((unsigned short *)in_buf, sizeof(in_buf), (unsigned short *)buf_data[curBuf], FACT);
         play_buf(buffer_size, DATA_SIZE);
         played++;
-        // svcSleepThread(16666665); //Nano sleep to keep at 60fps
     }
 
     for (int curBuf = 0; curBuf < BUF_COUNT; curBuf++)

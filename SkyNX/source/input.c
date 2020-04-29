@@ -136,7 +136,7 @@ void inputHandlerLoop(void *dummy)
     while (appletMainLoop())
     {
         handleInput(connection);
-        svcSleepThread(23333333);
+        svcSleepThread(23333333ULL);
     }
 
     freeJoyConSocket(connection);
