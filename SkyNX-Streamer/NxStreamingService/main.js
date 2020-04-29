@@ -105,10 +105,8 @@ hidStreamClient.on('connect', function () {
     startAudioProcess();
   }
 });
-var switchHidBuffer = new Buffer.alloc(0);
 function parseInputStruct(buff) {
   var input = Struct()
-    .word64Ule('streamStart')
     .word32Ule('HeldKeys1')
     .word32Sle('LJoyX1')
     .word32Sle('LJoyY1')
@@ -161,7 +159,6 @@ function parseInputStruct(buff) {
     .floatle('gyroZ')
     .word32Ule('controllerCount')
     .word32Ule('frameRate')
-    .word64Ule('streamEnd')
   input._setBuff(buff);
   return input;
 };
@@ -478,24 +475,19 @@ function handleGyroAndAccel(hid) {
   GyroServ.sendMotionData(gyro, accel);
 }
 var fpsPrintTimer = 0;
-var hidDataBuffer;
-hidStreamClient.on('data', function (data) {
-  if (data.length < 224) {
-    console.log("HID data too short. Data length: " + data.length)
-    return;
-  } //packet is 216 in length. anyless then the data is bad
-  if (data.length > 224) {
-    data.length = 224; //ignore extra data
-    //console.log("Duplicate Data: " + (data.length / 224))
-  }
-  switchHidBuffer = new Buffer.from(data);
-  var hid = parseInputStruct(switchHidBuffer)
-  if (!(hid.get("streamStart") === "18446744073709551615" && hid.get("streamEnd") === "9223372036854775807")) {
-    console.log("HID Data malformed. Data length: " + data.length);
-    console.log(hid.get("streamStart") + " - " + hid.get("streamEnd"))
+var hidDataBuffer = "";
+hidStreamClient.on('data', function (chunk) {
+  hidDataBuffer += chunk.toString("hex");
+  var completeData = "";
+  if (hidDataBuffer.includes("ffffffffffffffff") && hidDataBuffer.includes("ffffffffffffff7")) {
+    completeData = hidDataBuffer.split("ffffffffffffffff")[1].split("ffffffffffffff7")[0];
+    hidDataBuffer = "";
+  } else {
     return;
   }
-
+  var data = Buffer.from(completeData, 'hex');
+  console.log(data)
+  var hid = parseInputStruct(data);
 
   var controllerCount = hid.get("controllerCount");
   if (controllerCount > controllerIds.length) {
