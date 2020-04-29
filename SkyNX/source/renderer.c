@@ -9,7 +9,7 @@
 float timeThen = 0;
 float timeNow = 1;
 float delta = 1;
-u32 frameRate = 0;
+uint32_t frameRate = 0;
 void initDelta()
 {
     timeThen = svcGetSystemTick();
@@ -489,7 +489,7 @@ void handleFrame(RenderContext *renderContext, VideoContext *videoContext)
     if (++videoContext->video_frame_count % 60 == 0)
     {
         new_time = svcGetSystemTick();
-        frameRate = (u32)(60.0 / ((new_time - old_time) / 19200000.0));
+        frameRate = (uint32_t)(60.0 / ((new_time - old_time) / 19200000.0));
         old_time = new_time;
     }
 }

@@ -474,16 +474,20 @@ function handleGyroAndAccel(hid) {
   gyro.y *= -1;
   GyroServ.sendMotionData(gyro, accel);
 }
-
+var fpsPrintTimer = 0;
 hidStreamClient.on('data', function (data) {
-  console.log("dataLength: " + data.length)
   switchHidBuffer = new Buffer.from(data);
+
   var hid = parseInputStruct(switchHidBuffer)
   var controllerCount = hid.get("controllerCount");
   if (controllerCount > controllerIds.length) {
     plugControllerIn();
   }
-  console.log("switchFps=" + hid.get("frameRate"))
+  fpsPrintTimer++;
+  if (fpsPrintTimer == 10) {
+    console.log("switchFps=" + hid.get("frameRate"))
+    fpsPrintTimer = 0;
+  }
   var playerNumber;
   for (i in controllerIds) {
     playerNumber = parseInt(i) + 1;
