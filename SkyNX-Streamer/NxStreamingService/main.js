@@ -337,12 +337,43 @@ function handleAnalogMouse(hid, playerNumber) {
     }
   }
 }
+var gyroHistory = [];
+function smoothGyroMouse(gyro) {
+
+  if (gyroHistory.length < 3) {
+    gyroHistory.push(gyro);
+    return gyro; //smoothing not ready
+  } else {
+    gyroHistory.shift();
+    gyroHistory.push(gyro);
+    gyro.x = (gyroHistory[0].x + gyroHistory[1].x + gyroHistory[2].x) / 3;
+    gyro.y = (gyroHistory[0].y + gyroHistory[1].y + gyroHistory[2].y) / 3;
+    gyro.z = (gyroHistory[0].z + gyroHistory[1].z + gyroHistory[2].z) / 3;
+    if (gyro.x < 0.01 && gyro.x > 0) {
+      gyro.x = 0;
+    } else if (gyro.x > -0.01 && gyro.x < 0) {
+      gyro.x = 0;
+    }
+    if (gyro.y < 0.01 && gyro.y > 0) {
+      gyro.y = 0;
+    } else if (gyro.y > -0.01 && gyro.y < 0) {
+      gyro.y = 0;
+    }
+    if (gyro.z < 0.01 && gyro.z > 0) {
+      gyro.z = 0;
+    } else if (gyro.z > -0.01 && gyro.z < 0) {
+      gyro.z = 0;
+    }
+    return gyro;
+  }
+}
 function handleGyroMouse(hid, playerNumber) {
   var RJoyX = convertAnalog(hid.get("RJoyX" + playerNumber));
   var RJoyY = convertAnalog(hid.get("RJoyY" + playerNumber));
   var heldKeys = hid.get("HeldKeys" + playerNumber);
   var inputStates = heldKeysBitmask(heldKeys);
   var gyro = { x: hid.get("gyroX"), y: hid.get("gyroY"), z: hid.get("gyroZ") }
+  smoothGyroMouse(gyro);
   var mouse = robot.getMousePos();
   var ngx = gyro.x * -1;
   var ngz = gyro.z * -1
