@@ -118,12 +118,14 @@ void startRender(VideoContext *videoContext)
 
 RenderContext *renderContext = NULL;
 VideoContext *videoContext = NULL;
+ClkrstSession cpuSession;
 void init()
 {
     /* Init all switch required systems */
     switchInit();
-    pcvSetClockRate(PcvModule_CpuBus, 1785000000); //Overclock CPU
-
+    clkrstInitialize();
+    clkrstOpenSession(&cpuSession, PcvModuleId_CpuBus, 3);
+    clkrstSetClockRate(&cpuSession, 1785000000);
     renderContext = createRenderer();
     videoContext = createVideoContext();
     videoContext->renderContext = renderContext;
@@ -137,7 +139,8 @@ void unInit()
     freeRenderer(renderContext);
     freeVideoContext(videoContext);
     unInitGyro();
-    pcvSetClockRate(PcvModule_CpuBus, 1020000000); //Reset CPU clock to default
+    clkrstCloseSession(&cpuSession); //end OC
+    clkrstExit();
 }
 int main(int argc, char **argv)
 {
