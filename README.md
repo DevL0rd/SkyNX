@@ -14,7 +14,7 @@ If you think this app is Useful, Plese consider donating to support its developm
 The desktop streaming client is completely new. The Switch app however has it's roots in the original [In-Home-Switching](https://github.com/jakibaki/In-Home-Switching) app.
 ## Features
  * Stream PC games with audio to switch at 60fps!
- * Handles up to 4 JoyCon pairs. (4 Players at once!)
+ * Handles up to 8 JoyCon pairs. (8 Players at once!)
  * Motion control support for Cemu.
  * Use Analog sticks and triggers to control mouse
  * Use gyro to control mouse like a Wii remote.
