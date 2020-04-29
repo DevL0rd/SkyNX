@@ -6,6 +6,15 @@
         "iosfwd": "c",
         "queue": "c",
         "sdl.h": "c",
-        "context.h": "c"
+        "context.h": "c",
+        "array": "c",
+        "deque": "c",
+        "list": "c",
+        "vector": "c",
+        "xhash": "c",
+        "xstring": "c",
+        "xutility": "c",
+        "string_view": "c",
+        "type_traits": "c"
     }
 }

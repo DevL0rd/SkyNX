@@ -52,7 +52,7 @@ static const SocketInitConfig socketInitConf = {
     .tcp_rx_buf_max_size = 0x400000,
 
     .udp_tx_buf_size = 0x1400,
-    .udp_rx_buf_size = 0x2500,
+    .udp_rx_buf_size = 0x3500,
 
     .sb_efficiency = 2,
 };
@@ -123,8 +123,7 @@ void init()
     /* Init all switch required systems */
     switchInit();
     pcvSetClockRate(PcvModule_CpuBus, 1785000000); //Overclock CPU
-    pcvSetClockRate(PcvModule_GPU, 921000000);     //Overclock GPU
-    pcvSetClockRate(PcvModule_EMC, 1600000000);    //OC memory to docked frequency
+
     renderContext = createRenderer();
     videoContext = createVideoContext();
     videoContext->renderContext = renderContext;
@@ -139,8 +138,6 @@ void unInit()
     freeVideoContext(videoContext);
     unInitGyro();
     pcvSetClockRate(PcvModule_CpuBus, 1020000000); //Reset CPU clock to default
-    pcvSetClockRate(PcvModule_GPU, 768000000);     //Reset GPU clock to docked frequency
-    // pcvSetClockRate(PcvModule_EMC, 1600000000);    //Leave memory in docked frequency
 }
 int main(int argc, char **argv)
 {

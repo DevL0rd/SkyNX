@@ -346,9 +346,9 @@ function smoothGyroMouse(gyro) {
   } else {
     gyroHistory.shift();
     gyroHistory.push(gyro);
-    gyro.x = (gyroHistory[0].x + gyroHistory[1].x + gyroHistory[2].x) / 3;
-    gyro.y = (gyroHistory[0].y + gyroHistory[1].y + gyroHistory[2].y) / 3;
-    gyro.z = (gyroHistory[0].z + gyroHistory[1].z + gyroHistory[2].z) / 3;
+    gyro.x = ((gyroHistory[0].x * 1) + (gyroHistory[1].x * 3) + (gyroHistory[2].x * 5)) / 9;
+    gyro.y = ((gyroHistory[0].y * 1) + (gyroHistory[1].y * 3) + (gyroHistory[2].y * 5)) / 9;
+    gyro.z = ((gyroHistory[0].z * 1) + (gyroHistory[1].z * 3) + (gyroHistory[2].z * 5)) / 9;
     if (gyro.x < 0.01 && gyro.x > 0) {
       gyro.x = 0;
     } else if (gyro.x > -0.01 && gyro.x < 0) {
@@ -465,6 +465,7 @@ function handleTouchInput(hid) {
   }
 }
 function handleGyroAndAccel(hid) {
+
   var gyro = { x: hid.get("gyroX"), y: hid.get("gyroY"), z: hid.get("gyroZ") }
   var accel = { x: hid.get("accelX"), y: hid.get("accelY"), z: hid.get("accelZ") }
   for (axis in gyro) {
@@ -475,6 +476,7 @@ function handleGyroAndAccel(hid) {
 }
 
 hidStreamClient.on('data', function (data) {
+  console.log("dataLength: " + data.length)
   switchHidBuffer = new Buffer.from(data);
   var hid = parseInputStruct(switchHidBuffer)
   var controllerCount = hid.get("controllerCount");
