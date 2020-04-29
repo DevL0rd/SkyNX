@@ -29,10 +29,10 @@ void gamePadSend(JoyConSocket *connection)
             controllersConnected++;
         }
     }
-    pkg.streamStart = 255;
-    pkg.streamEnd = 255;
-    pkg.frameRate = frameRate;
-    pkg.controllerCount = controllersConnected;
+    pkg.streamStart = (uint64_t)UINT64_MAX; //easy identifiers for the start and stop of tcp stream
+    pkg.streamEnd = (uint64_t)UINT64_MAX / 2;
+    pkg.frameRate = (uint32_t)frameRate;
+    pkg.controllerCount = (uint32_t)controllersConnected;
 
     pkg.heldKeys1 = (uint32_t)hidKeysHeld(player1Id);
     hidJoystickRead(&lJoy, player1Id, JOYSTICK_LEFT);

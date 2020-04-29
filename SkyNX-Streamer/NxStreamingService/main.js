@@ -108,7 +108,7 @@ hidStreamClient.on('connect', function () {
 var switchHidBuffer = new Buffer.alloc(0);
 function parseInputStruct(buff) {
   var input = Struct()
-    .word8('streamStart')
+    .word64Ule('streamStart')
     .word32Ule('HeldKeys1')
     .word32Sle('LJoyX1')
     .word32Sle('LJoyY1')
@@ -161,7 +161,7 @@ function parseInputStruct(buff) {
     .floatle('gyroZ')
     .word32Ule('controllerCount')
     .word32Ule('frameRate')
-    .word8('streamEnd')
+    .word64Ule('streamEnd')
   input._setBuff(buff);
   return input;
 };
@@ -478,19 +478,21 @@ function handleGyroAndAccel(hid) {
   GyroServ.sendMotionData(gyro, accel);
 }
 var fpsPrintTimer = 0;
+var hidDataBuffer;
 hidStreamClient.on('data', function (data) {
-  if (data.length < 208) {
+  if (data.length < 224) {
     console.log("HID data too short. Data length: " + data.length)
     return;
-  } //packet is 208 in length. anyless then the data is bad
-  if (data.length > 208) {
-    data.length = 208; //ignore extra data
-    // console.log(data.length / 208)
+  } //packet is 216 in length. anyless then the data is bad
+  if (data.length > 224) {
+    data.length = 224; //ignore extra data
+    //console.log("Duplicate Data: " + (data.length / 224))
   }
   switchHidBuffer = new Buffer.from(data);
   var hid = parseInputStruct(switchHidBuffer)
-  if (!(hid.get("streamStart") === 255 && hid.get("streamEnd") === 255)) {
-    console.log("HID data malformed: " + data.length);
+  if (!(hid.get("streamStart") === "18446744073709551615" && hid.get("streamEnd") === "9223372036854775807")) {
+    console.log("HID Data malformed. Data length: " + data.length);
+    console.log(hid.get("streamStart") + " - " + hid.get("streamEnd"))
     return;
   }
 

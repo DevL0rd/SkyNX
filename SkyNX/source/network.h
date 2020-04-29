@@ -10,7 +10,7 @@
 /* Data to send to server */
 typedef struct
 {
-    uint8_t streamStart;
+    uint64_t streamStart;
     uint32_t heldKeys1;
     int32_t lJoyX1;
     int32_t lJoyY1;
@@ -63,7 +63,7 @@ typedef struct
     float_t gyroZ;
     uint32_t controllerCount;
     uint32_t frameRate;
-    uint8_t streamEnd;
+    uint64_t streamEnd;
 } JoyPkg;
 
 /* Init nx network and av network */
