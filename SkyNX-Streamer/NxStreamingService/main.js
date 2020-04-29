@@ -482,11 +482,14 @@ hidStreamClient.on('data', function (chunk) {
   if (hidDataBuffer.includes("ffffffffffffffff") && hidDataBuffer.includes("ffffffffffffff7")) {
     completeData = hidDataBuffer.split("ffffffffffffffff")[1].split("ffffffffffffff7")[0];
     hidDataBuffer = "";
+    if (completeData.length != 416) {
+      console.log("Incorrect data length: " + completeData.length + " - " + completeData);
+      return
+    }
   } else {
     return;
   }
   var data = Buffer.from(completeData, 'hex');
-  console.log(data)
   var hid = parseInputStruct(data);
 
   var controllerCount = hid.get("controllerCount");
