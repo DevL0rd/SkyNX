@@ -349,24 +349,26 @@ function smoothGyroMouse(gyro) {
     gyro.x = ((gyroHistory[0].x * 1) + (gyroHistory[1].x * 3) + (gyroHistory[2].x * 5)) / 9;
     gyro.y = ((gyroHistory[0].y * 1) + (gyroHistory[1].y * 3) + (gyroHistory[2].y * 5)) / 9;
     gyro.z = ((gyroHistory[0].z * 1) + (gyroHistory[1].z * 3) + (gyroHistory[2].z * 5)) / 9;
-    if (gyro.x < 0.01 && gyro.x > 0) {
+    if (gyro.x < 0.005 && gyro.x > 0) {
       gyro.x = 0;
-    } else if (gyro.x > -0.01 && gyro.x < 0) {
+    } else if (gyro.x > -0.005 && gyro.x < 0) {
       gyro.x = 0;
     }
-    if (gyro.y < 0.01 && gyro.y > 0) {
+    if (gyro.y < 0.005 && gyro.y > 0) {
       gyro.y = 0;
-    } else if (gyro.y > -0.01 && gyro.y < 0) {
+    } else if (gyro.y > -0.005 && gyro.y < 0) {
       gyro.y = 0;
     }
-    if (gyro.z < 0.01 && gyro.z > 0) {
+    if (gyro.z < 0.005 && gyro.z > 0) {
       gyro.z = 0;
-    } else if (gyro.z > -0.01 && gyro.z < 0) {
+    } else if (gyro.z > -0.005 && gyro.z < 0) {
       gyro.z = 0;
     }
     return gyro;
   }
 }
+var touchX1Old = 0;
+var touchY1Old = 0;
 function handleGyroMouse(hid, playerNumber) {
   var RJoyX = convertAnalog(hid.get("RJoyX" + playerNumber));
   var RJoyY = convertAnalog(hid.get("RJoyY" + playerNumber));
@@ -416,18 +418,16 @@ function handleTouchInput(hid) {
     touchY1 -= 15;
     touchX1 = Math.floor(screenWidth * (touchX1 / 1280))
     touchY1 = Math.floor(screenHeight * (touchY1 / 720))
+    if (!touchX1old) touchX1old = touchX1;
+    if (!touchY1old) touchY1old = touchY1;
     var touchX2 = hid.get("touchX2");
     var touchY2 = hid.get("touchY2");
     if (touchX2 && touchY2) {
       rightTouchTime++;
       if (rightTouchTime > 5) { //Handle scrolling
-        if (!touchX1old) touchX1old = touchX1;
-        if (!touchY1old) touchY1old = touchY1;
         var xDiff = touchX1old - touchX1;
         var yDiff = touchY1old - touchY1;
         robot.scrollMouse(xDiff, yDiff);
-        touchX1old = touchX1;
-        touchY1old = touchY1;
         scrolling = true;
         touchRightClicking = false;
       } else { //Handle left click
@@ -443,7 +443,9 @@ function handleTouchInput(hid) {
     }
     if (!scrolling) {
       leftTouchTime++;
-      robot.moveMouse(touchX1 / screenScale, touchY1 / screenScale);
+      if (Math.abs(touchX1 - touchX1old) > 5 || Math.abs(touchY1 - touchY1old) > 5) {
+        robot.moveMouse(touchX1 / screenScale, touchY1 / screenScale);
+      }
       if (!touchLeftClicking) {
         robot.mouseToggle("down");
         touchLeftClicking = true;
@@ -452,13 +454,12 @@ function handleTouchInput(hid) {
       robot.mouseToggle("up");
       touchLeftClicking = false;
     }
+    touchX1old = touchX1;
+    touchY1old = touchY1;
   } else {
     if (touchLeftClicking) { //release left click
       robot.mouseToggle("up");
       touchLeftClicking = false;
-      if (leftTouchTime < 3) {
-        robot.mouseClick("left", true); //double click
-      }
     }
     leftTouchTime = 0;
     rightTouchTime = 0;
