@@ -78,7 +78,6 @@ void unInitGyro()
 void switchInit()
 {
     plInitialize();
-    pcvInitialize();
     romfsInit();
     networkInit(&socketInitConf);
     audoutInitialize();
@@ -90,20 +89,20 @@ void switchDestroy()
     audoutStopAudioOut();
     audoutExit();
     networkDestroy();
-    pcvExit();
     plExit();
 }
 
+static Thread renderThread;
+static Thread inputHandlerThread;
+static Thread audioHandlerThread;
 void startInput()
 {
-    static Thread inputHandlerThread;
     threadCreate(&inputHandlerThread, inputHandlerLoop, NULL, NULL, 0x1000, 0x2b, 0);
     threadStart(&inputHandlerThread);
 }
 
 void startAudio()
 {
-    static Thread audioHandlerThread;
     // On same thread as input and preemptive
     threadCreate(&audioHandlerThread, audioHandlerLoop, NULL, NULL, 0x10000, 0x20, 1);
     threadStart(&audioHandlerThread);
@@ -111,7 +110,6 @@ void startAudio()
 
 void startRender(VideoContext *videoContext)
 {
-    static Thread renderThread;
     threadCreate(&renderThread, videoLoop, videoContext, NULL, 0x800000, 0x2b, 2);
     threadStart(&renderThread);
 }
@@ -142,21 +140,45 @@ void unInit()
     clkrstCloseSession(&cpuSession); //end OC
     clkrstExit();
 }
+bool threadsSleeping = false;
 int main(int argc, char **argv)
 {
     init();
-
+    static Thread renderThread;
+    static Thread inputHandlerThread;
+    static Thread audioHandlerThread;
     while (appletMainLoop())
     {
-        if (isVideoActive(renderContext))
+        if (appletGetFocusState() == AppletFocusState_Focused)
         {
-            displayFrame(renderContext);
+            if (threadsSleeping)
+            {
+                threadResume(&renderThread);
+                threadResume(&inputHandlerThread);
+                threadResume(&audioHandlerThread);
+                threadsSleeping = false;
+            }
+            if (isVideoActive(renderContext))
+            {
+                displayFrame(renderContext);
+            }
+            else
+            {
+                drawSplash(renderContext);
+            }
+            svcSleepThread(14285714ULL); //Nano sleep to keep at 70fps to handle drop frames without stutter
         }
         else
         {
-            drawSplash(renderContext);
+            if (!threadsSleeping)
+            {
+                threadPause(&renderThread);
+                threadPause(&inputHandlerThread);
+                threadPause(&audioHandlerThread);
+                threadsSleeping = true;
+            }
+            svcSleepThread(1000000000ULL);
         }
-        svcSleepThread(14285714ULL); //Nano sleep to keep at 70fps to handle drop frames without stutter
     }
     /* Deinitialize all used systems */
     unInit();

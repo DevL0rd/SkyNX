@@ -15,6 +15,7 @@
         "xstring": "c",
         "xutility": "c",
         "string_view": "c",
-        "type_traits": "c"
+        "type_traits": "c",
+        "thread.h": "c"
     }
 }
