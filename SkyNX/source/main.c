@@ -131,6 +131,7 @@ void init()
     startInput();
     startRender(videoContext);
     initGyro();
+    appletSetIdleTimeDetectionExtension(AppletIdleTimeDetectionExtension_ExtendedUnsafe);
 }
 void unInit()
 {
