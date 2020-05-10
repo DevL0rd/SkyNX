@@ -92,6 +92,8 @@ function applyClientSettings() {
     $("#ipInput").val(clientSettings.ip);
     if (clientSettings.encoding == "NVENC") {
         $("#encodingDrop").html("Encoding (Nvidia)");
+    } else if(clientSettings.encoding == "AMDVCE"){
+        $("#encodingDrop").html("Encoding (AMD)")
     } else {
         $("#encodingDrop").html("Encoding (CPU)");
         clientSettings.encoding = "CPU";
