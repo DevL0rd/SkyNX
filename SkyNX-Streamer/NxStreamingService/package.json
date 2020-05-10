@@ -12,7 +12,7 @@
     "formidable": "latest",
     "long": "^4.0.0",
     "readdirp": "latest",
-    "robotjs": "^0.6.0",
+    "robotjs": "latest",
     "struct": "latest",
     "vgen-xbox": "^1.0.1",
     "ws": "latest"
