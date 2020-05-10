@@ -94,6 +94,8 @@ function applyClientSettings() {
         $("#encodingDrop").html("Encoding (Nvidia)");
     } else if(clientSettings.encoding == "AMDVCE"){
         $("#encodingDrop").html("Encoding (AMD)")
+    } else if(clientSettings.encoding == "QSV"){
+        $("#encodingDrop").html("Encoding (Intel)");
     } else {
         $("#encodingDrop").html("Encoding (CPU)");
         clientSettings.encoding = "CPU";

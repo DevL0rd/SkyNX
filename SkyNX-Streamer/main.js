@@ -138,7 +138,7 @@ function startStreamer(arg) {
   if (arg.abxySwap) {
     args.push("/abxySwap");
   }
-  if (arg.encoding == "NVENC" || arg.encoding == "AMDVCE") {
+  if (arg.encoding == "NVENC" || arg.encoding == "AMDVCE" || arg.encoding == "QSV") {
     args.push("/e");
     args.push(arg.encoding);
   }
