@@ -21,6 +21,8 @@ The desktop streaming client is completely new. The Switch app however has it's 
  * Use Analog sticks and triggers to control mouse
  * Use gyro to control mouse like a Wii remote.
  * Built in Nvidia encoding for low latency.
+ * Built in AMD encoding for low latency. 
+ * Built in Intel encoding for low latency.
  * Automatically sets desktop resolution for max performance. (Optional)
  * Optionally disable video  to use the JoyCons as remotes on PC!
  * Optionally disable audio.
