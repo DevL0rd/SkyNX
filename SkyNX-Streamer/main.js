@@ -268,7 +268,7 @@ function log(str) {
 }
 
 ipcMain.on('donate', (event, fullMessage) => {
-  var url = 'https://www.paypal.com/cgi-bin/webscr?cmd=_donations&business=PY867SNUQX2ZJ&currency_code=USD&source=url';
+  var url = 'https://www.paypal.me/SkyNX';
   var start = (process.platform == 'darwin' ? 'open' : process.platform == 'win32' ? 'start' : 'xdg-open');
   exec(start + ' ' + url);
 })
