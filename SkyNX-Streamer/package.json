@@ -11,7 +11,7 @@
   "author": "Dustin Harris",
   "license": "",
   "dependencies": {
-    "ansi_up": "^4.0.4",
+    "ansi_up": "^5.0.0",
     "auto-launch": "^5.0.5",
     "bootstrap": "latest",
     "electron": "latest",
