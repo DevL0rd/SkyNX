@@ -5,7 +5,6 @@
 #include <libswscale/swscale.h>
 
 #include "context.h"
-uint32_t frameRate;
 /* Allocates a render context */
 RenderContext *createRenderer(void);
 

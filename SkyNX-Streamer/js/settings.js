@@ -126,7 +126,7 @@ function applyClientSettings() {
     if (!clientSettings.firstInstall) {
         ipcRenderer.send('installScpVBus');
         ipcRenderer.send('installAudioDriver');
-        $('#restartModal').modal('show');
+        // $('#restartModal').modal('show');
         clientSettings.firstInstall = true;
         saveClientSettings();
     }

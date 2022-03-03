@@ -9,7 +9,6 @@
 float timeThen = 0;
 float timeNow = 1;
 float delta = 1;
-uint32_t frameRate = 0;
 void initDelta()
 {
     timeThen = svcGetSystemTick();
@@ -22,7 +21,7 @@ void loopStart()
     delta = (timeNow - timeThen) / 10000000;
     if (delta > 1)
     {
-        //to much lag. set to 1
+        // to much lag. set to 1
         delta = 1.0f;
     }
 }
@@ -69,7 +68,7 @@ long getDistance(long ax, long ay, long bx, long by)
     return sqrt(a * a + b * b);
 }
 bubble resolveBubble(bubble b1, bubble b2)
-{ //Fix colliding circles
+{ // Fix colliding circles
     long distance_x = b1.x - b2.x;
     long distance_y = b1.y - b2.y;
     long radii_sum = b1.r + b2.r;
@@ -77,9 +76,9 @@ bubble resolveBubble(bubble b1, bubble b2)
     long unit_x = distance_x / distance;
     long unit_y = distance_y / distance;
 
-    b1.x = b2.x + (radii_sum)*unit_x; //Uncollide
-    b1.y = b2.y + (radii_sum)*unit_y; //Uncollide
-    //Conservation of momentum
+    b1.x = b2.x + (radii_sum)*unit_x; // Uncollide
+    b1.y = b2.y + (radii_sum)*unit_y; // Uncollide
+    // Conservation of momentum
     long newVelX1 = (b1.vx * (b1.r - b2.r) + (2 * b2.r * b2.vx)) / radii_sum;
     long newVelY1 = (b1.vy * (b1.r - b2.r) + (2 * b2.r * b2.vy)) / radii_sum;
     // long newVelX2 = (b2.vx * (b2.r - b1.r) + (2 * b1.r * b1.vx)) / radii_sum;
@@ -92,9 +91,9 @@ bubble resolveBubble(bubble b1, bubble b2)
     return newBubble;
 }
 bool detectCircleToCircleCollision(bubble b1, bubble b2)
-{ //check for collision between circles
+{ // check for collision between circles
     long radii_sum = b1.r + b2.r;
-    long distance = getDistance(b1.x, b1.y, b2.x, b2.y); //If distance is less than radius added together a collision is occuring
+    long distance = getDistance(b1.x, b1.y, b2.x, b2.y); // If distance is less than radius added together a collision is occuring
     if (distance < radii_sum)
     {
         return true;
@@ -131,7 +130,7 @@ void resolveCollisions()
             }
         }
         if (!aCollided)
-        { //If nothing collided keep the same data
+        { // If nothing collided keep the same data
             newBubbles[a] = bubbles[a];
         }
         aCollided = false;
@@ -218,11 +217,11 @@ RenderContext *createRenderer()
         while (1)
             ;
     }
-    SDL_SetRenderDrawBlendMode(context->renderer, SDL_BLENDMODE_BLEND); //enable transparency
+    SDL_SetRenderDrawBlendMode(context->renderer, SDL_BLENDMODE_BLEND); // enable transparency
 
     logoTexture = IMG_LoadTexture(context->renderer, "iconTransparent.png");
 
-    //Create font cache
+    // Create font cache
     context->yuv_text = SDL_CreateTexture(context->renderer, SDL_PIXELFORMAT_IYUV, SDL_TEXTUREACCESS_STREAMING, RESX, RESY);
 
     context->rect.x = 0;
@@ -354,21 +353,21 @@ void drawGradient(RenderContext *context, int x, int y, int w, int h, SDL_Color 
     int drawLines = 1;
     switch (direction)
     {
-    case 1: //Top to bottom gradient
+    case 1: // Top to bottom gradient
         drawLines = h;
         break;
-    case 2: //Bottom to top gradient
+    case 2: // Bottom to top gradient
         drawLines = h;
         break;
-    case 3: //Left to right gradient
+    case 3: // Left to right gradient
         drawLines = w;
         break;
-    case 4: //Right to left gradient
+    case 4: // Right to left gradient
         drawLines = w;
         break;
     }
     for (int i = 0; i < drawLines; i++)
-    { //Top to bottom gradient
+    { // Top to bottom gradient
         float t = ((float)(i)) / ((float)(drawLines));
         int r = ((float)colourStart.r) * (1.0f - t) + ((float)colourEnd.r) * t;
         int g = ((float)colourStart.g) * (1.0f - t) + ((float)colourEnd.g) * t;
@@ -395,8 +394,8 @@ void drawGradient(RenderContext *context, int x, int y, int w, int h, SDL_Color 
 
 void renderBubbles(RenderContext *context)
 {
-    //Buggy right now. I need to understand C a bit better first.
-    //resolveCollisions();
+    // Buggy right now. I need to understand C a bit better first.
+    // resolveCollisions();
     for (int i = 0; i < bubblesLength; i++)
     {
         bubbles[i].vx += globalForce.vx * delta;
@@ -404,7 +403,7 @@ void renderBubbles(RenderContext *context)
         bubbles[i].x += bubbles[i].vx * delta;
         bubbles[i].y += bubbles[i].vy * delta;
         float negRadius = bubbles[i].r * -1;
-        if (bubbles[i].y < negRadius || bubbles[i].y > 720 + bubbles[i].r + 1) //bubble off top or overflowed to bottom because large delta
+        if (bubbles[i].y < negRadius || bubbles[i].y > 720 + bubbles[i].r + 1) // bubble off top or overflowed to bottom because large delta
         {
 
             float randYv = getRandomInt(20, 50) * -1;
@@ -485,13 +484,6 @@ void handleFrame(RenderContext *renderContext, VideoContext *videoContext)
     memcpy(renderContext->VPlane, frame->data[2], sizeof(renderContext->VPlane));
     mutexUnlock(&renderContext->texture_mut);
     setFrameAvail(renderContext);
-
-    if (++videoContext->video_frame_count % 60 == 0)
-    {
-        new_time = svcGetSystemTick();
-        frameRate = (uint32_t)(60.0 / ((new_time - old_time) / 19200000.0));
-        old_time = new_time;
-    }
 }
 
 void displayFrame(RenderContext *renderContext)

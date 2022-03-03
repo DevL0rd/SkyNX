@@ -11,17 +11,23 @@
   "author": "Dustin Harris",
   "license": "",
   "dependencies": {
-    "ansi_up": "^5.0.0",
-    "auto-launch": "^5.0.5",
-    "bootstrap": "latest",
-    "electron": "latest",
-    "electron-is-dev": "^1.2.0",
+    "ansi_up": "latest",
+    "auto-launch": "latest",
+    "crc": "latest",
+    "dgram": "latest",
+    "electron": "^17.1.0",
+    "electron-is-dev": "latest",
     "electron-window-state": "latest",
     "formidable": "latest",
     "jquery": "latest",
-    "popper.js": "latest",
-    "readdirp": "latest",
-    "screenres": "^2.0.1",
-    "windows-elevate": "^1.0.1"
+    "long": "latest",
+    "popper.js": "^1.16.1",
+    "struct": "latest",
+    "vgen-xbox": "git+https://github.com/JAMesserman/vgen-xbox.git",
+    "windows-elevate": "^1.0.1",
+    "ws": "^8.5.0"
+  },
+  "devDependencies": {
+    "electron-rebuild": "^3.2.7"
   }
 }

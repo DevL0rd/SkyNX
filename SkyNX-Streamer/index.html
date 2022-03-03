@@ -19,7 +19,7 @@
       <button id="rld-btn" class="title-bar-tools" style="display: none;"><i class="fas fa-sync-alt"></i></button>
       <button id="dev-btn" class="title-bar-tools" style="display: none;"><i class="fab fa-dev"></i></button>
       <button id="min-btn" class="title-bar-btns"><i class="fas fa-window-minimize"></i></button>
-      <button id="max-btn" class="title-bar-btns"><i class="fas fa-window-maximize"></i></button>
+      <!-- <button id="max-btn" class="title-bar-btns"><i class="fas fa-window-maximize"></i></button> -->
       <button id="close-btn" class="title-bar-btns"><i class="fas fa-window-close"></i></button>
     </div>
   </nav>
@@ -245,18 +245,23 @@
       </div>
     </div>
   </div>
-  <script src="js/fontawesome-all.min.js"></script>
-  <script src="js/Chart.min.js"></script>
+  <script src="./js/jquery.min.js"></script>
+  <script src="./js/jquery.min.js"></script>
+  <script src="./js/popper.min.js"></script>
+  <script src="./js/bootstrap.min.js"></script>
+  <script src="./js/fontawesome-all.min.js"></script>
+  <script src="./js/Chart.min.js"></script>
   <script>
-    let $ = require('jquery');
-    require('popper.js');
-    require('bootstrap');
+    const { remote, ipcRenderer } = require("electron");
+    const fs = require('fs');
+    var DB = require('./Devlord_modules/DB.js');
+    // require('popper.js');
     $(function () {
       $('[data-toggle="tooltip"]').tooltip({ boundary: 'window' })
     })
   </script>
-  <script src="./js/animations.js"></script>
   <script src="./js/window.js"></script>
+  <script src="./js/animations.js"></script>
   <script src="./js/settings.js"></script>
   <script src="./js/main.js"></script>
   <script src="./js/stats.js"></script>

@@ -56,41 +56,7 @@ static const SocketInitConfig socketInitConf = {
 
     .sb_efficiency = 2,
 };
-u32 gyroHandles[4];
-void initGyro()
-{
-    hidGetSixAxisSensorHandles(&gyroHandles[0], 2, CONTROLLER_PLAYER_1, TYPE_JOYCON_PAIR);
-    hidGetSixAxisSensorHandles(&gyroHandles[2], 1, CONTROLLER_PLAYER_1, TYPE_PROCONTROLLER);
-    hidGetSixAxisSensorHandles(&gyroHandles[3], 1, CONTROLLER_HANDHELD, TYPE_HANDHELD);
-    hidStartSixAxisSensor(gyroHandles[0]);
-    hidStartSixAxisSensor(gyroHandles[1]);
-    hidStartSixAxisSensor(gyroHandles[2]);
-    hidStartSixAxisSensor(gyroHandles[3]);
-}
-void unInitGyro()
-{
 
-    hidStopSixAxisSensor(gyroHandles[0]);
-    hidStopSixAxisSensor(gyroHandles[1]);
-    hidStopSixAxisSensor(gyroHandles[2]);
-    hidStopSixAxisSensor(gyroHandles[3]);
-}
-void switchInit()
-{
-    plInitialize();
-    romfsInit();
-    networkInit(&socketInitConf);
-    audoutInitialize();
-    audoutStartAudioOut();
-}
-
-void switchDestroy()
-{
-    audoutStopAudioOut();
-    audoutExit();
-    networkDestroy();
-    plExit();
-}
 
 static Thread renderThread;
 static Thread inputHandlerThread;
@@ -120,7 +86,11 @@ ClkrstSession cpuSession;
 void init()
 {
     /* Init all switch required systems */
-    switchInit();
+    romfsInit();
+    networkInit(&socketInitConf);
+    audoutInitialize();
+    audoutStartAudioOut();
+    padConfigureInput(8, HidNpadStyleSet_NpadStandard);
     clkrstInitialize();
     clkrstOpenSession(&cpuSession, PcvModuleId_CpuBus, 3);
     clkrstSetClockRate(&cpuSession, 1785000000);
@@ -130,16 +100,18 @@ void init()
     startAudio();
     startInput();
     startRender(videoContext);
-    initGyro();
     appletSetIdleTimeDetectionExtension(AppletIdleTimeDetectionExtension_ExtendedUnsafe);
 }
 void unInit()
 {
     freeRenderer(renderContext);
     freeVideoContext(videoContext);
-    unInitGyro();
     clkrstCloseSession(&cpuSession); //end OC
     clkrstExit();
+    audoutStopAudioOut();
+    audoutExit();
+    networkDestroy();
+    plExit();
 }
 bool threadsSleeping = false;
 int main(int argc, char **argv)
@@ -150,7 +122,7 @@ int main(int argc, char **argv)
     static Thread audioHandlerThread;
     while (appletMainLoop())
     {
-        if (appletGetFocusState() == AppletFocusState_Focused)
+        if (appletGetFocusState() == AppletFocusState_InFocus)
         {
             if (threadsSleeping)
             {
