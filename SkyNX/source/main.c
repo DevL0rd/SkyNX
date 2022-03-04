@@ -53,11 +53,11 @@ void init()
 {
     // consoleInit(NULL);
     /* Init all switch required systems */
-    printf("romfsInit\n");
-    romfsInit();
-
     printf("networkInit\n");
     network_init(&socketInitConf);
+
+    printf("romfsInit\n");
+    romfsInit();
 
     printf("audoutInitialize\n");
     audoutInitialize();

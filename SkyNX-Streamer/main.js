@@ -8,7 +8,7 @@ const DB = require('./Devlord_modules/DB.js');
 const isDev = require('electron-is-dev');
 const Struct = require('struct');
 const net = require('net');
-// const robot = require("robotjs");
+const robot = require("robotjs");
 const VGen = require("vgen-xbox")
 const vgen = new VGen();
 const GyroServ = require("./Devlord_modules/GyroServ.js");
@@ -49,23 +49,23 @@ function createWindow() {
   });
   // Create the browser window.
   mainWindow = new BrowserWindow({
-		title: "SkyNX",
-		x: mainWindowState.x,
-		y: mainWindowState.y,
-		// width: mainWindowState.width,
-		// height: mainWindowState.height,
-		show: true,
+    title: "SkyNX",
+    x: mainWindowState.x,
+    y: mainWindowState.y,
+    // width: mainWindowState.width,
+    // height: mainWindowState.height,
+    show: true,
     width: 500,
     height: 320,
-		frame: false,
-		transparent: true, // needed for windows rounded edges
-		resizable: false,
-		webPreferences: {
-			nodeIntegration: true,
-			enableRemoteModule: true,
+    frame: false,
+    transparent: true, // needed for windows rounded edges
+    resizable: false,
+    webPreferences: {
+      nodeIntegration: true,
+      enableRemoteModule: true,
       contextIsolation: false,
-			devTools: true
-		}
+      devTools: true
+    }
   })
   mainWindowState.manage(mainWindow);
   mainWindow.setMenu(null);
@@ -132,7 +132,7 @@ ipcMain.on('min', function () {
   mainWindow.minimize();
 });
 ipcMain.on('max', function () {
-      mainWindow.maximize();
+  mainWindow.maximize();
 });
 
 ipcMain.on('consoleCommand', (event, fullMessage) => {
@@ -200,7 +200,7 @@ function startStreamer(arg) {
   mouseControl = arg.mouseControl;
   encoding = arg.encoding
 
-  connectHID()
+  setTimeout(connectHID, 0);
 
   if (usingVideo) {
     if (autoChangeResolution && !restartingStream) {
@@ -235,7 +235,6 @@ function startStreamer(arg) {
     );
     ffmpegProcess.stdout.on("data", data => {
       log(`${data}`);
-      clientSender.send("started");
       restartingStream = false;
     });
     ffmpegProcess.stderr.on('data', (data) => {
@@ -266,6 +265,7 @@ function startStreamer(arg) {
     });
     ffmpegAudioProcess.on('close', (code) => {
       log(`AudioProcess process exited with code ${code}`);
+      clientSender.send("close");
     });
   }
 
@@ -490,45 +490,45 @@ function handleMouseInputToggling(hid, playerNumber) {
     toggledMouseInput = false;
   }
 }
-// function handleAnalogMouse(hid, playerNumber) {
-//   var RJoyX = convertAnalog(hid.get("RJoyX" + playerNumber));
-//   var RJoyY = convertAnalog(hid.get("RJoyY" + playerNumber));
-//   var LJoyX = convertAnalog(hid.get("LJoyX" + playerNumber));
-//   var LJoyY = convertAnalog(hid.get("LJoyY" + playerNumber));
-//   var heldKeys = hid.get("HeldKeys" + playerNumber);
-//   var inputStates = heldKeysBitmask(heldKeys);
-//   var mouse = robot.getMousePos();
-//   mx = mouse.x + (RJoyX * 25);
-//   my = mouse.y - (RJoyY * 25);
-//   if (mx && my) {
-//     robot.moveMouse(mx, my);
-//   }
-//   if (LJoyX || LJoyY) {
-//     robot.scrollMouse(LJoyX, LJoyY);
-//   }
-//   if (inputStates.ZR) {
-//     if (!leftClicking) {
-//       robot.mouseToggle("down");
-//       leftClicking = true;
-//     }
-//   } else {
-//     if (leftClicking) {
-//       robot.mouseToggle("up");
-//       leftClicking = false;
-//     }
-//   }
-//   if (inputStates.ZL) {
-//     if (!rightClicking) {
-//       robot.mouseToggle("down", "right");
-//       rightClicking = true;
-//     }
-//   } else {
-//     if (rightClicking) {
-//       robot.mouseToggle("up", "right");
-//       rightClicking = false;
-//     }
-//   }
-// }
+function handleAnalogMouse(hid, playerNumber) {
+  var RJoyX = convertAnalog(hid.get("RJoyX" + playerNumber));
+  var RJoyY = convertAnalog(hid.get("RJoyY" + playerNumber));
+  var LJoyX = convertAnalog(hid.get("LJoyX" + playerNumber));
+  var LJoyY = convertAnalog(hid.get("LJoyY" + playerNumber));
+  var heldKeys = hid.get("HeldKeys" + playerNumber);
+  var inputStates = heldKeysBitmask(heldKeys);
+  var mouse = robot.getMousePos();
+  mx = mouse.x + (RJoyX * 25);
+  my = mouse.y - (RJoyY * 25);
+  if (mx && my) {
+    robot.moveMouse(mx, my);
+  }
+  if (LJoyX || LJoyY) {
+    robot.scrollMouse(LJoyX, LJoyY);
+  }
+  if (inputStates.ZR) {
+    if (!leftClicking) {
+      robot.mouseToggle("down");
+      leftClicking = true;
+    }
+  } else {
+    if (leftClicking) {
+      robot.mouseToggle("up");
+      leftClicking = false;
+    }
+  }
+  if (inputStates.ZL) {
+    if (!rightClicking) {
+      robot.mouseToggle("down", "right");
+      rightClicking = true;
+    }
+  } else {
+    if (rightClicking) {
+      robot.mouseToggle("up", "right");
+      rightClicking = false;
+    }
+  }
+}
 
 var gyroHistory = [];
 function smoothGyroMouse(gyro) {
@@ -561,102 +561,102 @@ function smoothGyroMouse(gyro) {
 }
 var touchX1Old = 0;
 var touchY1Old = 0;
-// function handleGyroMouse(hid, playerNumber) {
-//   var RJoyX = convertAnalog(hid.get("RJoyX" + playerNumber));
-//   var RJoyY = convertAnalog(hid.get("RJoyY" + playerNumber));
-//   var heldKeys = hid.get("HeldKeys" + playerNumber);
-//   var inputStates = heldKeysBitmask(heldKeys);
-//   var gyro = { x: hid.get("gyroX"), y: hid.get("gyroY"), z: hid.get("gyroZ") }
-//   smoothGyroMouse(gyro);
-//   var mouse = robot.getMousePos();
-//   var ngx = gyro.x * -1;
-//   var ngz = gyro.z * -1
-//   mx = mouse.x + (ngz * ((screenWidth) / 3));
-//   my = mouse.y + (ngx * ((screenHeight) / 2));
-//   if (mx && my) {
-//     robot.moveMouse(mx, my);
-//   }
-//   if (RJoyX || RJoyY) {
-//     robot.scrollMouse(RJoyX, RJoyY);
-//   }
-//   if (inputStates.ZR) {
-//     if (!leftClicking) {
-//       robot.mouseToggle("down");
-//       leftClicking = true;
-//     }
-//   } else {
-//     if (leftClicking) {
-//       robot.mouseToggle("up");
-//       leftClicking = false;
-//     }
-//   }
-//   if (inputStates.R) {
-//     if (!rightClicking) {
-//       robot.mouseToggle("down", "right");
-//       rightClicking = true;
-//     }
-//   } else {
-//     if (rightClicking) {
-//       robot.mouseToggle("up", "right");
-//       rightClicking = false;
-//     }
-//   }
-// }
-// function handleTouchInput(hid) {
-//   var touchX1 = hid.get("touchX1");
-//   var touchY1 = hid.get("touchY1");
-//   if (touchX1 && touchY1) {
-//     touchX1 -= 15;
-//     touchY1 -= 15;
-//     touchX1 = Math.floor(screenWidth * (touchX1 / 1280))
-//     touchY1 = Math.floor(screenHeight * (touchY1 / 720))
-//     if (!touchX1old) touchX1old = touchX1;
-//     if (!touchY1old) touchY1old = touchY1;
-//     var touchX2 = hid.get("touchX2");
-//     var touchY2 = hid.get("touchY2");
-//     if (touchX2 && touchY2) {
-//       rightTouchTime++;
-//       if (rightTouchTime > 5) { //Handle scrolling
-//         var xDiff = touchX1old - touchX1;
-//         var yDiff = touchY1old - touchY1;
-//         robot.scrollMouse(xDiff, yDiff);
-//         scrolling = true;
-//         touchRightClicking = false;
-//       } else { //Handle left click
-//         touchRightClicking = true;
-//       }
-//     } else {
-//       if (touchRightClicking) {
-//         robot.mouseClick("right");
-//         touchRightClicking = false
-//       }
-//       scrolling = false;
-//       rightTouchTime = 0;
-//     }
-//     if (!scrolling) {
-//       leftTouchTime++;
-//       if (Math.abs(touchX1 - touchX1old) > 5 || Math.abs(touchY1 - touchY1old) > 5) {
-//         robot.moveMouse(touchX1 / screenScale, touchY1 / screenScale);
-//       }
-//       if (!touchLeftClicking) {
-//         robot.mouseToggle("down");
-//         touchLeftClicking = true;
-//       }
-//     } else {
-//       robot.mouseToggle("up");
-//       touchLeftClicking = false;
-//     }
-//     touchX1old = touchX1;
-//     touchY1old = touchY1;
-//   } else {
-//     if (touchLeftClicking) { //release left click
-//       robot.mouseToggle("up");
-//       touchLeftClicking = false;
-//     }
-//     leftTouchTime = 0;
-//     rightTouchTime = 0;
-//   }
-// }
+function handleGyroMouse(hid, playerNumber) {
+  var RJoyX = convertAnalog(hid.get("RJoyX" + playerNumber));
+  var RJoyY = convertAnalog(hid.get("RJoyY" + playerNumber));
+  var heldKeys = hid.get("HeldKeys" + playerNumber);
+  var inputStates = heldKeysBitmask(heldKeys);
+  var gyro = { x: hid.get("gyroX"), y: hid.get("gyroY"), z: hid.get("gyroZ") }
+  smoothGyroMouse(gyro);
+  var mouse = robot.getMousePos();
+  var ngx = gyro.x * -1;
+  var ngz = gyro.z * -1
+  mx = mouse.x + (ngz * ((screenWidth) / 3));
+  my = mouse.y + (ngx * ((screenHeight) / 2));
+  if (mx && my) {
+    robot.moveMouse(mx, my);
+  }
+  if (RJoyX || RJoyY) {
+    robot.scrollMouse(RJoyX, RJoyY);
+  }
+  if (inputStates.ZR) {
+    if (!leftClicking) {
+      robot.mouseToggle("down");
+      leftClicking = true;
+    }
+  } else {
+    if (leftClicking) {
+      robot.mouseToggle("up");
+      leftClicking = false;
+    }
+  }
+  if (inputStates.R) {
+    if (!rightClicking) {
+      robot.mouseToggle("down", "right");
+      rightClicking = true;
+    }
+  } else {
+    if (rightClicking) {
+      robot.mouseToggle("up", "right");
+      rightClicking = false;
+    }
+  }
+}
+function handleTouchInput(hid) {
+  var touchX1 = hid.get("touchX1");
+  var touchY1 = hid.get("touchY1");
+  if (touchX1 && touchY1) {
+    touchX1 -= 15;
+    touchY1 -= 15;
+    touchX1 = Math.floor(screenWidth * (touchX1 / 1280))
+    touchY1 = Math.floor(screenHeight * (touchY1 / 720))
+    if (!touchX1old) touchX1old = touchX1;
+    if (!touchY1old) touchY1old = touchY1;
+    var touchX2 = hid.get("touchX2");
+    var touchY2 = hid.get("touchY2");
+    if (touchX2 && touchY2) {
+      rightTouchTime++;
+      if (rightTouchTime > 5) { //Handle scrolling
+        var xDiff = touchX1old - touchX1;
+        var yDiff = touchY1old - touchY1;
+        robot.scrollMouse(xDiff, yDiff);
+        scrolling = true;
+        touchRightClicking = false;
+      } else { //Handle left click
+        touchRightClicking = true;
+      }
+    } else {
+      if (touchRightClicking) {
+        robot.mouseClick("right");
+        touchRightClicking = false
+      }
+      scrolling = false;
+      rightTouchTime = 0;
+    }
+    if (!scrolling) {
+      leftTouchTime++;
+      if (Math.abs(touchX1 - touchX1old) > 5 || Math.abs(touchY1 - touchY1old) > 5) {
+        robot.moveMouse(touchX1 / screenScale, touchY1 / screenScale);
+      }
+      if (!touchLeftClicking) {
+        robot.mouseToggle("down");
+        touchLeftClicking = true;
+      }
+    } else {
+      robot.mouseToggle("up");
+      touchLeftClicking = false;
+    }
+    touchX1old = touchX1;
+    touchY1old = touchY1;
+  } else {
+    if (touchLeftClicking) { //release left click
+      robot.mouseToggle("up");
+      touchLeftClicking = false;
+    }
+    leftTouchTime = 0;
+    rightTouchTime = 0;
+  }
+}
 
 
 function handleGyroAndAccel(hid) {
@@ -672,22 +672,22 @@ function handleGyroAndAccel(hid) {
 var fpsPrintTimer = 0;
 var hidDataBuffer = "";
 function connectHID() {
-    hidStreamClient.connect({
-      host: ip,
-      port: 2223
-    });
+  log("Connecting to switch...");
+  log(ip)
+  hidStreamClient.connect(2223, ip, function () {
+    hidStreamClient.setNoDelay(true);
+    log('Connected to Switch!');
+  });
 }
 hidStreamClient.on('error', function (ex) {
+  log("Could not connect to Switch. Connection timed out...");
   if (ex) {
     log("Could not connect to Switch. Connection timed out...");
     setTimeout(connectHID, 1000);
   }
 });
-hidStreamClient.on('connect', function () {
-  hidStreamClient.setNoDelay(true);
-  log('Connected to Switch!');
-});
 hidStreamClient.on('data', function (chunk) {
+  log(chunk)
   hidDataBuffer += chunk.toString("hex");
   var completeData = "";
   if (hidDataBuffer.includes("ffffffffffffffff") && hidDataBuffer.includes("ffffffffffffff7")) {
@@ -719,15 +719,15 @@ hidStreamClient.on('data', function (chunk) {
   }
   handleMouseInputToggling(hid, 1);
   if (mouseControl == "ANALOG" && mouseInput) {
-    // handleAnalogMouse(hid, 1);
+    handleAnalogMouse(hid, 1);
   } else if (mouseControl == "GYRO" && mouseInput) {
-    // handleGyroMouse(hid, 1);
+    handleGyroMouse(hid, 1);
   }
-  // handleTouchInput(hid);
+  handleTouchInput(hid);
   handleGyroAndAccel(hid);
 });
 
-hidStreamClient.on('end', function () {
+hidStreamClient.on('close', function () {
   log('hidStreamClient Disconnected.');
   try {
     for (i in controllerIds) {

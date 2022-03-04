@@ -4,11 +4,6 @@ ipcRenderer.on('close', function (event, data) {
     $("#startBtn").html("Start Streamer");
     running = false;
 });
-ipcRenderer.on('started', function (event, data) {
-    $('#startBtn').addClass('btn-danger').removeClass('btn-dark');
-    $("#startBtn").html("End Streamer");
-    running = true;
-})
 var running = false;
 function connect() {
     ipcRenderer.send('connect', { ip: clientSettings.ip, q: clientSettings.quality, disableVideo: clientSettings.disableVideo, disableAudio: clientSettings.disableAudio, abxySwap: clientSettings.abxySwap, encoding: clientSettings.encoding, limitFPS: clientSettings.limitFPS, mouseControl: clientSettings.mouseControl });
@@ -25,6 +20,9 @@ $('#startBtn').click(function () {
     } else {
         disconnect();
     }
+    $('#startBtn').addClass('btn-danger').removeClass('btn-dark');
+    $("#startBtn").html("End Streamer");
+    running = true;
 });
 $('#donateBtn').click(function () {
     ipcRenderer.send('donate');

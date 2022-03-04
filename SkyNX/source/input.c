@@ -14,10 +14,15 @@ Result rc = 0;
 void gamePadSend(JoyConSocket *connection)
 {
     JoyPkg pkg;
-
     pkg.streamStart = (uint64_t)UINT64_MAX; // easy identifiers for the start and stop of tcp stream
     pkg.streamEnd = (uint64_t)UINT64_MAX / 2;
     pkg.controllerCount = (uint32_t)1;
+
+    padUpdate(&pad);
+
+    u64 kDown = padGetButtonsDown(&pad);
+    u64 kHeld = padGetButtons(&pad);
+    u64 kUp = padGetButtonsUp(&pad);
 
     tmpout = 0;
     rc = hiddbgGetAbstractedPadsState(pads, states, sizeof(pads) / sizeof(u64), &tmpout);
@@ -63,6 +68,11 @@ void gamePadSend(JoyConSocket *connection)
     pkg.rJoyX4 = (int32_t)states[3].state.analog_stick_r.x;
     pkg.rJoyY4 = (int32_t)states[3].state.analog_stick_r.y;
 
+    printf("%d %d %d %d\n", pkg.lJoyX1, pkg.lJoyY1, pkg.rJoyX1, pkg.rJoyY1);
+    printf("%d %d %d %d\n", pkg.lJoyX2, pkg.lJoyY2, pkg.rJoyX2, pkg.rJoyY2);
+    printf("%d %d %d %d\n", pkg.lJoyX3, pkg.lJoyY3, pkg.rJoyX3, pkg.rJoyY3);
+    printf("%d %d %d %d\n", pkg.lJoyX4, pkg.lJoyY4, pkg.rJoyX4, pkg.rJoyY4);
+
     HidTouchScreenState touchState = {0};
     if (hidGetTouchScreenStates(&touchState, 1))
     {
@@ -71,28 +81,29 @@ void gamePadSend(JoyConSocket *connection)
         pkg.touchX2 = (uint32_t)touchState.touches[1].x;
         pkg.touchY2 = (uint32_t)touchState.touches[1].y;
     }
-
-    HidSixAxisSensorState sixaxis = {0};
-    u64 style_set = padGetStyleSet(&pad);
-    if (style_set & HidNpadStyleTag_NpadHandheld)
-        hidGetSixAxisSensorStates(handles[0], &sixaxis, 1);
-    else if (style_set & HidNpadStyleTag_NpadFullKey)
-        hidGetSixAxisSensorStates(handles[1], &sixaxis, 1);
-    else if (style_set & HidNpadStyleTag_NpadJoyDual)
-    {
-        // For JoyDual, read from either the Left or Right Joy-Con depending on which is/are connected
-        u64 attrib = padGetAttributes(&pad);
-        if (attrib & HidNpadAttribute_IsLeftConnected)
-            hidGetSixAxisSensorStates(handles[2], &sixaxis, 1);
-        else if (attrib & HidNpadAttribute_IsRightConnected)
-            hidGetSixAxisSensorStates(handles[3], &sixaxis, 1);
-    }
-    pkg.accelX = (float_t)sixaxis.acceleration.x;
-    pkg.accelY = (float_t)sixaxis.acceleration.y;
-    pkg.accelZ = (float_t)sixaxis.acceleration.z;
-    pkg.gyroX = (float_t)sixaxis.angle.x;
-    pkg.gyroY = (float_t)sixaxis.angle.y;
-    pkg.gyroZ = (float_t)sixaxis.angle.z;
+    printf("%d %d %d %d\n", pkg.touchX1, pkg.touchY1, pkg.touchX2, pkg.touchY2);
+    // HidSixAxisSensorState sixaxis = {0};
+    // u64 style_set = padGetStyleSet(&pad);
+    // if (style_set & HidNpadStyleTag_NpadHandheld)
+    //     hidGetSixAxisSensorStates(handles[0], &sixaxis, 1);
+    // else if (style_set & HidNpadStyleTag_NpadFullKey)
+    //     hidGetSixAxisSensorStates(handles[1], &sixaxis, 1);
+    // else if (style_set & HidNpadStyleTag_NpadJoyDual)
+    // {
+    //     // For JoyDual, read from either the Left or Right Joy-Con depending on which is/are connected
+    //     u64 attrib = padGetAttributes(&pad);
+    //     if (attrib & HidNpadAttribute_IsLeftConnected)
+    //         hidGetSixAxisSensorStates(handles[2], &sixaxis, 1);
+    //     else if (attrib & HidNpadAttribute_IsRightConnected)
+    //         hidGetSixAxisSensorStates(handles[3], &sixaxis, 1);
+    // }
+    // pkg.accelX = (float_t)sixaxis.acceleration.x;
+    // pkg.accelY = (float_t)sixaxis.acceleration.y;
+    // pkg.accelZ = (float_t)sixaxis.acceleration.z;
+    // pkg.gyroX = (float_t)sixaxis.angle.x;
+    // pkg.gyroY = (float_t)sixaxis.angle.y;
+    // pkg.gyroZ = (float_t)sixaxis.angle.z;
+    // printf("%f %f %f %f %f %f\n", pkg.accelX, pkg.accelY, pkg.accelZ, pkg.gyroX, pkg.gyroY, pkg.gyroZ);
     sendJoyConInput(connection, &pkg);
 }
 

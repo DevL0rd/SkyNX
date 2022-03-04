@@ -144,29 +144,29 @@ void initBubbles()
 {
     while (bubblesLength < maxBubbles)
     {
-        SDL_Color bubbleColor = {126, 242, 213, 255};
+        SDL_Color bubbleColor = {148, 0, 126, 255};
         float randR = 15;
         if (bubblesLength < 8)
         {
-            SDL_Color nbc = {145, 255, 249, 120};
+            SDL_Color nbc = {120, 0, 102, 120};
             randR = getRandomInt(5, 20);
             bubbleColor = nbc;
         }
         else if (bubblesLength < 13)
         {
-            SDL_Color nbc = {75, 219, 211, 180};
+            SDL_Color nbc = {89, 0, 76, 180};
             randR = getRandomInt(25, 40);
             bubbleColor = nbc;
         }
         else if (bubblesLength < 17)
         {
-            SDL_Color nbc = {24, 161, 153, 200};
+            SDL_Color nbc = {66, 0, 57, 200};
             randR = getRandomInt(45, 60);
             bubbleColor = nbc;
         }
         else if (bubblesLength < 20)
         {
-            SDL_Color nbc = {0, 102, 96, 230};
+            SDL_Color nbc = {46, 0, 40, 230};
             randR = getRandomInt(65, 80);
             bubbleColor = nbc;
         }
@@ -466,13 +466,13 @@ void drawSplash(RenderContext *context)
     SDL_Color bg = {50, 50, 50, 255};
     SDL_ClearScreen(context, bg);
 
-    SDL_Color bgf = {0, 181, 178, 255};
-    SDL_Color bgt = {0, 41, 40, 255};
+    SDL_Color bgf = {95, 0, 135, 255};
+    SDL_Color bgt = {87, 1, 94, 255};
     drawGradient(context, 0, 0, 1280, 720, bgf, bgt, 1);
 
     renderBubbles(context);
 
-    SDL_Color gf = {0, 0, 0, 250};
+    SDL_Color gf = {0, 0, 0, 200};
     SDL_Color gt = {0, 0, 0, 0};
     drawGradient(context, 0, 0, 1280, 180, gf, gt, 1);
     drawGradient(context, 0, 720 - 100, 1280, 180, gf, gt, 2);

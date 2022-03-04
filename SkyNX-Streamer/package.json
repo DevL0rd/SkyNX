@@ -13,6 +13,7 @@
   "dependencies": {
     "ansi_up": "latest",
     "auto-launch": "latest",
+    "buffer": "^6.0.3",
     "crc": "latest",
     "dgram": "latest",
     "electron": "^17.1.0",
@@ -22,6 +23,7 @@
     "jquery": "latest",
     "long": "latest",
     "popper.js": "^1.16.1",
+    "robotjs": "git+https://github.com/csett86/robotjs.git",
     "struct": "latest",
     "vgen-xbox": "git+https://github.com/JAMesserman/vgen-xbox.git",
     "windows-elevate": "^1.0.1",
