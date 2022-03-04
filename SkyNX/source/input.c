@@ -70,10 +70,10 @@ void gamePadSend(JoyConSocket *connection)
     pkg.rJoyX4 = (int32_t)states[3].state.analog_stick_r.x;
     pkg.rJoyY4 = (int32_t)states[3].state.analog_stick_r.y;
 
-    printf("%d %d %d %d\n", pkg.lJoyX1, pkg.lJoyY1, pkg.rJoyX1, pkg.rJoyY1);
-    printf("%d %d %d %d\n", pkg.lJoyX2, pkg.lJoyY2, pkg.rJoyX2, pkg.rJoyY2);
-    printf("%d %d %d %d\n", pkg.lJoyX3, pkg.lJoyY3, pkg.rJoyX3, pkg.rJoyY3);
-    printf("%d %d %d %d\n", pkg.lJoyX4, pkg.lJoyY4, pkg.rJoyX4, pkg.rJoyY4);
+    // printf("%d %d %d %d\n", pkg.lJoyX1, pkg.lJoyY1, pkg.rJoyX1, pkg.rJoyY1);
+    // printf("%d %d %d %d\n", pkg.lJoyX2, pkg.lJoyY2, pkg.rJoyX2, pkg.rJoyY2);
+    // printf("%d %d %d %d\n", pkg.lJoyX3, pkg.lJoyY3, pkg.rJoyX3, pkg.rJoyY3);
+    // printf("%d %d %d %d\n", pkg.lJoyX4, pkg.lJoyY4, pkg.rJoyX4, pkg.rJoyY4);
 
     HidTouchScreenState touchState = {0};
     if (hidGetTouchScreenStates(&touchState, 1))
@@ -83,7 +83,7 @@ void gamePadSend(JoyConSocket *connection)
         pkg.touchX2 = (uint32_t)touchState.touches[1].x;
         pkg.touchY2 = (uint32_t)touchState.touches[1].y;
     }
-    printf("%d %d %d %d\n", pkg.touchX1, pkg.touchY1, pkg.touchX2, pkg.touchY2);
+    // printf("%d %d %d %d\n", pkg.touchX1, pkg.touchY1, pkg.touchX2, pkg.touchY2);
     // HidSixAxisSensorState sixaxis = {0};
     // u64 style_set = padGetStyleSet(&pad);
     // if (style_set & HidNpadStyleTag_NpadHandheld)

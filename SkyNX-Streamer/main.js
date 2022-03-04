@@ -158,6 +158,8 @@ ipcMain.on('autoChangeResolutionOn', (event, fullMessage) => {
 function changeScreenRes(width, height) {
   var df = __dirname + "\\lib\\ChangeScreenResolution.exe"
   exec(df + " /w=" + width + " /h=" + height + " /d=0");
+  screenWidth = width;
+  screenHeight = height;
 }
 
 ipcMain.on('autoChangeResolutionOff', (event, fullMessage) => {
@@ -191,11 +193,13 @@ function killStream() {
   if (ffmpegAudioProcess) {
     ffmpegAudioProcess.kill();
   }
+
+  clientSender.send("close");
 }
 function startStreamer(arg) {
+
   screenWidth = mainScreen.bounds.width * screen.getPrimaryDisplay().scaleFactor;
   screenHeight = mainScreen.bounds.height * screen.getPrimaryDisplay().scaleFactor;
-
   ip = arg.ip
   quality = arg.q;
   hidStreamClient = new net.Socket();
@@ -212,8 +216,6 @@ function startStreamer(arg) {
   if (usingVideo) {
     if (autoChangeResolution && !restartingStream) {
       changeScreenRes("1280", "720");
-      screenWidth = "1280";
-      screenHeight = "720";
     }
     var fps = 60;
     if (limitFPS) {
@@ -221,7 +223,7 @@ function startStreamer(arg) {
     }
     var ffmpegVideoArgs = [];
     if (encoding == "NVENC") { //Nvidia Encoding
-      ffmpegVideoArgs = ["-probesize", "50M", "-hwaccel", "auto", "-f", "gdigrab", "-framerate", fps, "-video_size", screenWidth + "x" + screenHeight, "-offset_x", "0", "-offset_y", "0", "-draw_mouse", "1", "-i", "desktop", "-c:v", "h264_nvenc", "-gpu", "0", "-rc", "cbr_ld_hq", "-zerolatency", "1", "-f", "h264", "-vf", "scale=1280x720", "-pix_fmt", "yuv420p", "-profile:v", "baseline", "-cq:v", "19", "-g", "999999", "-b:v", quality + "M", "-minrate", quality - 3 + "M", "-maxrate", quality + "M", "-bufsize", (quality / (fps / 4)) + "M", "tcp://" + ip + ":2222"];
+      ffmpegVideoArgs = ["-probesize", "50M", "-hwaccel", "auto", "-f", "gdigrab", "-framerate", fps, "-video_size", screenWidth + "x" + screenHeight, "-offset_x", "0", "-offset_y", "0", "-draw_mouse", "1", "-i", "desktop", "-c:v", "h264_nvenc", "-gpu", "0", "-rc", "constqp/cbr/vbr", "-zerolatency", "1", "-f", "h264", "-vf", "scale=1280x720", "-pix_fmt", "yuv420p", "-profile:v", "baseline", "-cq:v", "19", "-g", "999999", "-b:v", quality + "M", "-minrate", quality - 3 + "M", "-maxrate", quality + "M", "-bufsize", (quality / (fps / 4)) + "M", "tcp://" + ip + ":2222"];
       log("Using Nvidia Encoding");
     } else if (encoding == "AMDVCE") { //AMD Video Coding Engine
       ffmpegVideoArgs = ["-probesize", "50M", "-hwaccel", "auto", "-f", "gdigrab", "-framerate", fps, "-video_size", screenWidth + "x" + screenHeight, "-offset_x", "0", "-offset_y", "0", "-draw_mouse", "1", "-i", "desktop", "-f", "h264", "-c:v", "h264_amf", "-usage", "1", "-rc", "cbr", "-vf", "scale=1280x720", "-pix_fmt", "yuv420p", "-b:v", quality + "M", "-minrate", quality - 3 + "M", "-maxrate", quality + "M", "-bufsize", (quality / (fps / 4)) + "M", "tcp://" + ip + ":2222"];
@@ -251,7 +253,6 @@ function startStreamer(arg) {
       if (autoChangeResolution && !restartingStream) {
         changeScreenRes(originalW, originalH);
       }
-      clientSender.send("close");
     });
   }
   if (usingAudio) {
@@ -268,7 +269,6 @@ function startStreamer(arg) {
     });
     ffmpegAudioProcess.on('close', (code) => {
       log(`AudioProcess process exited with code ${code}`);
-      clientSender.send("close");
     });
   }
 
@@ -601,10 +601,8 @@ function handleTouchInput(hid) {
   var touchX1 = hid.get("touchX1");
   var touchY1 = hid.get("touchY1");
   if (touchX1 && touchY1) {
-    touchX1 -= 15;
-    touchY1 -= 15;
-    touchX1 = Math.floor(screenWidth * (touchX1 / 1280))
-    touchY1 = Math.floor(screenHeight * (touchY1 / 720))
+    touchX1 = Math.floor(touchX1 * (screenWidth / 1280))
+    touchY1 = Math.floor(touchY1 * (screenHeight / 720))
     if (!touchX1old) touchX1old = touchX1;
     if (!touchY1old) touchY1old = touchY1;
     var touchX2 = hid.get("touchX2");
@@ -728,7 +726,7 @@ function connectHID() {
       controllerIds = [];
     } catch (error) {
     }
-    killStream();
+    // killStream();
   });
 }
 
