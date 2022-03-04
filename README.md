@@ -1,12 +1,11 @@
 # SkyNX
 Stream your PC games to your Nintendo Switch without Android! Now on the Homebrew App Store!
-This is replacement for the abandoned [In-Home-Switching](https://github.com/jakibaki/In-Home-Switching/blob/master/README.md).
 
 [Downloads are here](https://github.com/DevL0rd/SkyNX/releases).
 
 Also, if you can help, I'm currently looking for a job. If you have any leads, let me know at SkyNxApp@gmail.com.
 
-[Video Instructions / Review Here](https://www.youtube.com/watch?v=YtnIqVdYbf4). Big shout out to Jonny Troche for this high quality tutorial! Make sure to like and subscribe guys ;D
+[Video Instructions / Review Here](https://www.youtube.com/watch?v=YtnIqVdYbf4). 
 
 If your interested in using SkyNX to turn your Nintendo Switch into a WiiU gamepad using Cemu. Here is a link with my tutorial on how to set it up! [Nintendo Switch as a WiiU Gamepad](https://gbatemp.net/threads/how-to-use-your-switch-as-a-wiiu-game-pad-in-cemu-using-skynx.563405/)
 
@@ -63,12 +62,10 @@ If there is no audio playing..
 
 
 ## Known issues
-  * So far Switch crashes when put to sleep with app running, please close app beforehand. It will be fixed after optimizations.
-  * App breaks when Switch changes from docked to handheld mode or vice-versa. Please quit the app before doing so.
+* Currently more than 1 controller is not working, please wait for update.
 
 ## Credits to
 * [DuchessOfDark88](https://twitter.com/DuchessOfDark88) App icon and graphics. (Some content at this link may be NSFW)
-* [jakibaki](https://github.com/jakibaki) For the original [In-Home-Switching](https://github.com/jakibaki/In-Home-Switching/blob/master/README.md) Switch app I am using as a base.
 * [ffmpeg](https://www.ffmpeg.org/) for being such a powerful media tool that we use on PC and Switch.
 * [SwitchBrew](https://switchbrew.org/) for libNX and its ffmpeg inclusion
 * [Atmosphère](https://github.com/Atmosphere-NX/Atmosphere) for being such a great Switch CFW
