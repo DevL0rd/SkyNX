@@ -17,12 +17,12 @@ void network_init(const SocketInitConfig *conf)
     nxlinkStdio();
 
     printf("avformat_network_init\n");
-    avformat_network_init();
+    // avformat_network_init();
 }
 
 void network_unInit()
 {
-    avformat_network_deinit();
+    // avformat_network_deinit();
     socketExit();
 }
 

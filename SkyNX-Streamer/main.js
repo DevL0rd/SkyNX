@@ -89,15 +89,7 @@ app.on('ready', function () {
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
-  if (ffmpegAudioProcess) {
-    ffmpegAudioProcess.kill();
-  }
-  if (ffmpegProcess) {
-    ffmpegProcess.kill();
-  }
-  if (autoChangeResolution) {
-    changeScreenRes(originalW, originalH);
-  }
+  killStream();
   if (process.platform !== 'darwin') app.quit()
 })
 
@@ -126,6 +118,7 @@ function log(str) {
 
 // Emitted when the window is closed.
 ipcMain.on('close', function () {
+  killStream();
   mainWindow.destroy();
 });
 ipcMain.on('min', function () {
@@ -185,6 +178,20 @@ ipcMain.on("restartComputer", (event, fullMessage) => {
 //Streaming
 //***************************************************************/
 
+function killStream() {
+  if (autoChangeResolution) {
+    changeScreenRes(originalW, originalH);
+  }
+  if (hidStreamClient) {
+    hidStreamClient.end();
+  }
+  if (ffmpegProcess) {
+    ffmpegProcess.kill();
+  }
+  if (ffmpegAudioProcess) {
+    ffmpegAudioProcess.kill();
+  }
+}
 function startStreamer(arg) {
   screenWidth = mainScreen.bounds.width * screen.getPrimaryDisplay().scaleFactor;
   screenHeight = mainScreen.bounds.height * screen.getPrimaryDisplay().scaleFactor;
@@ -235,7 +242,6 @@ function startStreamer(arg) {
     );
     ffmpegProcess.stdout.on("data", data => {
       log(`${data}`);
-      restartingStream = false;
     });
     ffmpegProcess.stderr.on('data', (data) => {
       log(`${data}`);
@@ -244,9 +250,6 @@ function startStreamer(arg) {
       log(`VideoProcess process exited with code ${code}`);
       if (autoChangeResolution && !restartingStream) {
         changeScreenRes(originalW, originalH);
-      }
-      if (restartingStream) {
-        startStreamer(arg);
       }
       clientSender.send("close");
     });
@@ -273,27 +276,22 @@ function startStreamer(arg) {
 
 ipcMain.on('connect', (event, arg) => {
   clientSender = event.sender;
+  killStream()
   startStreamer(arg);
 })
 
 ipcMain.on('restart', (event, arg) => {
   restartingStream = true;
-  if (ffmpegAudioProcess) {
-    ffmpegAudioProcess.kill();
-  }
-  if (ffmpegProcess) {
-    ffmpegProcess.kill();
-  }
+  killStream()
+  setTimeout(function () {
+    restartingStream = false;
+    startStreamer(arg);
+  }, 1000)
 });
 
 
 ipcMain.on('kill', (event, arg) => {
-  if (ffmpegAudioProcess) {
-    ffmpegAudioProcess.kill();
-  }
-  if (ffmpegProcess) {
-    ffmpegProcess.kill();
-  }
+  killStream()
 });
 
 
@@ -388,9 +386,6 @@ function convertAnalog(axis) {
     na = -na
   }
   return na;
-}
-function convertAnalogXY(x, y) {
-  return { x: convertAnalog(x), y: convertAnalog(y) };
 }
 function handleControllerInput(hid, controllerId, playerNumber) {
   var heldKeys = hid.get("HeldKeys" + playerNumber);
@@ -678,74 +673,64 @@ function connectHID() {
     hidStreamClient.setNoDelay(true);
     log('Connected to Switch!');
   });
-}
-hidStreamClient.on('error', function (ex) {
-  log("Could not connect to Switch. Connection timed out...");
-  if (ex) {
-    log("Could not connect to Switch. Connection timed out...");
-    setTimeout(connectHID, 1000);
-  }
-});
-hidStreamClient.on('data', function (chunk) {
-  log(chunk)
-  hidDataBuffer += chunk.toString("hex");
-  var completeData = "";
-  if (hidDataBuffer.includes("ffffffffffffffff") && hidDataBuffer.includes("ffffffffffffff7")) {
-    completeData = hidDataBuffer.split("ffffffffffffffff")[1].split("ffffffffffffff7")[0];
-    hidDataBuffer = "";
-    if (completeData.length != 416) {
-      log("Incorrect data length: " + completeData.length + " - " + completeData);
-      return
+  hidStreamClient.on('error', function (ex) {
+    if (ex) {
+      log("Could not connect to Switch. Connection timed out...");
+      // setTimeout(connectHID, 1000);
     }
-  } else {
-    return;
-  }
-  var data = Buffer.from(completeData, 'hex');
-  var hid = parseInputStruct(data);
+  });
+  hidStreamClient.on('data', function (chunk) {
+    hidDataBuffer += chunk.toString("hex");
+    var completeData = "";
+    if (hidDataBuffer.includes("ffffffffffffffff") && hidDataBuffer.includes("ffffffffffffff7")) {
+      completeData = hidDataBuffer.split("ffffffffffffffff")[1].split("ffffffffffffff7")[0];
+      hidDataBuffer = "";
+      if (completeData.length != 256) {
+        log("Incorrect data length: " + completeData.length + " - " + completeData);
+        return
+      }
+    } else {
+      return;
+    }
+    var data = Buffer.from(completeData, 'hex');
+    var hid = parseInputStruct(data);
 
-  var controllerCount = hid.get("controllerCount");
-  if (controllerCount > controllerIds.length) {
-    plugControllerIn();
-  }
-  fpsPrintTimer++;
-  if (fpsPrintTimer == 10) {
-    log("switchFps=" + hid.get("frameRate"))
-    fpsPrintTimer = 0;
-  }
-  var playerNumber;
-  for (i in controllerIds) {
-    playerNumber = parseInt(i) + 1;
-    handleControllerInput(hid, controllerIds[i], playerNumber);
-  }
-  handleMouseInputToggling(hid, 1);
-  if (mouseControl == "ANALOG" && mouseInput) {
-    handleAnalogMouse(hid, 1);
-  } else if (mouseControl == "GYRO" && mouseInput) {
-    handleGyroMouse(hid, 1);
-  }
-  handleTouchInput(hid);
-  handleGyroAndAccel(hid);
-});
-
-hidStreamClient.on('close', function () {
-  log('hidStreamClient Disconnected.');
-  try {
+    var controllerCount = hid.get("controllerCount");
+    if (controllerCount > controllerIds.length) {
+      plugControllerIn();
+    }
+    // fpsPrintTimer++;
+    // if (fpsPrintTimer == 10) {
+    //   log("switchFps=" + hid.get("frameRate"))
+    //   fpsPrintTimer = 0;
+    // }
+    var playerNumber;
     for (i in controllerIds) {
-      vgen.unplug(controllerIds[i]);
+      playerNumber = parseInt(i) + 1;
+      handleControllerInput(hid, controllerIds[i], playerNumber);
     }
-    controllerIds = [];
-  } catch (error) {
+    handleMouseInputToggling(hid, 1);
+    if (mouseControl == "ANALOG" && mouseInput) {
+      handleAnalogMouse(hid, 1);
+    } else if (mouseControl == "GYRO" && mouseInput) {
+      handleGyroMouse(hid, 1);
+    }
+    handleTouchInput(hid);
+    handleGyroAndAccel(hid);
+  });
 
-  }
-  if (usingVideo) {
-    ffmpegProcess.kill();
-  }
-  if (usingAudio) {
-    ffmpegAudioProcess.kill();
-  }
-  setTimeout(connectHID, 1000);
-});
-
+  hidStreamClient.on('close', function () {
+    log('hidStreamClient Disconnected.');
+    try {
+      for (i in controllerIds) {
+        vgen.unplug(controllerIds[i]);
+      }
+      controllerIds = [];
+    } catch (error) {
+    }
+    killStream();
+  });
+}
 
 
 

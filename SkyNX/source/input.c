@@ -44,11 +44,13 @@ void gamePadSend(JoyConSocket *connection)
     //     printf("hiddbgSetAutoPilotVirtualPadState(): 0x%x\n", rc);
     // }
 
-    pkg.heldKeys1 = (uint32_t)states[0].state.buttons;
-    pkg.lJoyX1 = (int32_t)states[0].state.analog_stick_l.x;
-    pkg.lJoyY1 = (int32_t)states[0].state.analog_stick_l.y;
-    pkg.rJoyX1 = (int32_t)states[0].state.analog_stick_r.x;
-    pkg.rJoyY1 = (int32_t)states[0].state.analog_stick_r.y;
+    HidAnalogStickState analog_stick_l = padGetStickPos(&pad, 0);
+    HidAnalogStickState analog_stick_r = padGetStickPos(&pad, 1);
+    pkg.heldKeys1 = (uint32_t)kHeld;
+    pkg.lJoyX1 = (int32_t)analog_stick_l.x;
+    pkg.lJoyY1 = (int32_t)analog_stick_l.y;
+    pkg.rJoyX1 = (int32_t)analog_stick_r.x;
+    pkg.rJoyY1 = (int32_t)analog_stick_r.y;
 
     pkg.heldKeys2 = (uint32_t)states[1].state.buttons;
     pkg.lJoyX2 = (int32_t)states[1].state.analog_stick_l.x;
