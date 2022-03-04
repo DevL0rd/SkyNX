@@ -9,14 +9,18 @@
 #include <errno.h>
 #include <arpa/inet.h>
 
-void networkInit(const SocketInitConfig *conf)
+void network_init(const SocketInitConfig *conf)
 {
+    printf("socketInitialize\n");
     socketInitialize(conf);
+
     nxlinkStdio();
+
+    printf("avformat_network_init\n");
     avformat_network_init();
 }
 
-void networkDestroy()
+void network_unInit()
 {
     avformat_network_deinit();
     socketExit();

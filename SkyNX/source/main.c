@@ -1,37 +1,3 @@
-// The following ffmpeg code is inspired by an official ffmpeg example, so here is its Copyright notice:
-
-/*
- * Copyright (c) 2012 Stefano Sabatini
- * 
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in
- * all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL
- * THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
- * THE SOFTWARE.
-
-
-*
- * @file
- * Demuxing and decoding example.
- *
- * Show how to use the libavformat and libavcodec API to demux and
- * decode audio and video data.
- * @example demuxing_decoding.c
-
-*/
-
 #include <libavutil/samplefmt.h>
 
 #include <switch.h>
@@ -57,12 +23,12 @@ static const SocketInitConfig socketInitConf = {
     .sb_efficiency = 2,
 };
 
-
 static Thread renderThread;
 static Thread inputHandlerThread;
 static Thread audioHandlerThread;
 void startInput()
 {
+    input_init();
     threadCreate(&inputHandlerThread, inputHandlerLoop, NULL, NULL, 0x1000, 0x2b, 0);
     threadStart(&inputHandlerThread);
 }
@@ -85,41 +51,59 @@ VideoContext *videoContext = NULL;
 ClkrstSession cpuSession;
 void init()
 {
+    // consoleInit(NULL);
     /* Init all switch required systems */
+    printf("romfsInit\n");
     romfsInit();
-    networkInit(&socketInitConf);
+
+    printf("networkInit\n");
+    network_init(&socketInitConf);
+
+    printf("audoutInitialize\n");
     audoutInitialize();
+
+    printf("audoutStartAudioOut\n");
     audoutStartAudioOut();
-    padConfigureInput(8, HidNpadStyleSet_NpadStandard);
+
+    printf("clkrstInitialize\n");
     clkrstInitialize();
     clkrstOpenSession(&cpuSession, PcvModuleId_CpuBus, 3);
     clkrstSetClockRate(&cpuSession, 1785000000);
-    renderContext = createRenderer();
+
+    printf("startAudio\n");
+    startAudio();
+
+    printf("startInput\n");
+    startInput();
+
+    printf("makeRenderer\n");
+    renderContext = makeRenderer();
+    printf("createVideoContext\n");
     videoContext = createVideoContext();
     videoContext->renderContext = renderContext;
-    startAudio();
-    startInput();
+    printf("startRender\n");
     startRender(videoContext);
-    appletSetIdleTimeDetectionExtension(AppletIdleTimeDetectionExtension_ExtendedUnsafe);
+    printf("appletSetIdleTimeDetectionExtension\n");
+    appletSetIdleTimeDetectionExtension(AppletIdleTimeDetectionExtension_None);
+    printf("Complete INIT!\n");
 }
+
 void unInit()
 {
     freeRenderer(renderContext);
     freeVideoContext(videoContext);
-    clkrstCloseSession(&cpuSession); //end OC
+    clkrstCloseSession(&cpuSession); // end OC
     clkrstExit();
+    input_unInit();
     audoutStopAudioOut();
     audoutExit();
-    networkDestroy();
+    network_unInit();
     plExit();
 }
 bool threadsSleeping = false;
 int main(int argc, char **argv)
 {
     init();
-    static Thread renderThread;
-    static Thread inputHandlerThread;
-    static Thread audioHandlerThread;
     while (appletMainLoop())
     {
         if (appletGetFocusState() == AppletFocusState_InFocus)
@@ -139,10 +123,11 @@ int main(int argc, char **argv)
             {
                 drawSplash(renderContext);
             }
-            svcSleepThread(14285714ULL); //Nano sleep to keep at 70fps to handle drop frames without stutter
+            svcSleepThread(14285714ULL); // Nano sleep to keep at 70fps to handle drop frames without stutter
         }
         else
         {
+            printf("sleeping\n");
             if (!threadsSleeping)
             {
                 threadPause(&renderThread);
@@ -155,4 +140,5 @@ int main(int argc, char **argv)
     }
     /* Deinitialize all used systems */
     unInit();
+    return 0;
 }

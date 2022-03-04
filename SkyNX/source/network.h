@@ -46,10 +46,10 @@ typedef struct
 } JoyPkg;
 
 /* Init nx network and av network */
-void networkInit(const SocketInitConfig *conf);
+void network_init(const SocketInitConfig *conf);
 
 /* Deinitialize nx network and av network*/
-void networkDestroy();
+void network_unInit();
 
 /* Creates the context for sending joycon inputs */
 JoyConSocket *createJoyConSocket();
@@ -60,7 +60,7 @@ void freeJoyConSocket(JoyConSocket *connection);
 /* Send joycon input over the network */
 void sendJoyConInput(JoyConSocket *connection, const JoyPkg *pkg);
 
-/* 
+/*
  * Binds, listens and accepts connection with the server
  * If the connection was previously opened reuses it
  */

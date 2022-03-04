@@ -6,22 +6,21 @@
 #include "renderer.h"
 
 PadState pad;
-HiddbgAbstractedPadHandle pads[4]={0};
-HiddbgAbstractedPadState states[4]={0};
+HiddbgAbstractedPadHandle pads[4] = {0};
+HiddbgAbstractedPadState states[4] = {0};
 HidSixAxisSensorHandle handles[4];
-s32 tmpout=0;
-Result rc=0;
+s32 tmpout = 0;
+Result rc = 0;
 void gamePadSend(JoyConSocket *connection)
 {
     JoyPkg pkg;
 
-    pkg.streamStart = (uint64_t)UINT64_MAX; //easy identifiers for the start and stop of tcp stream
+    pkg.streamStart = (uint64_t)UINT64_MAX; // easy identifiers for the start and stop of tcp stream
     pkg.streamEnd = (uint64_t)UINT64_MAX / 2;
     pkg.controllerCount = (uint32_t)1;
 
-
     tmpout = 0;
-    rc = hiddbgGetAbstractedPadsState(pads, states, sizeof(pads)/sizeof(u64), &tmpout);
+    rc = hiddbgGetAbstractedPadsState(pads, states, sizeof(pads) / sizeof(u64), &tmpout);
 
     // if (tmpout>=1) {
     //     s8 AbstractedVirtualPadId=0;
@@ -39,8 +38,6 @@ void gamePadSend(JoyConSocket *connection)
     //     rc = hiddbgSetAutoPilotVirtualPadState(AbstractedVirtualPadId, &states[0]);
     //     printf("hiddbgSetAutoPilotVirtualPadState(): 0x%x\n", rc);
     // }
-
-
 
     pkg.heldKeys1 = (uint32_t)states[0].state.buttons;
     pkg.lJoyX1 = (int32_t)states[0].state.analog_stick_l.x;
@@ -66,8 +63,9 @@ void gamePadSend(JoyConSocket *connection)
     pkg.rJoyX4 = (int32_t)states[3].state.analog_stick_r.x;
     pkg.rJoyY4 = (int32_t)states[3].state.analog_stick_r.y;
 
-    HidTouchScreenState touchState={0};
-    if (hidGetTouchScreenStates(&touchState, 1)) {
+    HidTouchScreenState touchState = {0};
+    if (hidGetTouchScreenStates(&touchState, 1))
+    {
         pkg.touchX1 = (uint32_t)touchState.touches[0].x;
         pkg.touchY1 = (uint32_t)touchState.touches[0].y;
         pkg.touchX2 = (uint32_t)touchState.touches[1].x;
@@ -80,7 +78,8 @@ void gamePadSend(JoyConSocket *connection)
         hidGetSixAxisSensorStates(handles[0], &sixaxis, 1);
     else if (style_set & HidNpadStyleTag_NpadFullKey)
         hidGetSixAxisSensorStates(handles[1], &sixaxis, 1);
-    else if (style_set & HidNpadStyleTag_NpadJoyDual) {
+    else if (style_set & HidNpadStyleTag_NpadJoyDual)
+    {
         // For JoyDual, read from either the Left or Right Joy-Con depending on which is/are connected
         u64 attrib = padGetAttributes(&pad);
         if (attrib & HidNpadAttribute_IsLeftConnected)
@@ -102,9 +101,9 @@ void handleInput(JoyConSocket *connection)
     if (connectJoyConSocket(connection, 2223))
         gamePadSend(connection);
 }
-void inputHandlerLoop(void *dummy)
+
+void input_init()
 {
-    JoyConSocket *connection = createJoyConSocket();
     padConfigureInput(4, HidNpadStyleSet_NpadStandard);
     padInitializeAny(&pad);
     rc = hiddbgInitialize();
@@ -112,22 +111,30 @@ void inputHandlerLoop(void *dummy)
     // It's necessary to initialize these separately as they all have different handle values
     HidSixAxisSensorHandle handles[4];
     hidGetSixAxisSensorHandles(&handles[0], 1, HidNpadIdType_Handheld, HidNpadStyleTag_NpadHandheld);
-    hidGetSixAxisSensorHandles(&handles[1], 1, HidNpadIdType_No1,      HidNpadStyleTag_NpadFullKey);
-    hidGetSixAxisSensorHandles(&handles[2], 2, HidNpadIdType_No1,      HidNpadStyleTag_NpadJoyDual);
+    hidGetSixAxisSensorHandles(&handles[1], 1, HidNpadIdType_No1, HidNpadStyleTag_NpadFullKey);
+    hidGetSixAxisSensorHandles(&handles[2], 2, HidNpadIdType_No1, HidNpadStyleTag_NpadJoyDual);
     hidStartSixAxisSensor(handles[0]);
     hidStartSixAxisSensor(handles[1]);
     hidStartSixAxisSensor(handles[2]);
     hidStartSixAxisSensor(handles[3]);
-    while (appletMainLoop())
-    {
-        handleInput(connection);
-        svcSleepThread(23333333ULL);
-    }
-    freeJoyConSocket(connection);
+}
+void input_unInit()
+{
     hiddbgUnsetAllAutoPilotVirtualPadState();
     hiddbgExit();
     hidStopSixAxisSensor(handles[0]);
     hidStopSixAxisSensor(handles[1]);
     hidStopSixAxisSensor(handles[2]);
     hidStopSixAxisSensor(handles[3]);
+}
+void inputHandlerLoop(void *dummy)
+{
+    JoyConSocket *connection = createJoyConSocket();
+
+    while (appletMainLoop())
+    {
+        handleInput(connection);
+        svcSleepThread(23333333ULL);
+    }
+    freeJoyConSocket(connection);
 }

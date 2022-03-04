@@ -6,7 +6,7 @@
 
 #include "context.h"
 /* Allocates a render context */
-RenderContext *createRenderer(void);
+RenderContext *makeRenderer(void);
 
 /* Draws an image filling all screen */
 void drawSplash(RenderContext *context);

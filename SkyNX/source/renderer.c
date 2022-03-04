@@ -196,10 +196,16 @@ void initBubbles()
     }
 }
 SDL_Texture *logoTexture = NULL;
-RenderContext *createRenderer()
+RenderContext *makeRenderer()
 {
+    SDL_Init(SDL_INIT_VIDEO | SDL_INIT_TIMER);
+    SDL_Log("TTF_Init");
+    TTF_Init();
+    SDL_Log("plInitialize");
+    plInitialize(PlServiceType_User);
+    SDL_Log("malloc RenderContext\n");
     RenderContext *context = malloc(sizeof(RenderContext));
-
+    SDL_Log("SDL_CreateWindow\n");
     context->window = SDL_CreateWindow("sdl2_gles2", 0, 0, RESX, RESY, SDL_WINDOW_FULLSCREEN);
     if (context->window == NULL)
     {
@@ -209,6 +215,7 @@ RenderContext *createRenderer()
             ;
     }
 
+    SDL_Log("SDL_CreateRenderer\n");
     context->renderer = SDL_CreateRenderer(context->window, 0, SDL_RENDERER_ACCELERATED | SDL_RENDERER_PRESENTVSYNC);
     if (context->renderer == NULL)
     {
@@ -217,11 +224,20 @@ RenderContext *createRenderer()
         while (1)
             ;
     }
+    SDL_Log("SDL_SetRenderDrawBlendMode");
     SDL_SetRenderDrawBlendMode(context->renderer, SDL_BLENDMODE_BLEND); // enable transparency
 
+    SDL_Log("IMG_LoadTexture ICON");
+    IMG_Init(IMG_INIT_PNG);
     logoTexture = IMG_LoadTexture(context->renderer, "iconTransparent.png");
-
+    // SDL_Surface *logo = IMG_Load("iconTransparent.png");
+    // if (logo)
+    // {
+    //     logoTexture = SDL_CreateTextureFromSurface(context->renderer, logo);
+    //     SDL_FreeSurface(logo);
+    // }
     // Create font cache
+    SDL_Log("SDL_CreateTexture");
     context->yuv_text = SDL_CreateTexture(context->renderer, SDL_PIXELFORMAT_IYUV, SDL_TEXTUREACCESS_STREAMING, RESX, RESY);
 
     context->rect.x = 0;
@@ -229,18 +245,27 @@ RenderContext *createRenderer()
     context->rect.w = RESX;
     context->rect.h = RESY;
 
+    SDL_Log("mutexInit texture_mut");
     mutexInit(&context->texture_mut);
+    SDL_Log("mutexInit frame_avail_mut");
     mutexInit(&context->frame_avail_mut);
+    SDL_Log("mutexInit video_active_mut");
     mutexInit(&context->video_active_mut);
     context->frame_avail = false;
     context->video_active = false;
 
     PlFontData fontData, fontExtData;
+    SDL_Log("plGetSharedFontByType");
     plGetSharedFontByType(&fontData, PlSharedFontType_Standard);
     plGetSharedFontByType(&fontExtData, PlSharedFontType_NintendoExt);
+    SDL_Log((char *)fontData.address);
+    SDL_Log("FC_CreateFont");
     context->font = FC_CreateFont();
+    SDL_Log("FC_LoadFont_RW");
     FC_LoadFont_RW(context->font, context->renderer, SDL_RWFromMem((void *)fontData.address, fontData.size), SDL_RWFromMem((void *)fontExtData.address, fontExtData.size), 1, 40, FC_MakeColor(0, 0, 0, 255), TTF_STYLE_NORMAL);
+    SDL_Log("initDelta");
     initDelta();
+    SDL_Log("initBubbles");
     initBubbles();
 
     return context;
@@ -452,15 +477,17 @@ void drawSplash(RenderContext *context)
     drawGradient(context, 0, 0, 1280, 180, gf, gt, 1);
     drawGradient(context, 0, 720 - 100, 1280, 180, gf, gt, 2);
 
-    int imgW = 0;
-    int imgH = 0;
-    SDL_QueryTexture(logoTexture, NULL, NULL, &imgW, &imgH);
+    int imgW = 256;
+    int imgH = 256;
+    // printf("SDL_QueryTexture\n");
+    // SDL_QueryTexture(logoTexture, NULL, NULL, &imgW, &imgH);
     SDL_Rect imgDest;
     imgDest.x = (1280 / 2) - (imgW / 2);
     imgDest.y = (720 / 2) - (imgH / 2);
     imgDest.w = imgW;
     imgDest.h = imgH;
-    SDL_RenderCopy(context->renderer, logoTexture, NULL, &imgDest);
+    // printf("SDL_RenderCopy\n");
+    // SDL_RenderCopy(context->renderer, logoTexture, NULL, &imgDest);
 
     SDL_Color white = {230, 230, 230, 255};
     u32 ip = gethostid();
@@ -506,4 +533,8 @@ void displayFrame(RenderContext *renderContext)
 void freeRenderer(RenderContext *context)
 {
     free(context);
+    plExit();
+    IMG_Quit();
+    TTF_Quit();
+    SDL_Quit();
 }
