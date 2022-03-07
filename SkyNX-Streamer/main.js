@@ -20,7 +20,7 @@ var minimizeToTray = false;
 var autoChangeResolution = false;
 var ip = "0.0.0.0"
 var quality = 5;
-var hidStreamClient = new net.Socket();
+var hidStreamClient = null;
 var usingVideo = true;
 var usingAudio = true;
 var abxySwap = false;
@@ -33,6 +33,7 @@ var mouseControl = "ANALOG";
 var ffmpegProcess;
 var ffmpegAudioProcess;
 var clientSender;
+var isRunning = true;
 var restartingStream = false;
 var autoLauncher = new AutoLaunch({
   name: 'SkyNX',
@@ -89,6 +90,7 @@ app.on('ready', function () {
 
 // Quit when all windows are closed.
 app.on('window-all-closed', function () {
+  isRunning = false;
   killStream();
   if (process.platform !== 'darwin') app.quit()
 })
@@ -118,6 +120,7 @@ function log(str) {
 
 // Emitted when the window is closed.
 ipcMain.on('close', function () {
+  isRunning = false;
   killStream();
   mainWindow.destroy();
 });
@@ -181,11 +184,12 @@ ipcMain.on("restartComputer", (event, fullMessage) => {
 //***************************************************************/
 
 function killStream() {
-  if (autoChangeResolution) {
+  if (autoChangeResolution && !restartingStream) {
     changeScreenRes(originalW, originalH);
   }
-  if (hidStreamClient) {
+  if (hidStreamClient && !restartingStream) {
     hidStreamClient.end();
+    hidStreamClient.destroy();
   }
   if (ffmpegProcess) {
     ffmpegProcess.kill();
@@ -193,28 +197,10 @@ function killStream() {
   if (ffmpegAudioProcess) {
     ffmpegAudioProcess.kill();
   }
-
-  clientSender.send("close");
 }
-function startStreamer(arg) {
-
-  screenWidth = mainScreen.bounds.width * screen.getPrimaryDisplay().scaleFactor;
-  screenHeight = mainScreen.bounds.height * screen.getPrimaryDisplay().scaleFactor;
-  ip = arg.ip
-  quality = arg.q;
-  hidStreamClient = new net.Socket();
-  usingVideo = !arg.disableVideo;
-  usingAudio = !arg.disableAudio;
-  abxySwap = arg.abxySwap;
-  limitFPS = arg.limitFPS;
-  screenScale = screen.getPrimaryDisplay().scaleFactor;
-  mouseControl = arg.mouseControl;
-  encoding = arg.encoding
-
-  setTimeout(connectHID, 0);
-
+function startStreamer() {
   if (usingVideo) {
-    if (autoChangeResolution && !restartingStream) {
+    if (autoChangeResolution) {
       changeScreenRes("1280", "720");
     }
     var fps = 60;
@@ -222,17 +208,20 @@ function startStreamer(arg) {
       fps = 30;
     }
     var ffmpegVideoArgs = [];
-    if (encoding == "NVENC") { //Nvidia Encoding
-      ffmpegVideoArgs = ["-probesize", "50M", "-hwaccel", "auto", "-f", "gdigrab", "-framerate", fps, "-video_size", screenWidth + "x" + screenHeight, "-offset_x", "0", "-offset_y", "0", "-draw_mouse", "1", "-i", "desktop", "-c:v", "h264_nvenc", "-gpu", "0", "-rc", "constqp/cbr/vbr", "-zerolatency", "1", "-f", "h264", "-vf", "scale=1280x720", "-pix_fmt", "yuv420p", "-profile:v", "baseline", "-cq:v", "19", "-g", "999999", "-b:v", quality + "M", "-minrate", quality - 3 + "M", "-maxrate", quality + "M", "-bufsize", (quality / (fps / 4)) + "M", "tcp://" + ip + ":2222"];
+    var bitrate = quality * 1024;
+    bitrate = bitrate + "k";
+    console.log(bitrate)
+    if (encoding == "NVENC") {
+      ffmpegVideoArgs = ["-probesize", "32", "-hwaccel", "auto", "-y", "-f", "gdigrab", "-framerate", fps, "-vsync", "vfr", "-video_size", screenWidth + "x" + screenHeight, "-offset_x", "0", "-offset_y", "0", "-draw_mouse", "1", "-i", "desktop", "-c:v", "h264_nvenc", "-gpu", "0", "-rc", "vbr", "-zerolatency", "1", "-f", "h264", "-vf", "scale=1280x720", "-pix_fmt", "yuv420p", "-profile:v", "baseline", "-cq:v", "19", "-g", "999999", "-b:v", bitrate, "-minrate", bitrate, "-maxrate", bitrate, "-bufsize", bitrate, "tcp://" + ip + ":2222"];
       log("Using Nvidia Encoding");
     } else if (encoding == "AMDVCE") { //AMD Video Coding Engine
-      ffmpegVideoArgs = ["-probesize", "50M", "-hwaccel", "auto", "-f", "gdigrab", "-framerate", fps, "-video_size", screenWidth + "x" + screenHeight, "-offset_x", "0", "-offset_y", "0", "-draw_mouse", "1", "-i", "desktop", "-f", "h264", "-c:v", "h264_amf", "-usage", "1", "-rc", "cbr", "-vf", "scale=1280x720", "-pix_fmt", "yuv420p", "-b:v", quality + "M", "-minrate", quality - 3 + "M", "-maxrate", quality + "M", "-bufsize", (quality / (fps / 4)) + "M", "tcp://" + ip + ":2222"];
+      ffmpegVideoArgs = ["-probesize", "32", "-hwaccel", "auto", "-y", "-f", "gdigrab", "-framerate", fps, "-vsync", "vfr", "-video_size", screenWidth + "x" + screenHeight, "-offset_x", "0", "-offset_y", "0", "-draw_mouse", "1", "-i", "desktop", "-f", "h264", "-c:v", "h264_amf", "-usage", "1", "-rc", "vbr", "-vf", "scale=1280x720", "-pix_fmt", "yuv420p", "-b:v", bitrate, "-minrate", bitrate, "-maxrate", bitrate, "-bufsize", bitrate, "tcp://" + ip + ":2222"];
       log("Using AMD Video Coding Engine");
     } else if (encoding == "QSV") {
-      ffmpegVideoArgs = ["-probesize", "50M", "-hwaccel", "auto", "-f", "gdigrab", "-framerate", fps, "-video_size", screenWidth + "x" + screenHeight, "-offset_x", "0", "-offset_y", "0", "-draw_mouse", "1", "-i", "desktop", "-f", "h264", "-c:v", "h264_qsv", "-preset", "faster", "-profile", "baseline", "-vf", "scale=1280x720", "-pix_fmt", "yuv420p", "-b:v", quality + "M", "-minrate", quality - 3 + "M", "-maxrate", quality + "M", "-bufsize", (quality / (fps / 4)) + "M", "tcp://" + ip + ":2222"];
+      ffmpegVideoArgs = ["-probesize", "32", "-hwaccel", "auto", "-y", "-f", "gdigrab", "-framerate", fps, "-vsync", "vfr", "-video_size", screenWidth + "x" + screenHeight, "-offset_x", "0", "-offset_y", "0", "-draw_mouse", "1", "-i", "desktop", "-f", "h264", "-c:v", "h264_qsv", "-preset", "faster", "-profile", "baseline", "-vf", "scale=1280x720", "-pix_fmt", "yuv420p", "-b:v", bitrate, "-minrate", bitrate, "-maxrate", bitrate, "-bufsize", bitrate, "tcp://" + ip + ":2222"];
       log("Using Intel QSV Encoding");
     } else { //CPU Software Encoding
-      ffmpegVideoArgs = ["-probesize", "50M", "-hwaccel", "auto", "-f", "gdigrab", "-framerate", fps, "-video_size", screenWidth + "x" + screenHeight, "-offset_x", "0", "-offset_y", "0", "-draw_mouse", "1", "-i", "desktop", "-f", "h264", "-vf", "scale=1280x720", "-preset", "ultrafast", "-tune", "zerolatency", "-pix_fmt", "yuv420p", "-profile:v", "baseline", "-x264-params", "nal-hrd=cbr", "-b:v", quality + "M", "-minrate", quality - 3 + "M", "-maxrate", quality + "M", "-bufsize", (quality / 2) + "M", "tcp://" + ip + ":2222"];
+      ffmpegVideoArgs = ["-probesize", "32", "-hwaccel", "auto", "-y", "-f", "gdigrab", "-framerate", fps, "-vsync", "vfr", "-video_size", screenWidth + "x" + screenHeight, "-offset_x", "0", "-offset_y", "0", "-draw_mouse", "1", "-i", "desktop", "-f", "h264", "-vf", "scale=1280x720", "-preset", "ultrafast", "-crf", "18", "-tune", "zerolatency", "-pix_fmt", "yuv420p", "-profile:v", "baseline", "-x264-params", "nal-hrd=vbr:opencl=true", "-b:v", bitrate, "-minrate", bitrate, "-maxrate", bitrate, "-bufsize", bitrate, "tcp://" + ip + ":2222"];
       log("Using CPU Encoding");
     }
     ffmpegProcess = spawn(
@@ -253,11 +242,12 @@ function startStreamer(arg) {
       if (autoChangeResolution && !restartingStream) {
         changeScreenRes(originalW, originalH);
       }
+      ffmpegProcess = null;
     });
   }
   if (usingAudio) {
     ffmpegAudioProcess = spawn(
-      "./lib/ffmpeg.exe",
+      "./lib/ffmpeg_old.exe",
       ["-y", "-f", "dshow", "-i", 'audio=virtual-audio-capturer', "-f", "s16le", "-ar", "16000", "-ac", "2", "-c:a", "pcm_s16le", "udp://" + ip + ":2224?pkt_size=640"],
       { detached: false }
     );
@@ -269,28 +259,47 @@ function startStreamer(arg) {
     });
     ffmpegAudioProcess.on('close', (code) => {
       log(`AudioProcess process exited with code ${code}`);
+      ffmpegAudioProcess = null;
     });
   }
 
 }
-
+function setArgs(arg) {
+  screenWidth = mainScreen.bounds.width * screen.getPrimaryDisplay().scaleFactor;
+  screenHeight = mainScreen.bounds.height * screen.getPrimaryDisplay().scaleFactor;
+  ip = arg.ip
+  quality = arg.q;
+  hidStreamClient = new net.Socket();
+  usingVideo = !arg.disableVideo;
+  usingAudio = !arg.disableAudio;
+  abxySwap = arg.abxySwap;
+  limitFPS = arg.limitFPS;
+  screenScale = screen.getPrimaryDisplay().scaleFactor;
+  mouseControl = arg.mouseControl;
+  encoding = arg.encoding
+}
 ipcMain.on('connect', (event, arg) => {
   clientSender = event.sender;
-  killStream()
-  startStreamer(arg);
+  setArgs(arg);
+  // killStream()
+  isRunning = true;
+  setTimeout(connectHID, 0);
 })
 
 ipcMain.on('restart', (event, arg) => {
   restartingStream = true;
+  setArgs(arg);
   killStream()
-  setTimeout(function () {
+  setTimeout(() => {
+    startStreamer();
     restartingStream = false;
-    startStreamer(arg);
-  }, 1000)
+  }, 2000)
 });
 
 
 ipcMain.on('kill', (event, arg) => {
+  isRunning = false;
+  restartingStream = false;
   killStream()
 });
 
@@ -349,6 +358,7 @@ function parseInputStruct(buff) {
     .floatle('gyroX')
     .floatle('gyroY')
     .floatle('gyroZ')
+    .word32Ule('frameRate')
     .word32Ule('controllerCount')
   input._setBuff(buff);
   return input;
@@ -655,10 +665,9 @@ function handleTouchInput(hid) {
 function handleGyroAndAccel(hid) {
   var gyro = { x: hid.get("gyroX"), y: hid.get("gyroY"), z: hid.get("gyroZ") }
   var accel = { x: hid.get("accelX"), y: hid.get("accelY"), z: hid.get("accelZ") }
-  for (axis in gyro) {
-    gyro[axis] *= 250;
-  }
-  gyro.y *= -1;
+  // for (axis in gyro) {
+  //   gyro[axis] *= 250;
+  // }
   GyroServ.sendMotionData(gyro, accel);
 }
 
@@ -667,16 +676,18 @@ var hidDataBuffer = "";
 function connectHID() {
   log("Connecting to switch...");
   log(ip)
+  hidStreamClient = new net.Socket();
   hidStreamClient.connect(2223, ip, function () {
     hidStreamClient.setNoDelay(true);
     log('Connected to Switch!');
+    startStreamer();
   });
-  hidStreamClient.on('error', function (ex) {
-    if (ex) {
-      log("Could not connect to Switch. Connection timed out...");
-      // setTimeout(connectHID, 1000);
-    }
-  });
+  hidStreamClient.on('error', function (err) {
+    log('Error: ' + err);
+    // if (err.code == "ECONNREFUSED") {
+    //   setTimeout(connectHID, 1000);
+    // }
+  })
   hidStreamClient.on('data', function (chunk) {
     hidDataBuffer += chunk.toString("hex");
     var completeData = "";
@@ -697,16 +708,17 @@ function connectHID() {
     if (controllerCount > controllerIds.length) {
       plugControllerIn();
     }
-    // fpsPrintTimer++;
-    // if (fpsPrintTimer == 10) {
-    //   log("switchFps=" + hid.get("frameRate"))
-    //   fpsPrintTimer = 0;
-    // }
+    fpsPrintTimer++;
+    if (fpsPrintTimer == 10) {
+      log("switchFps=" + hid.get("frameRate"))
+      fpsPrintTimer = 0;
+    }
     var playerNumber;
     for (i in controllerIds) {
       playerNumber = parseInt(i) + 1;
       handleControllerInput(hid, controllerIds[i], playerNumber);
     }
+    handleGyroAndAccel(hid);
     handleMouseInputToggling(hid, 1);
     if (mouseControl == "ANALOG" && mouseInput) {
       handleAnalogMouse(hid, 1);
@@ -714,7 +726,6 @@ function connectHID() {
       handleGyroMouse(hid, 1);
     }
     handleTouchInput(hid);
-    handleGyroAndAccel(hid);
   });
 
   hidStreamClient.on('close', function () {
@@ -726,7 +737,10 @@ function connectHID() {
       controllerIds = [];
     } catch (error) {
     }
-    // killStream();
+    killStream();
+    if (isRunning) {
+      setTimeout(connectHID, 1000);
+    }
   });
 }
 

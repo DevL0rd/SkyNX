@@ -29,7 +29,6 @@ const GyroServer = function (opt) {
 
     var connectedClient = null;
     var lastRequestAt = 0;
-    var phoneIsConnected = false;
     var packetCounter = 0;
     const clientTimeoutLimit = 5000;
 

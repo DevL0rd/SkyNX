@@ -52,12 +52,16 @@ ClkrstSession cpuSession;
 void init()
 {
     // consoleInit(NULL);
-    /* Init all switch required systems */
+    appletSetIdleTimeDetectionExtension(AppletIdleTimeDetectionExtension_None);
+    appletSetWirelessPriorityMode(AppletWirelessPriorityMode_OptimizedForWlan);
+    appletSetAutoSleepDisabled(true);
+
     printf("networkInit\n");
     network_init(&socketInitConf);
 
     printf("romfsInit\n");
     romfsInit();
+    // chdir("romfs:/");
 
     printf("audoutInitialize\n");
     audoutInitialize();
@@ -83,8 +87,6 @@ void init()
     videoContext->renderContext = renderContext;
     printf("startRender\n");
     startRender(videoContext);
-    printf("appletSetIdleTimeDetectionExtension\n");
-    appletSetIdleTimeDetectionExtension(AppletIdleTimeDetectionExtension_None);
     printf("Complete INIT!\n");
 }
 

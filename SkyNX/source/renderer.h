@@ -17,6 +17,8 @@ void handleFrame(RenderContext *context, VideoContext *videoContext);
 /* Draws a frame */
 void displayFrame(RenderContext *renderContext);
 
+uint32_t getFPS(void);
+
 /* Deallocates the render context */
 void freeRenderer(RenderContext *context);
 

@@ -6,74 +6,112 @@
 #include "renderer.h"
 
 PadState pad;
+PadState pad2;
+PadState pad3;
+PadState pad4;
 HiddbgAbstractedPadHandle pads[4] = {0};
 HiddbgAbstractedPadState states[4] = {0};
 HidSixAxisSensorHandle handles[4];
-s32 tmpout = 0;
 Result rc = 0;
 void gamePadSend(JoyConSocket *connection)
 {
     JoyPkg pkg;
+    HidAnalogStickState analog_stick_l;
+    HidAnalogStickState analog_stick_r;
     pkg.streamStart = (uint64_t)UINT64_MAX; // easy identifiers for the start and stop of tcp stream
     pkg.streamEnd = (uint64_t)UINT64_MAX / 2;
-    pkg.controllerCount = (uint32_t)1;
-
+    uint32_t controllerCount = 0;
     padUpdate(&pad);
+    padUpdate(&pad2);
+    padUpdate(&pad3);
+    padUpdate(&pad4);
 
-    u64 kDown = padGetButtonsDown(&pad);
-    u64 kHeld = padGetButtons(&pad);
-    u64 kUp = padGetButtonsUp(&pad);
+    if (padIsConnected(&pad))
+    {
+        controllerCount++;
+        analog_stick_l = padGetStickPos(&pad, 0);
+        analog_stick_r = padGetStickPos(&pad, 1);
+        pkg.heldKeys1 = (uint32_t)padGetButtons(&pad);
+        pkg.lJoyX1 = (int32_t)analog_stick_l.x;
+        pkg.lJoyY1 = (int32_t)analog_stick_l.y;
+        pkg.rJoyX1 = (int32_t)analog_stick_r.x;
+        pkg.rJoyY1 = (int32_t)analog_stick_r.y;
+    }
+    else
+    {
+        pkg.heldKeys1 = 0;
+        pkg.lJoyX1 = 0;
+        pkg.lJoyY1 = 0;
+        pkg.rJoyX1 = 0;
+        pkg.rJoyY1 = 0;
+    }
 
-    tmpout = 0;
-    rc = hiddbgGetAbstractedPadsState(pads, states, sizeof(pads) / sizeof(u64), &tmpout);
+    if (padIsConnected(&pad2))
+    {
+        controllerCount++;
+        analog_stick_l = padGetStickPos(&pad2, 0);
+        analog_stick_r = padGetStickPos(&pad2, 1);
+        pkg.heldKeys2 = (uint32_t)padGetButtons(&pad2);
+        pkg.lJoyX2 = (int32_t)analog_stick_l.x;
+        pkg.lJoyY2 = (int32_t)analog_stick_l.y;
+        pkg.rJoyX2 = (int32_t)analog_stick_r.x;
+        pkg.rJoyY2 = (int32_t)analog_stick_r.y;
+    }
+    else
+    {
+        pkg.heldKeys2 = 0;
+        pkg.lJoyX2 = 0;
+        pkg.lJoyY2 = 0;
+        pkg.rJoyX2 = 0;
+        pkg.rJoyY2 = 0;
+    }
 
-    // if (tmpout>=1) {
-    //     s8 AbstractedVirtualPadId=0;
+    if (padIsConnected(&pad3))
+    {
+        controllerCount++;
+        analog_stick_l = padGetStickPos(&pad3, 0);
+        analog_stick_r = padGetStickPos(&pad3, 1);
+        pkg.heldKeys3 = (uint32_t)padGetButtons(&pad3);
+        pkg.lJoyX3 = (int32_t)analog_stick_l.x;
+        pkg.lJoyY3 = (int32_t)analog_stick_l.y;
+        pkg.rJoyX3 = (int32_t)analog_stick_r.x;
+        pkg.rJoyY3 = (int32_t)analog_stick_r.y;
+    }
+    else
+    {
+        pkg.heldKeys3 = 0;
+        pkg.lJoyX3 = 0;
+        pkg.lJoyY3 = 0;
+        pkg.rJoyX3 = 0;
+        pkg.rJoyY3 = 0;
+    }
 
-    //     // Setup state. You could also construct it without using hiddbgGetAbstractedPadsState, if preferred.
+    if (padIsConnected(&pad4))
+    {
+        controllerCount++;
+        analog_stick_l = padGetStickPos(&pad4, 0);
+        analog_stick_r = padGetStickPos(&pad4, 1);
+        pkg.heldKeys4 = (uint32_t)padGetButtons(&pad4);
+        pkg.lJoyX4 = (int32_t)analog_stick_l.x;
+        pkg.lJoyY4 = (int32_t)analog_stick_l.y;
+        pkg.rJoyX4 = (int32_t)analog_stick_r.x;
+        pkg.rJoyY4 = (int32_t)analog_stick_r.y;
+    }
+    else
+    {
+        pkg.heldKeys4 = 0;
+        pkg.lJoyX4 = 0;
+        pkg.lJoyY4 = 0;
+        pkg.rJoyX4 = 0;
+        pkg.rJoyY4 = 0;
+    }
 
-    //     // Set type to one that's usable with state-merge. Note that this is also available with Hdls.
-    //     states[0].type = BIT(1);
-    //     // Use state-merge for the above controller, the state will be merged with an existing controller.
-    //     // For a plain virtual controller, use NpadInterfaceType_Bluetooth, and update the above type value.
-    //     states[0].npadInterfaceType = HidNpadInterfaceType_Rail;
-
-    //     states[0].state.buttons |= HidNpadButton_ZL;
-
-    //     rc = hiddbgSetAutoPilotVirtualPadState(AbstractedVirtualPadId, &states[0]);
-    //     printf("hiddbgSetAutoPilotVirtualPadState(): 0x%x\n", rc);
-    // }
-
-    HidAnalogStickState analog_stick_l = padGetStickPos(&pad, 0);
-    HidAnalogStickState analog_stick_r = padGetStickPos(&pad, 1);
-    pkg.heldKeys1 = (uint32_t)kHeld;
-    pkg.lJoyX1 = (int32_t)analog_stick_l.x;
-    pkg.lJoyY1 = (int32_t)analog_stick_l.y;
-    pkg.rJoyX1 = (int32_t)analog_stick_r.x;
-    pkg.rJoyY1 = (int32_t)analog_stick_r.y;
-
-    pkg.heldKeys2 = (uint32_t)states[1].state.buttons;
-    pkg.lJoyX2 = (int32_t)states[1].state.analog_stick_l.x;
-    pkg.lJoyY2 = (int32_t)states[1].state.analog_stick_l.y;
-    pkg.rJoyX2 = (int32_t)states[1].state.analog_stick_r.x;
-    pkg.rJoyY2 = (int32_t)states[1].state.analog_stick_r.y;
-
-    pkg.heldKeys3 = (uint32_t)states[2].state.buttons;
-    pkg.lJoyX3 = (int32_t)states[2].state.analog_stick_l.x;
-    pkg.lJoyY3 = (int32_t)states[2].state.analog_stick_l.y;
-    pkg.rJoyX3 = (int32_t)states[2].state.analog_stick_r.x;
-    pkg.rJoyY3 = (int32_t)states[2].state.analog_stick_r.y;
-
-    pkg.heldKeys4 = (uint32_t)states[3].state.buttons;
-    pkg.lJoyX4 = (int32_t)states[3].state.analog_stick_l.x;
-    pkg.lJoyY4 = (int32_t)states[3].state.analog_stick_l.y;
-    pkg.rJoyX4 = (int32_t)states[3].state.analog_stick_r.x;
-    pkg.rJoyY4 = (int32_t)states[3].state.analog_stick_r.y;
-
-    // printf("%d %d %d %d\n", pkg.lJoyX1, pkg.lJoyY1, pkg.rJoyX1, pkg.rJoyY1);
-    // printf("%d %d %d %d\n", pkg.lJoyX2, pkg.lJoyY2, pkg.rJoyX2, pkg.rJoyY2);
-    // printf("%d %d %d %d\n", pkg.lJoyX3, pkg.lJoyY3, pkg.rJoyX3, pkg.rJoyY3);
-    // printf("%d %d %d %d\n", pkg.lJoyX4, pkg.lJoyY4, pkg.rJoyX4, pkg.rJoyY4);
+    pkg.controllerCount = (uint32_t)controllerCount;
+    // printf("controllerCount: %d\n", controllerCount);
+    // printf("%d %d %d %d %d\n", pkg.heldKeys1, pkg.lJoyX1, pkg.lJoyY1, pkg.rJoyX1, pkg.rJoyY1);
+    // printf("%d %d %d %d %d\n", pkg.heldKeys2, pkg.lJoyX2, pkg.lJoyY2, pkg.rJoyX2, pkg.rJoyY2);
+    // printf("%d %d %d %d %d\n", pkg.heldKeys3, pkg.lJoyX3, pkg.lJoyY3, pkg.rJoyX3, pkg.rJoyY3);
+    // printf("%d %d %d %d %d\n", pkg.heldKeys4, pkg.lJoyX4, pkg.lJoyY4, pkg.rJoyX4, pkg.rJoyY4);
 
     HidTouchScreenState touchState = {0};
     if (hidGetTouchScreenStates(&touchState, 1))
@@ -84,28 +122,32 @@ void gamePadSend(JoyConSocket *connection)
         pkg.touchY2 = (uint32_t)touchState.touches[1].y;
     }
     // printf("%d %d %d %d\n", pkg.touchX1, pkg.touchY1, pkg.touchX2, pkg.touchY2);
-    // HidSixAxisSensorState sixaxis = {0};
-    // u64 style_set = padGetStyleSet(&pad);
-    // if (style_set & HidNpadStyleTag_NpadHandheld)
-    //     hidGetSixAxisSensorStates(handles[0], &sixaxis, 1);
-    // else if (style_set & HidNpadStyleTag_NpadFullKey)
-    //     hidGetSixAxisSensorStates(handles[1], &sixaxis, 1);
-    // else if (style_set & HidNpadStyleTag_NpadJoyDual)
-    // {
-    //     // For JoyDual, read from either the Left or Right Joy-Con depending on which is/are connected
-    //     u64 attrib = padGetAttributes(&pad);
-    //     if (attrib & HidNpadAttribute_IsLeftConnected)
-    //         hidGetSixAxisSensorStates(handles[2], &sixaxis, 1);
-    //     else if (attrib & HidNpadAttribute_IsRightConnected)
-    //         hidGetSixAxisSensorStates(handles[3], &sixaxis, 1);
-    // }
-    // pkg.accelX = (float_t)sixaxis.acceleration.x;
-    // pkg.accelY = (float_t)sixaxis.acceleration.y;
-    // pkg.accelZ = (float_t)sixaxis.acceleration.z;
-    // pkg.gyroX = (float_t)sixaxis.angle.x;
-    // pkg.gyroY = (float_t)sixaxis.angle.y;
-    // pkg.gyroZ = (float_t)sixaxis.angle.z;
+    HidSixAxisSensorState sixaxis = {0};
+    u64 style_set = padGetStyleSet(&pad);
+    if (style_set & HidNpadStyleTag_NpadHandheld)
+        hidGetSixAxisSensorStates(handles[0], &sixaxis, 1);
+    else if (style_set & HidNpadStyleTag_NpadFullKey)
+        hidGetSixAxisSensorStates(handles[1], &sixaxis, 1);
+    else if (style_set & HidNpadStyleTag_NpadJoyDual)
+    {
+        // For JoyDual, read from either the Left or Right Joy-Con depending on which is/are connected
+        u64 attrib = padGetAttributes(&pad);
+        if (attrib & HidNpadAttribute_IsLeftConnected)
+            hidGetSixAxisSensorStates(handles[2], &sixaxis, 1);
+        else if (attrib & HidNpadAttribute_IsRightConnected)
+            hidGetSixAxisSensorStates(handles[3], &sixaxis, 1);
+    }
+    pkg.accelX = (float_t)sixaxis.acceleration.x;
+    pkg.accelY = (float_t)sixaxis.acceleration.y;
+    pkg.accelZ = (float_t)sixaxis.acceleration.z;
+    pkg.gyroX = (float_t)sixaxis.angle.x;
+    pkg.gyroY = (float_t)sixaxis.angle.y;
+    pkg.gyroZ = (float_t)sixaxis.angle.z;
+    // acceleration
+    // angle
+    // angular_velocity
     // printf("%f %f %f %f %f %f\n", pkg.accelX, pkg.accelY, pkg.accelZ, pkg.gyroX, pkg.gyroY, pkg.gyroZ);
+    pkg.renderFPS = (uint32_t)getFPS();
     sendJoyConInput(connection, &pkg);
 }
 
@@ -118,11 +160,12 @@ void handleInput(JoyConSocket *connection)
 void input_init()
 {
     padConfigureInput(4, HidNpadStyleSet_NpadStandard);
-    padInitializeAny(&pad);
-    rc = hiddbgInitialize();
+    padInitialize(&pad, HidNpadIdType_No1, HidNpadIdType_Handheld);
+    padInitialize(&pad2, HidNpadIdType_No2, HidNpadStyleTag_NpadJoyDual);
+    padInitialize(&pad3, HidNpadIdType_No3, HidNpadStyleTag_NpadJoyDual);
+    padInitialize(&pad4, HidNpadIdType_No4, HidNpadStyleTag_NpadJoyDual);
+
     hidInitializeTouchScreen();
-    // It's necessary to initialize these separately as they all have different handle values
-    HidSixAxisSensorHandle handles[4];
     hidGetSixAxisSensorHandles(&handles[0], 1, HidNpadIdType_Handheld, HidNpadStyleTag_NpadHandheld);
     hidGetSixAxisSensorHandles(&handles[1], 1, HidNpadIdType_No1, HidNpadStyleTag_NpadFullKey);
     hidGetSixAxisSensorHandles(&handles[2], 2, HidNpadIdType_No1, HidNpadStyleTag_NpadJoyDual);
@@ -133,8 +176,7 @@ void input_init()
 }
 void input_unInit()
 {
-    hiddbgUnsetAllAutoPilotVirtualPadState();
-    hiddbgExit();
+
     hidStopSixAxisSensor(handles[0]);
     hidStopSixAxisSensor(handles[1]);
     hidStopSixAxisSensor(handles[2]);

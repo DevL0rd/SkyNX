@@ -41,6 +41,7 @@ typedef struct
     float_t gyroX;
     float_t gyroY;
     float_t gyroZ;
+    uint32_t renderFPS;
     uint32_t controllerCount;
     uint64_t streamEnd;
 } JoyPkg;

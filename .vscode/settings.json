@@ -20,7 +20,8 @@
         "renderer.h": "c",
         "switch.h": "c",
         "xmemory0": "c",
-        "socket.h": "c"
+        "socket.h": "c",
+        "unistd.h": "c"
     },
     "Lua.diagnostics.disable": [
         "lowercase-global",
