@@ -74,7 +74,7 @@ function createWindow() {
   mainWindow.loadFile('index.html');
   //fix transparency bug in windows 10
   mainWindow.reload();
-  mainWindow.webContents.openDevTools();
+  // mainWindow.webContents.openDevTools();
 }
 
 
@@ -225,7 +225,7 @@ function startStreamer() {
       log("Using CPU Encoding");
     }
     ffmpegProcess = spawn(
-      "./lib/ffmpeg.exe",
+      __dirname + "/lib/ffmpeg.exe",
       ffmpegVideoArgs,
       {
         detached: false
@@ -247,7 +247,7 @@ function startStreamer() {
   }
   if (usingAudio) {
     ffmpegAudioProcess = spawn(
-      "./lib/ffmpeg_old.exe",
+      __dirname + "/lib/ffmpeg_old.exe",
       ["-y", "-f", "dshow", "-i", 'audio=virtual-audio-capturer', "-f", "s16le", "-ar", "16000", "-ac", "2", "-c:a", "pcm_s16le", "udp://" + ip + ":2224?pkt_size=640"],
       { detached: false }
     );
@@ -665,6 +665,7 @@ function handleTouchInput(hid) {
 function handleGyroAndAccel(hid) {
   var gyro = { x: hid.get("gyroX"), y: hid.get("gyroY"), z: hid.get("gyroZ") }
   var accel = { x: hid.get("accelX"), y: hid.get("accelY"), z: hid.get("accelZ") }
+  // log(gyro.y + "")
   // for (axis in gyro) {
   //   gyro[axis] *= 250;
   // }

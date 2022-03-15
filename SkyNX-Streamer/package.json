@@ -18,6 +18,7 @@
     "dgram": "latest",
     "electron": "^17.1.0",
     "electron-is-dev": "latest",
+    "electron-packager": "^15.4.0",
     "electron-window-state": "latest",
     "formidable": "latest",
     "jquery": "latest",
