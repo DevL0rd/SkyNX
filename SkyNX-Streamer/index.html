@@ -56,8 +56,22 @@
               <div class="dropdown-menu" aria-labelledby="encodingDrop">
                 <a class="dropdown-item" href="javascript:setEncoding('CPU')">CPU Encoding</a>
                 <a class="dropdown-item" href="javascript:setEncoding('NVENC')">Nvidia Encoding</a>
-                <a class="dropdown-item" href="javascript:setEncoding('AMDVCE')">AMD Encoding</a>
+                <a class="dropdown-item" href="javascript:setEncoding('AMDVCE')">AMD Encoding (AMF)</a>
+                <a class="dropdown-item" href="javascript:setEncoding('AMDHEVC')">AMD Encoding (HEVC)</a>
                 <a class="dropdown-item" href="javascript:setEncoding('QSV')">Intel Encoding</a>
+              </div>
+            </div>
+          </div>
+          <div class="form-group">
+            <div class="dropdown">
+              <button class="btn btn-secondary dropdown-toggle btn-block" type="button" id="vsyncDrop"
+                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                Vsync (VFR)
+              </button>
+              <div class="dropdown-menu" aria-labelledby="vsyncDrop">
+                <a class="dropdown-item" href="javascript:setVsync('passthrough')">Passthrough</a>
+                <a class="dropdown-item" href="javascript:setVsync('drop')">Drop</a>
+                <a class="dropdown-item" href="javascript:setVsync('vfr')">VFR</a>
               </div>
             </div>
           </div>
@@ -140,6 +154,10 @@
       <hr />
       <h2>General</h2>
       <hr />
+      <div class="form-group">
+        <label for="monitorInput">Monitor ID (0, 1, etc)</label>
+        <input id="monitorInput" title="Typically your primary monitor is ID 0, however due to Windows stuff this isn't always the case... MUST BE A NUMBER!" type="text" class="form-control" placeholder="0">
+      </div>
       <div class="form-group">
         <label class="switch">
           <input id="autoChangeResolution" type="checkbox">

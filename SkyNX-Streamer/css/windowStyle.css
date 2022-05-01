@@ -2,7 +2,7 @@
 /* GitHub: https://github.com/DevL0rd */
 html {
     background: transparent;
-    height: 100%;
+    height: 1200px;
     border-top-left-radius: 5px;
     border-top-right-radius: 5px;
     border-bottom-left-radius: 8px;
@@ -25,12 +25,11 @@ body {
 textarea:focus, input:focus{
     outline: none;
 }
+
 #content {
     background: linear-gradient(to bottom, rgba(30,30,30,0.9) 0%,rgba(51,51,51,0.8) 67%,rgba(51,51,51,0.8) 100%);
-    height: calc(100% - 57px);
-    overflow: auto;
+    height: 100%;
     width: 100%;
-    
 }
 
 #title-bar {
@@ -213,11 +212,12 @@ textarea:focus, input:focus{
     position: absolute;
     top: 32px;
     left: 50px;
-    height: calc(100% - 57px);
+    height: 100%;
     width: calc(100% - 50px);
     background: rgba(50,50,50,0.5);
     overflow: hidden;
 }
+
 .contentAreaScrollable{
     overflow: hidden;
     overflow-y: auto;
