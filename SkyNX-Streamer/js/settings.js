@@ -33,7 +33,7 @@ function initSettings() {
         clientSettings.ip = "0.0.0.0";
     }
     if (!clientSettings.hasOwnProperty("monitorID")) {
-        clientSettings.ip = "0";
+        clientSettings.monitorID = "0";
     }
     if (!clientSettings.hasOwnProperty("quality")) {
         clientSettings.quality = 5;
