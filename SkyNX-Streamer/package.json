@@ -16,7 +16,7 @@
     "buffer": "^6.0.3",
     "crc": "latest",
     "dgram": "latest",
-    "electron": "^17.1.0",
+    "electron": "^17.2.0",
     "electron-is-dev": "latest",
     "electron-packager": "^15.4.0",
     "electron-window-state": "latest",
