@@ -1,16 +1,15 @@
-# SkyNX
-Stream your PC games to your Nintendo Switch without Android! Now on the Homebrew App Store!
+# SkyNX+
 
-[Downloads are here](https://github.com/DevL0rd/SkyNX/releases).
+This is a modfied version of SkyNX which fixes the AMD encoder issues currently present on the main branch. Also includes more user input for vsync options and allows you to specify a monitor when setting the resolution to 720p (This issue appears in multi-monitor setups). SkyNX allows you to stream your PC games to your Nintendo Switch without Android! Now on the Homebrew App Store!
 
-Also, if you can help, I'm currently looking for a job. If you have any leads, let me know at SkyNxApp@gmail.com.
+For compatilibility reasons run this as an admin! Let me know if there's any issues with NVIDIA / Intel encoders as I can only test with AMD / CPU.
 
-[Video Instructions / Review Here](https://www.youtube.com/watch?v=YtnIqVdYbf4). 
+[NEW Downloads are here](https://github.com/williamhackett0/SkyNX/releases).
+[Old Downloads are here](https://github.com/DevL0rd/SkyNX/releases).
 
-If your interested in using SkyNX to turn your Nintendo Switch into a WiiU gamepad using Cemu. Here is a link with my tutorial on how to set it up! [Nintendo Switch as a WiiU Gamepad](https://gbatemp.net/threads/how-to-use-your-switch-as-a-wiiu-game-pad-in-cemu-using-skynx.563405/)
+## Set Resolution to 1280 x 720
 
-As per user suggestions I have made a patreon and a paypal.
-If you think this app is Useful, Plese consider donating to support its development. [Donate](https://www.paypal.me/SkyNX)
+When this setting is enabled the resolution of the monitor specified will be changedd to 1280 x 720 allowing for smoother streaming. There exists a bug currently whereby this feature may not work when ran from specific areas in windows (Desktop etc). Try running it from Downloads / Docouments / C:/ drive. 
 
 The desktop streaming client is completely new. The Switch app however has it's roots in the original [In-Home-Switching](https://github.com/jakibaki/In-Home-Switching) app.
 ## Features
@@ -60,7 +59,6 @@ If there is no audio playing..
 1. Remove the audio driver in settings, and re-install it. If it doesn't work then try step 2.
 2. Restart windows and launch it again.
 
-
 ## Known issues
 * Currently more than 1 controller is not working, please wait for update.
 
@@ -70,3 +68,4 @@ If there is no audio playing..
 * [SwitchBrew](https://switchbrew.org/) for libNX and its ffmpeg inclusion
 * [Atmosphère](https://github.com/Atmosphere-NX/Atmosphere) for being such a great Switch CFW
 * [Screen Capture Recorder](https://github.com/rdp/screen-capture-recorder-to-video-windows-free) for helping us grab audio.
+* [William Hackett](https://github.com/williamhackett0/SkyNX) Fixing AMD encoding bug + adding some general fixes/improvements.

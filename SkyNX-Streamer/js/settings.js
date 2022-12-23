@@ -32,6 +32,9 @@ function initSettings() {
     if (!clientSettings.hasOwnProperty("ip")) {
         clientSettings.ip = "0.0.0.0";
     }
+    if (!clientSettings.hasOwnProperty("monitorID")) {
+        clientSettings.monitorID = "0";
+    }
     if (!clientSettings.hasOwnProperty("quality")) {
         clientSettings.quality = 5;
     }
@@ -62,6 +65,9 @@ function initSettings() {
     if (!clientSettings.hasOwnProperty("autoStartup")) {
         clientSettings.autoStartup = false;
     }
+    if (!clientSettings.hasOwnProperty("vsync")) {
+        clientSettings.vsync = "vfr";
+    }
 
     applyClientSettings();
 }
@@ -90,16 +96,38 @@ function applyClientSettings() {
         ipcRenderer.send("autoChangeResolutionOff")
     }
     $("#ipInput").val(clientSettings.ip);
+    $("#monitorInput").val(clientSettings.monitorID);
+
     if (clientSettings.encoding == "NVENC") {
         $("#encodingDrop").html("Encoding (Nvidia)");
     } else if (clientSettings.encoding == "AMDVCE") {
-        $("#encodingDrop").html("Encoding (AMD)")
-    } else if (clientSettings.encoding == "QSV") {
+        $("#encodingDrop").html("Encoding (AMD amf)")
+    }
+    else if (clientSettings.encoding == "AMDHEVC")
+    {
+        $("#encodingDrop").html("Encoding (AMD hevc)")
+    }
+    else if (clientSettings.encoding == "QSV") {
         $("#encodingDrop").html("Encoding (Intel)");
     } else {
         $("#encodingDrop").html("Encoding (CPU)");
         clientSettings.encoding = "CPU";
     }
+
+    //Vsync options
+    switch(clientSettings.vsync)
+    {
+        case "passthrough":
+            $("#vsyncDrop").html("Vsync (Passthrough)")
+            break
+        case "drop":
+            $("#vsyncDrop").html("Vsync (Drop)")
+            break
+        case "vfr":
+            $("#vsyncDrop").html("Vsync (VFR)")
+            break
+    }
+
     if (clientSettings.mouseControl == "ANALOG") {
         $("#mouseControlDrop").html("Mouse Control (Analog)");
     } else if (clientSettings.mouseControl == "GYRO") {
@@ -193,6 +221,12 @@ $(document).on('input', '#ipInput', function () {
     clientSettings.ip = $(this).val();
     saveClientSettings();
 });
+
+$(document).on('input', '#monitorInput', function () {
+    clientSettings.monitorID = $(this).val();
+    saveClientSettings();
+});
+
 $("#disableVideo").on('change', function () {
     clientSettings.disableVideo = $("#disableVideo").prop("checked");
     if (running) {
@@ -245,6 +279,17 @@ function setEncoding(encoding) {
     saveClientSettings();
     applyClientSettings();
 }
+
+function setVsync(vsync) 
+{
+    clientSettings.vsync = vsync;
+    if (running) {
+        restart();
+    }
+    saveClientSettings();
+    applyClientSettings();
+}
+
 function setMouseControl(mouseControl) {
     clientSettings.mouseControl = mouseControl;
     if (running) {

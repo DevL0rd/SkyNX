@@ -18,7 +18,8 @@ var ansi_up = new AU.default;
 let mainWindow
 var minimizeToTray = false;
 var autoChangeResolution = false;
-var ip = "0.0.0.0"
+var ip = "0.0.0.0";
+var monitorID = "0";
 var quality = 5;
 var hidStreamClient = null;
 var usingVideo = true;
@@ -26,6 +27,7 @@ var usingAudio = true;
 var abxySwap = false;
 var limitFPS = false;
 var encoding = "CPU";
+var vsync = "vfr";
 var screenWidth = 1280;
 var screenHeight = 720;
 var screenScale = 1;
@@ -57,10 +59,10 @@ function createWindow() {
     // height: mainWindowState.height,
     show: true,
     width: 500,
-    height: 320,
+    height: 400,
     frame: false,
     transparent: true, // needed for windows rounded edges
-    resizable: false,
+    resizable: true,
     webPreferences: {
       nodeIntegration: true,
       enableRemoteModule: true,
@@ -160,7 +162,7 @@ ipcMain.on('autoChangeResolutionOn', (event, fullMessage) => {
 
 function changeScreenRes(width, height) {
   var df = __dirname + "\\lib\\ChangeScreenResolution.exe"
-  exec(df + " /w=" + width + " /h=" + height + " /d=0");
+  exec(df + " /w=" + width + " /h=" + height + " /d=" + monitorID);
   screenWidth = width;
   screenHeight = height;
 }
@@ -211,19 +213,32 @@ function startStreamer() {
     var bitrate = quality * 1024;
     bitrate = bitrate + "k";
     console.log(bitrate)
-    if (encoding == "NVENC") {
-      ffmpegVideoArgs = ["-probesize", "32", "-hwaccel", "auto", "-y", "-f", "gdigrab", "-framerate", fps, "-vsync", "vfr", "-video_size", screenWidth + "x" + screenHeight, "-offset_x", "0", "-offset_y", "0", "-draw_mouse", "1", "-i", "desktop", "-c:v", "h264_nvenc", "-gpu", "0", "-rc", "vbr", "-zerolatency", "1", "-f", "h264", "-vf", "scale=1280x720", "-pix_fmt", "yuv420p", "-profile:v", "baseline", "-cq:v", "19", "-g", "999999", "-b:v", bitrate, "-minrate", bitrate, "-maxrate", bitrate, "-bufsize", bitrate, "tcp://" + ip + ":2222"];
+
+    if (encoding == "NVENC") 
+    {
+      ffmpegVideoArgs = ["-fflags", "nobuffer", "-flags", "low_delay", "-probesize", "32", "-hwaccel", "auto", "-y", "-f", "gdigrab", "-framerate", fps, "-vsync", vsync, "-video_size", screenWidth + "x" + screenHeight, "-offset_x", "0", "-offset_y", "0", "-draw_mouse", "1", "-i", "desktop", "-c:v", "h264_nvenc", "-gpu", "0", "-rc", "vbr", "-zerolatency", "1", "-f", "h264", "-vf", "scale=1280x720", "-pix_fmt", "yuv420p", "-profile:v", "baseline", "-cq:v", "19", "-g", "999999", "-b:v", bitrate, "-minrate", bitrate, "-maxrate", bitrate, "-bufsize", bitrate, "tcp://" + ip + ":2222"];
       log("Using Nvidia Encoding");
-    } else if (encoding == "AMDVCE") { //AMD Video Coding Engine
-      ffmpegVideoArgs = ["-probesize", "32", "-hwaccel", "auto", "-y", "-f", "gdigrab", "-framerate", fps, "-vsync", "vfr", "-video_size", screenWidth + "x" + screenHeight, "-offset_x", "0", "-offset_y", "0", "-draw_mouse", "1", "-i", "desktop", "-f", "h264", "-c:v", "h264_amf", "-usage", "1", "-rc", "vbr", "-vf", "scale=1280x720", "-pix_fmt", "yuv420p", "-b:v", bitrate, "-minrate", bitrate, "-maxrate", bitrate, "-bufsize", bitrate, "tcp://" + ip + ":2222"];
-      log("Using AMD Video Coding Engine");
-    } else if (encoding == "QSV") {
-      ffmpegVideoArgs = ["-probesize", "32", "-hwaccel", "auto", "-y", "-f", "gdigrab", "-framerate", fps, "-vsync", "vfr", "-video_size", screenWidth + "x" + screenHeight, "-offset_x", "0", "-offset_y", "0", "-draw_mouse", "1", "-i", "desktop", "-f", "h264", "-c:v", "h264_qsv", "-preset", "faster", "-profile", "baseline", "-vf", "scale=1280x720", "-pix_fmt", "yuv420p", "-b:v", bitrate, "-minrate", bitrate, "-maxrate", bitrate, "-bufsize", bitrate, "tcp://" + ip + ":2222"];
+    } else if (encoding == "AMDVCE") //AMD Video Coding Engine
+    {
+      ffmpegVideoArgs = ["-fflags", "nobuffer", "-flags", "low_delay", "-probesize", "32", "-hwaccel", "auto", "-y", "-f", "gdigrab", "-framerate", fps, "-vsync", vsync, "-video_size", screenWidth + "x" + screenHeight, "-offset_x", "0", "-offset_y", "0", "-draw_mouse", "1", "-i", "desktop", "-f", "h264", "-c:v", "h264_amf", "-usage", "ultralowlatency", "-quality", "speed", "-rc", "vbr_latency", "-vf", "scale=1280x720", "-pix_fmt", "yuv420p", "-b:v", bitrate, "-minrate", bitrate, "-maxrate", bitrate, "-bufsize", bitrate, "tcp://" + ip + ":2222"];
+      log("Using AMD Video Coding Engine (amf)");
+    }
+    else if(encoding == "AMDHEVC")
+    {
+      ffmpegVideoArgs = ["-fflags", "nobuffer", "-flags", "low_delay", "-probesize", "32", "-hwaccel", "auto", "-y", "-f", "gdigrab", "-framerate", fps, "-vsync", vsync, "-video_size", screenWidth + "x" + screenHeight, "-offset_x", "0", "-offset_y", "0", "-draw_mouse", "1", "-i", "desktop", "-f", "h264", "-c:v", "hevc_amf", "-usage", "ultralowlatency", "-quality", "speed", "-rc", "vbr_latency", "-vf", "scale=1280x720", "-pix_fmt", "yuv420p", "-b:v", bitrate, "-minrate", bitrate, "-maxrate", bitrate, "-bufsize", bitrate, "tcp://" + ip + ":2222"];
+      log("Using AMD Video Coding Engine (hevc)");
+    }
+    else if (encoding == "QSV") 
+    {
+      ffmpegVideoArgs = ["-fflags", "nobuffer", "-flags", "low_delay", "-probesize", "32", "-hwaccel", "auto", "-y", "-f", "gdigrab", "-framerate", fps, "-vsync", vsync, "-video_size", screenWidth + "x" + screenHeight, "-offset_x", "0", "-offset_y", "0", "-draw_mouse", "1", "-i", "desktop", "-f", "h264", "-c:v", "h264_qsv", "-preset", "faster", "-profile", "baseline", "-vf", "scale=1280x720", "-pix_fmt", "yuv420p", "-b:v", bitrate, "-minrate", bitrate, "-maxrate", bitrate, "-bufsize", bitrate, "tcp://" + ip + ":2222"];
       log("Using Intel QSV Encoding");
-    } else { //CPU Software Encoding
-      ffmpegVideoArgs = ["-probesize", "32", "-hwaccel", "auto", "-y", "-f", "gdigrab", "-framerate", fps, "-vsync", "vfr", "-video_size", screenWidth + "x" + screenHeight, "-offset_x", "0", "-offset_y", "0", "-draw_mouse", "1", "-i", "desktop", "-f", "h264", "-vf", "scale=1280x720", "-preset", "ultrafast", "-crf", "18", "-tune", "zerolatency", "-pix_fmt", "yuv420p", "-profile:v", "baseline", "-x264-params", "nal-hrd=vbr:opencl=true", "-b:v", bitrate, "-minrate", bitrate, "-maxrate", bitrate, "-bufsize", bitrate, "tcp://" + ip + ":2222"];
+    } 
+    else 
+    { //CPU Software Encoding
+      ffmpegVideoArgs = ["-fflags", "nobuffer", "-flags", "low_delay", "-probesize", "32", "-hwaccel", "auto", "-y", "-f", "gdigrab", "-framerate", fps, "-vsync", vsync, "-video_size", screenWidth + "x" + screenHeight, "-offset_x", "0", "-offset_y", "0", "-draw_mouse", "1", "-i", "desktop", "-f", "h264", "-vf", "scale=1280x720", "-preset", "ultrafast", "-crf", "18", "-tune", "zerolatency", "-pix_fmt", "yuv420p", "-profile:v", "baseline", "-x264-params", "nal-hrd=vbr:opencl=true", "-b:v", bitrate, "-minrate", bitrate, "-maxrate", bitrate, "-bufsize", bitrate, "tcp://" + ip + ":2222"];
       log("Using CPU Encoding");
     }
+    
     ffmpegProcess = spawn(
       __dirname + "/lib/ffmpeg.exe",
       ffmpegVideoArgs,
@@ -276,7 +291,9 @@ function setArgs(arg) {
   limitFPS = arg.limitFPS;
   screenScale = screen.getPrimaryDisplay().scaleFactor;
   mouseControl = arg.mouseControl;
-  encoding = arg.encoding
+  encoding = arg.encoding;
+  vsync = arg.vsync;
+  monitorID = arg.monitorID;
 }
 ipcMain.on('connect', (event, arg) => {
   clientSender = event.sender;

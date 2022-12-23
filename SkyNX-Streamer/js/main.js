@@ -6,7 +6,7 @@ function connect() {
     $('#startBtn').addClass('btn-danger').removeClass('btn-dark');
     $("#startBtn").html("End Streamer");
     running = true;
-    ipcRenderer.send('connect', { ip: clientSettings.ip, q: clientSettings.quality, disableVideo: clientSettings.disableVideo, disableAudio: clientSettings.disableAudio, abxySwap: clientSettings.abxySwap, encoding: clientSettings.encoding, limitFPS: clientSettings.limitFPS, mouseControl: clientSettings.mouseControl });
+    ipcRenderer.send('connect', { ip: clientSettings.ip, q: clientSettings.quality, disableVideo: clientSettings.disableVideo, disableAudio: clientSettings.disableAudio, abxySwap: clientSettings.abxySwap, encoding: clientSettings.encoding, limitFPS: clientSettings.limitFPS, mouseControl: clientSettings.mouseControl, vsync: clientSettings.vsync, monitorID: clientSettings.monitorID});
 }
 function disconnect() {
     $("#startBtn").addClass('btn-dark').removeClass('btn-danger');
@@ -16,7 +16,7 @@ function disconnect() {
 }
 function restart() {
     if (running) {
-        ipcRenderer.send('restart', { ip: clientSettings.ip, q: clientSettings.quality, disableVideo: clientSettings.disableVideo, disableAudio: clientSettings.disableAudio, abxySwap: clientSettings.abxySwap, encoding: clientSettings.encoding, limitFPS: clientSettings.limitFPS, mouseControl: clientSettings.mouseControl });
+        ipcRenderer.send('restart', { ip: clientSettings.ip, q: clientSettings.quality, disableVideo: clientSettings.disableVideo, disableAudio: clientSettings.disableAudio, abxySwap: clientSettings.abxySwap, encoding: clientSettings.encoding, limitFPS: clientSettings.limitFPS, mouseControl: clientSettings.mouseControl, vsync: clientSettings.vsync, monitorID: clientSettings.monitorID});
     }
 }
 $('#startBtn').click(function () {
