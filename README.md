@@ -1,17 +1,6 @@
-# SkyNX+
+# SkyNX
 
-This is a modfied version of SkyNX which fixes the AMD encoder issues currently present on the main branch. Also includes more user input for vsync options and allows you to specify a monitor when setting the resolution to 720p (This issue appears in multi-monitor setups). SkyNX allows you to stream your PC games to your Nintendo Switch without Android! Now on the Homebrew App Store!
 
-For compatilibility reasons run this as an admin! Let me know if there's any issues with NVIDIA / Intel encoders as I can only test with AMD / CPU.
-
-[NEW Downloads are here](https://github.com/williamhackett0/SkyNX/releases).
-[Old Downloads are here](https://github.com/DevL0rd/SkyNX/releases).
-
-## Set Resolution to 1280 x 720
-
-When this setting is enabled the resolution of the monitor specified will be changedd to 1280 x 720 allowing for smoother streaming. There exists a bug currently whereby this feature may not work when ran from specific areas in windows (Desktop etc). Try running it from Downloads / Docouments / C:/ drive. 
-
-The desktop streaming client is completely new. The Switch app however has it's roots in the original [In-Home-Switching](https://github.com/jakibaki/In-Home-Switching) app.
 ## Features
  * Stream PC games with audio to switch at 60fps!
  * Handles up to 8 JoyCon pairs. (8 Players at once!)
